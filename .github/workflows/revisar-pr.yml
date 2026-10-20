@@ -1,0 +1,60 @@
+name: Revisar PR
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  carpeta:
+    name: Solo archivos del módulo
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Revisar qué archivos cambió el PR
+        env:
+          AUTOR: ${{ github.event.pull_request.user.login }}
+          RAMA: ${{ github.head_ref }}
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          # El coordinador puede cambiar cualquier archivo.
+          if [ "$AUTOR" = "josesaldana-collab" ]; then
+            echo "PR del coordinador: no se revisa la carpeta."
+            exit 0
+          fi
+
+          # La rama debe llamarse <nombre>/<descripcion-corta>.
+          NOMBRE="${RAMA%%/*}"
+          if [ "$NOMBRE" = "$RAMA" ] || [ ! -f "app/$NOMBRE/README.md" ]; then
+            echo "::error::La rama \"$RAMA\" debe llamarse <nombre>/<descripcion-corta>, con el nombre de tu módulo (por ejemplo marco/lista-de-tareas)."
+            exit 1
+          fi
+
+          FUERA=$(git diff --name-only "$BASE...$HEAD" | grep -v "^app/$NOMBRE/" || true)
+          if [ -n "$FUERA" ]; then
+            echo "::error::Este PR cambia archivos fuera de app/$NOMBRE/. Quita esos cambios o pídele a Jose David que los haga:"
+            echo "$FUERA" | sed 's/^/  - /'
+            exit 1
+          fi
+          echo "Todos los cambios están dentro de app/$NOMBRE/."
+
+  build:
+    name: Lint y build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
