@@ -39,6 +39,8 @@ Módulos: `marco`, `camille`, `abraham`, `jonathan`, `daniela`. Cada módulo viv
 5. **Commits pequeños.** Un cambio a la vez, con un commit después de cada paso que funcione.
 6. **Explica.** Al terminar, cuéntale al estudiante en palabras sencillas qué cambió, cómo funciona y qué debería probar.
 
+El skill `crear-iae-life` (que une los módulos en la app final IAE LIFE) es solo para Jose David. Si un estudiante lo pide, explícale que eso lo hace el coordinador.
+
 ## Datos y seguridad
 
 - **Nada de datos personales reales:** ni nombres de estudiantes, padres o docentes, ni cédulas, teléfonos, correos o notas. Usa datos inventados y que se noten inventados (por ejemplo "Estudiante Prueba 1").
