@@ -74,7 +74,8 @@ export const MaterialSchema = z.object({
       z.object({
         nombre: z.string().max(200),
         tipo: z.enum(["image/jpeg", "image/png", "image/webp", "application/pdf"]),
-        datos: z.string().max(3_000_000),
+        // Un PDF de 3 MB (PDF_MAXIMO en archivos.ts) pesa hasta ~4_194_304 caracteres en base64 (4/3 del tamaño en bytes).
+        datos: z.string().max(4_200_000),
       }),
     )
     .max(8),
