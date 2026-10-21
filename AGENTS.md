@@ -21,12 +21,15 @@ app/
   page.tsx              # inicio del HUB: lista los módulos (lo mantiene Jose David)
   layout.tsx            # layout común (lo mantiene Jose David)
   <nombre>/             # un módulo por estudiante
+    info.ts             # nombre del proyecto y descripción (salen en la tarjeta del inicio)
     page.tsx
     components/
     README.md           # proyecto, para quién es, funcionalidad central
     DESPUES.md          # ideas para después del MVP
 components/shared/      # componentes comunes (lo mantiene Jose David)
 ```
+
+Para cambiar el nombre o la descripción de su tarjeta en la página de inicio, el estudiante edita `app/<nombre>/info.ts`. No hace falta tocar `app/page.tsx`.
 
 Módulos: `marco`, `camille`, `abraham`, `jonathan`, `daniela`. Cada módulo vive en `http://localhost:3000/<nombre>`.
 
