@@ -21,12 +21,15 @@ app/
   page.tsx              # inicio del HUB: lista los módulos (lo mantiene Jose David)
   layout.tsx            # layout común (lo mantiene Jose David)
   <nombre>/             # un módulo por estudiante
+    info.ts             # nombre del proyecto y descripción (salen en la tarjeta del inicio)
     page.tsx
     components/
     README.md           # proyecto, para quién es, funcionalidad central
     DESPUES.md          # ideas para después del MVP
 components/shared/      # componentes comunes (lo mantiene Jose David)
 ```
+
+Para cambiar el nombre o la descripción de su tarjeta en la página de inicio, el estudiante edita `app/<nombre>/info.ts`. No hace falta tocar `app/page.tsx`.
 
 Módulos: `marco`, `camille`, `abraham`, `jonathan`, `daniela`. Cada módulo vive en `http://localhost:3000/<nombre>`.
 
@@ -38,6 +41,8 @@ Módulos: `marco`, `camille`, `abraham`, `jonathan`, `daniela`. Cada módulo viv
 4. **Reutiliza.** Para estilos usa Tailwind. Si un componente de `components/shared/` sirve, úsalo en lugar de crear otro igual.
 5. **Commits pequeños.** Un cambio a la vez, con un commit después de cada paso que funcione.
 6. **Explica.** Al terminar, cuéntale al estudiante en palabras sencillas qué cambió, cómo funciona y qué debería probar.
+
+El skill `crear-iae-life` (que une los módulos en la app final IAE LIFE) es solo para Jose David. Si un estudiante lo pide, explícale que eso lo hace el coordinador.
 
 ## Datos y seguridad
 
