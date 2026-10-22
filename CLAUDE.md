@@ -17,4 +17,4 @@ Este archivo lo usa Jose David Saldaña, coordinador del AI Lab, que sí puede m
   Entrega la revisión como una lista corta: qué está bien, qué hay que corregir y si se puede unir.
 - Si un módulo se ve demasiado ambicioso para la fecha del MVP (13 de noviembre), dilo directamente y propón qué recortar.
 - Para tareas de módulo, usa el skill `trabajar-en-mi-modulo`.
-- Cuando los módulos estén listos, `/crear-iae-life` (skill en `.claude/skills/crear-iae-life/`) los une en una sola app llamada IAE LIFE. Se detiene después del inventario y del plan para que Jose David decida.
+- Cuando los módulos estén listos, `/crear-iae-life` (skill en `.claude/skills/crear-iae-life/`) los une en una sola app llamada IAE LIFE. Se detiene después del inventario y del plan para que Jose David decida. También se puede lanzar en la nube con el botón "Crear IAE LIFE" de `/coordinador` (workflow `.github/workflows/crear-iae-life.yml`, modo automático, necesita el secreto `ANTHROPIC_API_KEY` en GitHub).

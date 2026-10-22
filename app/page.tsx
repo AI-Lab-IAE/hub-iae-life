@@ -22,6 +22,11 @@ export default function Home() {
           </li>
         ))}
       </ul>
+      <p className="mt-12 text-sm text-zinc-500">
+        <Link href="/coordinador" className="hover:underline">
+          Coordinador
+        </Link>
+      </p>
     </main>
   );
 }

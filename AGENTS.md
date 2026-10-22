@@ -26,6 +26,7 @@ app/
     components/
     README.md           # proyecto, para quién es, funcionalidad central
     DESPUES.md          # ideas para después del MVP
+app/coordinador/        # avance de módulos y botón "Crear IAE LIFE" (lo mantiene Jose David)
 components/shared/      # componentes comunes (lo mantiene Jose David)
 ```
 
