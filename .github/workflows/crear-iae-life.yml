@@ -1,0 +1,84 @@
+name: Crear IAE LIFE
+
+# Lo lanza el botón "Crear IAE LIFE" de /coordinador (Actions → Crear IAE LIFE → Run workflow).
+# Claude Code sigue .claude/skills/crear-iae-life en modo automático y el resultado llega como PR.
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: crear-iae-life
+  cancel-in-progress: false
+
+jobs:
+  crear:
+    name: Unir los módulos en IAE LIFE
+    # Solo el coordinador puede lanzarlo, aunque los estudiantes tengan permiso de escritura.
+    if: github.actor == 'josesaldana-collab'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Crear la rama de trabajo
+        id: rama
+        run: |
+          RAMA="coordinador/crear-iae-life-${{ github.run_number }}"
+          git config user.name "Claude (Crear IAE LIFE)"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$RAMA"
+          echo "nombre=$RAMA" >> "$GITHUB_OUTPUT"
+
+      - name: Claude une los módulos
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          prompt: |
+            Soy Jose David, el coordinador. Ejecuta el skill crear-iae-life (.claude/skills/crear-iae-life/SKILL.md) en MODO AUTOMÁTICO: lo lanzó el botón "Crear IAE LIFE", así que nadie puede responderte durante la ejecución.
+            Ya estás en la rama ${{ steps.rama.outputs.nombre }}. Haz commits ahí, no hagas push ni abras el PR, y deja la descripción del PR en PR_IAE_LIFE.md (sin commit).
+          claude_args: |
+            --model claude-opus-5-5
+            --max-turns 120
+            --allowedTools "Read,Write,Edit,Glob,Grep,Bash(npm run lint),Bash(npm run build),Bash(git status),Bash(git diff:*),Bash(git log:*),Bash(git add:*),Bash(git commit:*),Bash(git grep:*),Bash(ls:*)"
+
+      - name: Subir la rama y abrir el PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RAMA: ${{ steps.rama.outputs.nombre }}
+        run: |
+          CUERPO="$RUNNER_TEMP/pr.md"
+          if [ -f PR_IAE_LIFE.md ]; then
+            mv PR_IAE_LIFE.md "$CUERPO"
+            git rm -q --cached --ignore-unmatch PR_IAE_LIFE.md
+          else
+            echo "Claude no dejó descripción (PR_IAE_LIFE.md). Revisa el registro de la ejecución: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" > "$CUERPO"
+          fi
+          if [ -n "$(git status --porcelain)" ]; then
+            git add -A
+            git commit -q -m "Cambios pendientes de Crear IAE LIFE"
+          fi
+          if [ "$(git rev-list --count origin/main..HEAD)" = "0" ]; then
+            echo "::error::Claude no hizo cambios. Revisa el registro de la ejecución."
+            exit 1
+          fi
+          printf '\n\n---\nCreado por el botón "Crear IAE LIFE" (ejecución %s).\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n' \
+            "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" >> "$CUERPO"
+          git push -u origin "$RAMA"
+          if ! gh pr create --base main --head "$RAMA" --title "Crear IAE LIFE" --body-file "$CUERPO"; then
+            # Pasa si la organización no deja que GitHub Actions abra PRs.
+            echo "::warning::No pude abrir el PR. Ábrelo aquí: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/compare/main...$RAMA?expand=1"
+            cat "$CUERPO" >> "$GITHUB_STEP_SUMMARY"
+          fi

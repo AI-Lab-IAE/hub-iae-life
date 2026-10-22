@@ -11,6 +11,23 @@ Las reglas de AGENTS.md siguen aplicando: sin datos personales reales, sin secre
 
 Trabaja por fases. **Al final de las fases 1 y 2 detente y espera la respuesta de Jose David.**
 
+## Modo automático (botón "Crear IAE LIFE")
+
+Si te lanzó el workflow `.github/workflows/crear-iae-life.yml` (el botón de `/coordinador`), nadie puede responderte durante la ejecución. En ese caso:
+
+- **No te detengas** en las fases 1 y 2. En vez de preguntar, aplica estas decisiones:
+  - Módulo **listo**: entra a IAE LIFE.
+  - Módulo **incompleto**: entra con la etiqueta "Próximamente" en la navegación y en el inicio, sin tocar su código.
+  - Módulo **roto** (no compila o su página no carga): queda fuera de la navegación, sin borrar su carpeta.
+  - **Rutas:** se quedan como están (`/<nombre>`). No muevas carpetas: renombrarlas lo decide Jose David al revisar.
+  - **Revisión automática:** no cambies `.github/`.
+  - El resto del plan de la fase 2 (nombre, navegación, inicio, créditos, diseño común y `DESPUES.md`) sí se hace.
+- En la fase 0, salta la confirmación de quién lo pide (el workflow solo corre con la cuenta de Jose David) y no crees la rama: el workflow ya te dejó en una.
+- Haz commits en la rama actual, pero **no hagas push ni abras el PR**: de eso se encarga el workflow.
+- Al terminar, escribe la descripción del PR (el formato de la fase 5) en el archivo `PR_IAE_LIFE.md` en la raíz del repositorio, sin hacerle commit. Agrega al inicio una sección "## Decisiones para Jose David" con la tabla del inventario de la fase 1, las decisiones que tomaste por él y las preguntas que habrías hecho.
+- En la fase 4 no hay navegador ni `npm run dev`: comprueba con `npm run lint` y `npm run build`, revisa en el código que cada función tenga su enlace en la navegación y anota en el PR que Jose David debe probarla en el enlace de vista previa.
+- Si algo falla y no se arregla en dos intentos, no sigas: explica el problema en `PR_IAE_LIFE.md` y deja los commits que sí funcionan.
+
 ## 0. Comprobar antes de empezar
 
 - Confirma que quien lo pide es Jose David. Si es un estudiante, no sigas: explícale que esto lo hace el coordinador.
