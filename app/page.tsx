@@ -15,8 +15,9 @@ export default function Home() {
               href={`/${m.slug}`}
               className="block rounded-xl border border-zinc-200 p-6 transition hover:border-zinc-400 dark:border-zinc-800 dark:hover:border-zinc-600"
             >
-              <span className="text-xl font-semibold">Módulo de {m.estudiante}</span>
-              <span className="mt-1 block text-zinc-500">/{m.slug}</span>
+              <span className="text-xl font-semibold">{m.proyecto}</span>
+              <span className="mt-1 block text-zinc-500">de {m.estudiante}</span>
+              <span className="mt-3 block text-zinc-600 dark:text-zinc-400">{m.descripcion}</span>
             </Link>
           </li>
         ))}
