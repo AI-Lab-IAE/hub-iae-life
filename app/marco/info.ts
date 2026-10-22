@@ -2,5 +2,6 @@
 export const info = {
   estudiante: "Marco",
   proyecto: "EstudIA",
-  descripcion: "Escribe aquí en una frase qué hace tu proyecto y para quién es.",
+  descripcion:
+    "Subes tus apuntes y EstudIA arma un quiz por tema que revela tus 'puntos ciegos': lo que creías saber pero no.",
 };
