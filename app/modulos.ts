@@ -13,3 +13,10 @@ export const modulos = [
   { slug: "jonathan", ...jonathan },
   { slug: "daniela", ...daniela },
 ];
+
+const TEXTO_PLANTILLA = "Escribe aquí";
+
+// Una tarjeta está completa cuando el estudiante ya cambió el texto de la plantilla en su info.ts.
+export function tarjetaCompleta(m: { proyecto: string; descripcion: string }) {
+  return m.proyecto !== "Por definir" && !m.descripcion.startsWith(TEXTO_PLANTILLA);
+}
