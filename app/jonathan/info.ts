@@ -1,6 +1,7 @@
 // Datos de tu proyecto. Aparecen en la tarjeta de la página de inicio y en el título de tu módulo.
 export const info = {
   estudiante: "Jonathan",
-  proyecto: "Por definir",
-  descripcion: "Escribe aquí en una frase qué hace tu proyecto y para quién es.",
+  proyecto: "AvisIA",
+  descripcion:
+    "Reportas tu ausencia una sola vez y AvisIA cruza tu horario y redacta un correo para cada profesor cuyas clases vas a perder.",
 };
