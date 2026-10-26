@@ -38,15 +38,15 @@ export const eventos = [
   { fecha: "2026-12-21", titulo: "Inicio de vacaciones de invierno", tipo: "Vacaciones" },
 ] as const;
 
-// Los correos usan ejemplo.com, un dominio que no pertenece a nadie.
+// Los correos usan example.com, un dominio reservado oficialmente para ejemplos.
 export const contactos = [
-  { nombre: "Profesor Prueba 1", cargo: "Matemáticas", correo: "profesor1@ejemplo.com", lugar: "Salón Prueba 101" },
-  { nombre: "Profesora Prueba 2", cargo: "Español", correo: "profesora2@ejemplo.com", lugar: "Salón Prueba 102" },
-  { nombre: "Profesor Prueba 3", cargo: "Ciencias", correo: "profesor3@ejemplo.com", lugar: "Laboratorio Prueba" },
-  { nombre: "Profesora Prueba 4", cargo: "Inglés", correo: "profesora4@ejemplo.com", lugar: "Salón Prueba 201" },
-  { nombre: "Coordinador Prueba", cargo: "Coordinación académica", correo: "coordinacion@ejemplo.com", lugar: "Coordinación Prueba" },
-  { nombre: "Persona Prueba de Enfermería", cargo: "Enfermería", correo: "enfermeria@ejemplo.com", lugar: "Enfermería Prueba" },
-  { nombre: "Persona Prueba de Control Escolar", cargo: "Control escolar", correo: "control@ejemplo.com", lugar: "Oficina Prueba 1" },
+  { nombre: "Profesor Prueba 1", cargo: "Matemáticas", correo: "profesor1@example.com", lugar: "Salón Prueba 101" },
+  { nombre: "Profesora Prueba 2", cargo: "Español", correo: "profesora2@example.com", lugar: "Salón Prueba 102" },
+  { nombre: "Profesor Prueba 3", cargo: "Ciencias", correo: "profesor3@example.com", lugar: "Laboratorio Prueba" },
+  { nombre: "Profesora Prueba 4", cargo: "Inglés", correo: "profesora4@example.com", lugar: "Salón Prueba 201" },
+  { nombre: "Coordinador Prueba", cargo: "Coordinación académica", correo: "coordinacion@example.com", lugar: "Coordinación Prueba" },
+  { nombre: "Persona Prueba de Enfermería", cargo: "Enfermería", correo: "enfermeria@example.com", lugar: "Enfermería Prueba" },
+  { nombre: "Persona Prueba de Control Escolar", cargo: "Control escolar", correo: "control@example.com", lugar: "Oficina Prueba 1" },
 ];
 
 // Por ahora son solo descripciones; los archivos reales van en DESPUES.md.
