@@ -13,7 +13,6 @@ export default function Page() {
   const anunciosRecientes = [...anuncios].sort((a, b) => b.fecha.localeCompare(a.fecha));
   const ultimoAnuncio = anunciosRecientes[0];
   const fechas = [...eventos].sort((a, b) => a.fecha.localeCompare(b.fecha)).slice(0, 5);
-  const horarioCorto = horarios.filter((h) => h.que !== "Inicio de clases");
   const coordinacion = contactos.find((c) => c.cargo === "Coordinación académica")!;
 
   return (
@@ -113,7 +112,7 @@ export default function Page() {
           <section className={anim.aparecer} style={retraso(8)}>
             <TituloBloque titulo="Horario del día" href="/camille/informacion" />
             <div className={`${tarjeta} grid grid-cols-3 divide-x divide-sky-50 dark:divide-sky-900/40`}>
-              {horarioCorto.map((h) => (
+              {horarios.map((h) => (
                 <div key={h.que} className="p-3 text-center">
                   <Icono nombre="reloj" className="mx-auto size-5 text-sky-500" />
                   <p className="mt-1 text-sm font-semibold">{h.cuando}</p>
