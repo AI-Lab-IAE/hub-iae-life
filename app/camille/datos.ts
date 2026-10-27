@@ -93,45 +93,31 @@ export const pisos = [
   },
 ];
 
-// Horario de secundaria. Las horas son las del timbre del colegio; las materias y los salones
-// son de ejemplo (cada grupo tiene su propio horario y no se publica el de nadie).
+// Horario de secundaria con las horas del timbre del colegio. No se ponen materias ni salones,
+// porque cada grupo tiene su propio horario.
 export const bloquesSecundaria = [
   { nombre: "Rezo", hora: "7:15 – 8:00 a. m.", tipo: "rezo" },
-  { nombre: "Periodo 2", hora: "8:05 – 8:45 a. m.", tipo: "clase" },
-  { nombre: "Periodo 3", hora: "8:50 – 9:30 a. m.", tipo: "clase" },
+  { nombre: "Período 2", hora: "8:05 – 8:45 a. m.", tipo: "clase" },
+  { nombre: "Período 3", hora: "8:50 – 9:30 a. m.", tipo: "clase" },
   { nombre: "Recreo", hora: "9:30 – 9:55 a. m.", tipo: "descanso" },
-  { nombre: "Periodo 4", hora: "9:55 – 10:35 a. m.", tipo: "clase" },
-  { nombre: "Periodo 5", hora: "10:40 – 11:20 a. m.", tipo: "clase" },
-  { nombre: "Periodo 6", hora: "11:25 a. m. – 12:05 p. m.", tipo: "clase" },
-  { nombre: "Periodo 7", hora: "12:10 – 12:50 p. m.", tipo: "clase" },
+  { nombre: "Período 4", hora: "9:55 – 10:35 a. m.", tipo: "clase" },
+  { nombre: "Período 5", hora: "10:40 – 11:20 a. m.", tipo: "clase" },
+  { nombre: "Período 6", hora: "11:25 a. m. – 12:05 p. m.", tipo: "clase" },
+  { nombre: "Período 7", hora: "12:10 – 12:50 p. m.", tipo: "clase" },
   { nombre: "Almuerzo", hora: "12:50 – 1:25 p. m.", tipo: "descanso" },
-  { nombre: "Periodo 9", hora: "1:30 – 2:05 p. m.", tipo: "clase" },
-  { nombre: "Periodo 10", hora: "2:10 – 2:50 p. m.", tipo: "clase" },
-  { nombre: "Periodo 11", hora: "2:55 – 3:30 p. m.", tipo: "clase" },
+  { nombre: "Período 9", hora: "1:30 – 2:05 p. m.", tipo: "clase" },
+  { nombre: "Período 10", hora: "2:10 – 2:50 p. m.", tipo: "clase" },
+  { nombre: "Período 11", hora: "2:55 – 3:30 p. m.", tipo: "clase" },
 ] as const;
 
-// Materias de ejemplo de cada día, en orden de periodo (sin contar rezo, recreo ni almuerzo).
-// El viernes la salida es a las 12:50 p. m., así que solo hay clases hasta el periodo 7.
+// Cuántas clases hay cada día. El viernes la salida es a las 12:50 p. m.: solo hasta el periodo 7.
 export const semanaSecundaria = [
-  { dia: "Lunes", corto: "Lun", materias: ["Matemáticas", "Ciencias", "Español", "Inglés", "Historia", "Arte", "Tecnología", "Educación Física", "Inglés"] },
-  { dia: "Martes", corto: "Mar", materias: ["Inglés", "Matemáticas", "Historia", "Ciencias", "Español", "Música", "Matemáticas", "Tecnología", "Español"] },
-  { dia: "Miércoles", corto: "Mié", materias: ["Ciencias", "Español", "Matemáticas", "Educación Física", "Inglés", "Historia", "Arte", "Ciencias", "Matemáticas"] },
-  { dia: "Jueves", corto: "Jue", materias: ["Historia", "Inglés", "Ciencias", "Matemáticas", "Tecnología", "Español", "Inglés", "Música", "Historia"] },
-  { dia: "Viernes", corto: "Vie", materias: ["Español", "Matemáticas", "Inglés", "Ciencias", "Educación Física", "Orientación"] },
+  { dia: "Lunes", corto: "Lun", clases: 9 },
+  { dia: "Martes", corto: "Mar", clases: 9 },
+  { dia: "Miércoles", corto: "Mié", clases: 9 },
+  { dia: "Jueves", corto: "Jue", clases: 9 },
+  { dia: "Viernes", corto: "Vie", clases: 6 },
 ];
-
-export const salonDeEjemplo: Record<string, string> = {
-  Matemáticas: "Salón Prueba 201",
-  Ciencias: "Laboratorio Prueba",
-  Español: "Salón Prueba 202",
-  Inglés: "Salón Prueba 101",
-  Historia: "Salón Prueba 102",
-  Arte: "Salón Prueba 201",
-  Música: "Salón Prueba 102",
-  Tecnología: "Sala de cómputo Prueba",
-  "Educación Física": "Patio Prueba A",
-  Orientación: "Biblioteca Prueba",
-};
 
 export const horarioSecundaria = {
   entrada: "7:15 a. m.",
