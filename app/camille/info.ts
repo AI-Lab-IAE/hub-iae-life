@@ -2,5 +2,5 @@
 export const info = {
   estudiante: "Camille",
   proyecto: "IAE School Guide",
-  descripcion: "Escribe aquí en una frase qué hace tu proyecto y para quién es.",
+  descripcion: "Reúne en un solo lugar el mapa, los contactos, los documentos, el calendario y los anuncios del IAE para que los estudiantes encuentren rápido lo que necesitan.",
 };
