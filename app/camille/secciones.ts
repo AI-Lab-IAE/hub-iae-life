@@ -2,37 +2,37 @@
 export const secciones = [
   {
     ruta: "mapa",
-    icono: "🗺️",
+    icono: "mapa",
     nombre: "Mapa",
     descripcion: "Encuentra salones y oficinas del colegio.",
   },
   {
     ruta: "contactos",
-    icono: "📞",
+    icono: "contactos",
     nombre: "Contactos",
     descripcion: "Profesores y personal del colegio.",
   },
   {
     ruta: "documentos",
-    icono: "📄",
+    icono: "documentos",
     nombre: "Documentos",
     descripcion: "Reglamentos, formatos y circulares.",
   },
   {
     ruta: "calendario",
-    icono: "📅",
+    icono: "calendario",
     nombre: "Calendario",
     descripcion: "Exámenes, vacaciones y eventos.",
   },
   {
     ruta: "anuncios",
-    icono: "📢",
+    icono: "anuncios",
     nombre: "Anuncios",
     descripcion: "Avisos importantes del colegio.",
   },
   {
     ruta: "informacion",
-    icono: "ℹ️",
+    icono: "informacion",
     nombre: "Información general",
     descripcion: "Horarios, reglas y servicios.",
   },

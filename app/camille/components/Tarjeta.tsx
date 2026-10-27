@@ -1,24 +1,25 @@
 import Link from "next/link";
+import { elevar, tarjeta, tocar } from "./estilos";
+import { Icono, type NombreIcono } from "./Icono";
 
 type Props = {
   ruta: string;
-  icono: string;
+  icono: NombreIcono;
   nombre: string;
   descripcion: string;
 };
 
-// Tarjeta de la página principal: lleva a una sección de la guía.
+// Tarjeta de acceso rápido de la página principal: lleva a una sección de la guía.
 export function Tarjeta({ ruta, icono, nombre, descripcion }: Props) {
   return (
-    <Link
-      href={`/camille/${ruta}`}
-      className="flex flex-col gap-2 rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-zinc-400 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-600"
-    >
-      <span className="text-3xl" aria-hidden="true">
-        {icono}
+    <Link href={`/camille/${ruta}`} className={`${tarjeta} ${elevar} ${tocar} group flex h-full flex-col gap-3 p-4`}>
+      <span className="flex size-11 items-center justify-center rounded-xl bg-sky-50 text-sky-600 transition duration-300 group-hover:scale-110 group-hover:bg-sky-500 group-hover:text-white dark:bg-sky-950 dark:text-sky-400">
+        <Icono nombre={icono} />
       </span>
-      <span className="font-semibold">{nombre}</span>
-      <span className="text-sm text-zinc-500 dark:text-zinc-400">{descripcion}</span>
+      <span>
+        <span className="block font-semibold">{nombre}</span>
+        <span className="mt-0.5 block text-sm text-slate-500 dark:text-slate-400">{descripcion}</span>
+      </span>
     </Link>
   );
 }
