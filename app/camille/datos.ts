@@ -93,58 +93,48 @@ export const pisos = [
   },
 ];
 
-// Bloques del día por nivel. Secundaria usa las horas del timbre del colegio (sin materias,
-// grupos ni salones). Primaria es un horario inventado de ejemplo.
+// Momentos generales del día por nivel. No se ponen materias ni periodos, porque cada grupo
+// tiene un horario distinto. "Por confirmar" = todavía falta el dato.
 // "soloLunesAJueves": el viernes la salida es más temprano y ese bloque no hay.
 export const horariosEscolares = [
   {
     nivel: "Primaria",
-    ejemplo: true,
-    entrada: "7:15 a. m.",
-    salida: "2:20 p. m.",
-    salidaViernes: "12:15 p. m.",
+    entrada: "Por confirmar",
+    salida: "Por confirmar",
+    salidaViernes: "Por confirmar",
     bloques: [
-      { nombre: "Rezo", hora: "7:15 – 8:00 a. m.", tipo: "rezo" },
-      { nombre: "Clase 1", hora: "8:00 – 8:45 a. m.", tipo: "clase" },
-      { nombre: "Clase 2", hora: "8:45 – 9:30 a. m.", tipo: "clase" },
-      { nombre: "Clase 3", hora: "9:30 – 10:15 a. m.", tipo: "clase" },
-      { nombre: "Recreo", hora: "10:15 – 10:45 a. m.", tipo: "descanso" },
-      { nombre: "Clase 4", hora: "10:45 – 11:30 a. m.", tipo: "clase" },
-      { nombre: "Clase 5", hora: "11:30 a. m. – 12:15 p. m.", tipo: "clase" },
-      { nombre: "Almuerzo", hora: "12:15 – 12:50 p. m.", tipo: "descanso", soloLunesAJueves: true },
-      { nombre: "Clase 6", hora: "12:50 – 1:35 p. m.", tipo: "clase", soloLunesAJueves: true },
-      { nombre: "Clase 7", hora: "1:35 – 2:20 p. m.", tipo: "clase", soloLunesAJueves: true },
+      { nombre: "Rezo", hora: "Por confirmar", tipo: "rezo" },
+      { nombre: "Clases", hora: "1.ª y 2.ª hora", tipo: "clase" },
+      { nombre: "Recreo", hora: "Después de la 2.ª hora", tipo: "descanso" },
+      { nombre: "Clases", hora: "Por confirmar", tipo: "clase" },
+      { nombre: "Almuerzo", hora: "12:05 – 12:50 p. m.", tipo: "descanso" },
+      { nombre: "Clases", hora: "Por confirmar", tipo: "clase" },
     ],
   },
   {
     nivel: "Secundaria",
-    ejemplo: false,
     entrada: "7:15 a. m.",
     salida: "3:30 p. m.",
     salidaViernes: "12:50 p. m.",
     bloques: [
       { nombre: "Rezo", hora: "7:15 – 8:00 a. m.", tipo: "rezo" },
-      { nombre: "Periodo 2", hora: "8:05 – 8:45 a. m.", tipo: "clase" },
-      { nombre: "Periodo 3", hora: "8:50 – 9:30 a. m.", tipo: "clase" },
+      { nombre: "Clases", hora: "8:05 – 9:30 a. m.", tipo: "clase" },
       { nombre: "Recreo", hora: "9:30 – 9:55 a. m.", tipo: "descanso" },
-      { nombre: "Periodo 4", hora: "9:55 – 10:35 a. m.", tipo: "clase" },
-      { nombre: "Periodo 5", hora: "10:40 – 11:20 a. m.", tipo: "clase" },
-      { nombre: "Periodo 6", hora: "11:25 a. m. – 12:05 p. m.", tipo: "clase" },
-      { nombre: "Periodo 7", hora: "12:10 – 12:50 p. m.", tipo: "clase" },
+      { nombre: "Clases", hora: "9:55 a. m. – 12:50 p. m.", tipo: "clase" },
       { nombre: "Almuerzo", hora: "12:50 – 1:25 p. m.", tipo: "descanso", soloLunesAJueves: true },
-      { nombre: "Periodo 9", hora: "1:30 – 2:05 p. m.", tipo: "clase", soloLunesAJueves: true },
-      { nombre: "Periodo 10", hora: "2:10 – 2:50 p. m.", tipo: "clase", soloLunesAJueves: true },
-      { nombre: "Periodo 11", hora: "2:55 – 3:30 p. m.", tipo: "clase", soloLunesAJueves: true },
+      { nombre: "Clases", hora: "1:30 – 3:30 p. m.", tipo: "clase", soloLunesAJueves: true },
     ],
   },
 ] as const satisfies readonly {
   nivel: string;
-  ejemplo: boolean;
   entrada: string;
   salida: string;
   salidaViernes: string;
   bloques: readonly { nombre: string; hora: string; tipo: "rezo" | "clase" | "descanso"; soloLunesAJueves?: boolean }[];
 }[];
+
+export const porConfirmar = "Por confirmar";
+
 
 
 export const reglas = [

@@ -4,7 +4,7 @@ import { Icono } from "./components/Icono";
 import { Tarjeta } from "./components/Tarjeta";
 import { TituloBloque } from "./components/TituloBloque";
 import { elevar, retraso, tarjeta, tocar } from "./components/estilos";
-import { anuncios, contactos, eventos, horariosEscolares } from "./datos";
+import { anuncios, contactos, eventos, horariosEscolares, porConfirmar } from "./datos";
 import { diaYMes, formatearFecha } from "./formato";
 import { info } from "./info";
 import { secciones } from "./secciones";
@@ -115,17 +115,25 @@ export default function Page() {
               {horariosEscolares.map((h) => (
                 <div key={h.nivel} className="flex items-center gap-3 p-3">
                   <Icono nombre="reloj" className="size-5 shrink-0 text-sky-500" />
-                  <span className="flex-1 text-sm font-medium">
-                    {h.nivel}
-                    {h.ejemplo && <span className="ml-1 text-xs font-normal text-amber-600 dark:text-amber-400">(ejemplo)</span>}
-                  </span>
-                  <span className="text-sm text-slate-600 tabular-nums dark:text-slate-300">
-                    {h.entrada} – {h.salida}
-                  </span>
+                  <span className="flex-1 text-sm font-medium">{h.nivel}</span>
+                  {h.entrada === porConfirmar ? (
+                    <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-500 dark:bg-slate-800 dark:text-slate-400">
+                      {porConfirmar}
+                    </span>
+                  ) : (
+                    <span className="text-sm text-slate-600 tabular-nums dark:text-slate-300">
+                      {h.entrada} – {h.salida}
+                    </span>
+                  )}
                 </div>
               ))}
               <p className="p-3 text-xs text-slate-500 dark:text-slate-400">
-                Viernes: salida a las {horariosEscolares.map((h) => `${h.salidaViernes} (${h.nivel.toLowerCase()})`).join(" y ")}.
+                Viernes: salida a las{" "}
+                {horariosEscolares
+                  .filter((h) => h.salidaViernes !== porConfirmar)
+                  .map((h) => `${h.salidaViernes} (${h.nivel.toLowerCase()})`)
+                  .join(" y ")}
+                . Puede cambiar según tu grupo.
               </p>
             </div>
           </section>
