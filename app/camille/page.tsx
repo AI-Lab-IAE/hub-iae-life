@@ -4,7 +4,7 @@ import { Icono } from "./components/Icono";
 import { Tarjeta } from "./components/Tarjeta";
 import { TituloBloque } from "./components/TituloBloque";
 import { elevar, retraso, tarjeta, tocar } from "./components/estilos";
-import { anuncios, contactos, eventos, horarios } from "./datos";
+import { anuncios, contactos, eventos, horariosEscolares } from "./datos";
 import { diaYMes, formatearFecha } from "./formato";
 import { info } from "./info";
 import { secciones } from "./secciones";
@@ -111,14 +111,22 @@ export default function Page() {
           {/* Horario del día */}
           <section className={anim.aparecer} style={retraso(8)}>
             <TituloBloque titulo="Horario del día" href="/camille/informacion" />
-            <div className={`${tarjeta} grid grid-cols-2 divide-x divide-sky-50 dark:divide-sky-900/40`}>
-              {horarios.map((h) => (
-                <div key={h.que} className="p-3 text-center">
-                  <Icono nombre="reloj" className="mx-auto size-5 text-sky-500" />
-                  <p className="mt-1 text-sm font-semibold">{h.cuando}</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">{h.que}</p>
+            <div className={`${tarjeta} divide-y divide-sky-50 dark:divide-sky-900/40`}>
+              {horariosEscolares.map((h) => (
+                <div key={h.nivel} className="flex items-center gap-3 p-3">
+                  <Icono nombre="reloj" className="size-5 shrink-0 text-sky-500" />
+                  <span className="flex-1 text-sm font-medium">
+                    {h.nivel}
+                    {h.ejemplo && <span className="ml-1 text-xs font-normal text-amber-600 dark:text-amber-400">(ejemplo)</span>}
+                  </span>
+                  <span className="text-sm text-slate-600 tabular-nums dark:text-slate-300">
+                    {h.entrada} – {h.salida}
+                  </span>
                 </div>
               ))}
+              <p className="p-3 text-xs text-slate-500 dark:text-slate-400">
+                Viernes: salida a las {horariosEscolares.map((h) => `${h.salidaViernes} (${h.nivel.toLowerCase()})`).join(" y ")}.
+              </p>
             </div>
           </section>
 

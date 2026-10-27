@@ -1,5 +1,6 @@
 import { EncabezadoSeccion } from "../components/EncabezadoSeccion";
-import { horarios, reglas, servicios } from "../datos";
+import { HorarioNiveles } from "../components/HorarioNiveles";
+import { reglas, servicios } from "../datos";
 
 const caja = "rounded-2xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900";
 
@@ -9,15 +10,8 @@ export default function Page() {
       <EncabezadoSeccion ruta="informacion" />
 
       <section className="mt-8">
-        <h2 className="text-lg font-semibold">🕒 Horarios</h2>
-        <dl className={`${caja} mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-sm`}>
-          {horarios.map((h) => (
-            <div key={h.que} className="contents">
-              <dt className="text-zinc-500">{h.que}</dt>
-              <dd className="font-medium">{h.cuando}</dd>
-            </div>
-          ))}
-        </dl>
+        <h2 className="mb-3 text-lg font-semibold">🕒 Horario del día</h2>
+        <HorarioNiveles />
       </section>
 
       <section className="mt-8">
