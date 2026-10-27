@@ -4,7 +4,7 @@ import { Icono } from "./components/Icono";
 import { Tarjeta } from "./components/Tarjeta";
 import { TituloBloque } from "./components/TituloBloque";
 import { elevar, retraso, tarjeta, tocar } from "./components/estilos";
-import { anuncios, contactos, eventos, horariosEscolares, porConfirmar } from "./datos";
+import { anuncios, contactos, eventos, horarioSecundaria } from "./datos";
 import { diaYMes, formatearFecha } from "./formato";
 import { info } from "./info";
 import { secciones } from "./secciones";
@@ -110,31 +110,19 @@ export default function Page() {
         <div className="flex flex-col gap-6">
           {/* Horario del día */}
           <section className={anim.aparecer} style={retraso(8)}>
-            <TituloBloque titulo="Horario del día" href="/camille/informacion" />
-            <div className={`${tarjeta} divide-y divide-sky-50 dark:divide-sky-900/40`}>
-              {horariosEscolares.map((h) => (
-                <div key={h.nivel} className="flex items-center gap-3 p-3">
-                  <Icono nombre="reloj" className="size-5 shrink-0 text-sky-500" />
-                  <span className="flex-1 text-sm font-medium">{h.nivel}</span>
-                  {h.entrada === porConfirmar ? (
-                    <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-500 dark:bg-slate-800 dark:text-slate-400">
-                      {porConfirmar}
-                    </span>
-                  ) : (
-                    <span className="text-sm text-slate-600 tabular-nums dark:text-slate-300">
-                      {h.entrada} – {h.salida}
-                    </span>
-                  )}
+            <TituloBloque titulo="Horario de secundaria" href="/camille/informacion" />
+            <div className={`${tarjeta} grid grid-cols-3 divide-x divide-sky-50 dark:divide-sky-900/40`}>
+              {[
+                { que: "Entrada", cuando: horarioSecundaria.entrada },
+                { que: "Salida", cuando: horarioSecundaria.salida },
+                { que: "Salida viernes", cuando: horarioSecundaria.salidaViernes },
+              ].map((h) => (
+                <div key={h.que} className="p-3 text-center">
+                  <Icono nombre="reloj" className="mx-auto size-5 text-sky-500" />
+                  <p className="mt-1 text-sm font-semibold tabular-nums">{h.cuando}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">{h.que}</p>
                 </div>
               ))}
-              <p className="p-3 text-xs text-slate-500 dark:text-slate-400">
-                Viernes: salida a las{" "}
-                {horariosEscolares
-                  .filter((h) => h.salidaViernes !== porConfirmar)
-                  .map((h) => `${h.salidaViernes} (${h.nivel.toLowerCase()})`)
-                  .join(" y ")}
-                . Puede cambiar según tu grupo.
-              </p>
             </div>
           </section>
 

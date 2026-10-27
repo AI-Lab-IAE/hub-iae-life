@@ -1,5 +1,5 @@
 import { EncabezadoSeccion } from "../components/EncabezadoSeccion";
-import { HorarioNiveles } from "../components/HorarioNiveles";
+import { HorarioSemana } from "../components/HorarioSemana";
 import { reglas, servicios } from "../datos";
 
 const caja = "rounded-2xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900";
@@ -10,8 +10,8 @@ export default function Page() {
       <EncabezadoSeccion ruta="informacion" />
 
       <section className="mt-8">
-        <h2 className="mb-3 text-lg font-semibold">🕒 Horario del día</h2>
-        <HorarioNiveles />
+        <h2 className="mb-3 text-lg font-semibold">🕒 Horario de secundaria</h2>
+        <HorarioSemana />
       </section>
 
       <section className="mt-8">

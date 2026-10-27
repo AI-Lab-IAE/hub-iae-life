@@ -7,3 +7,4 @@
 - Más datos de ejemplo (siempre inventados).
 - Con fechas reales, el Calendario debería ocultar los eventos que ya pasaron.
 - Horario de materias por grado (con materias y salones inventados, nunca los reales).
+- Horario de primaria (cuando estén las horas confirmadas).
