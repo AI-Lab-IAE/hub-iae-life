@@ -29,7 +29,7 @@ export const anuncios = [
 ];
 
 export const eventos = [
-  { fecha: "2026-11-02", titulo: "Día sin clases (ejemplo)", tipo: "Vacaciones" },
+  { fecha: "2026-11-02", titulo: "Día sin clases", tipo: "Vacaciones" },
   { fecha: "2026-11-10", titulo: "Feria de Ciencias de Prueba", tipo: "Evento" },
   { fecha: "2026-11-16", titulo: "Inicio de exámenes del segundo periodo", tipo: "Examen" },
   { fecha: "2026-11-20", titulo: "Fin de exámenes del segundo periodo", tipo: "Examen" },
@@ -51,7 +51,7 @@ export const contactos = [
 
 // Por ahora son solo descripciones; los archivos reales van en DESPUES.md.
 export const documentos = [
-  { titulo: "Reglamento escolar (ejemplo)", tipo: "Reglamento", descripcion: "Normas de convivencia, uniforme y puntualidad.", dondeSePide: "Coordinación Prueba" },
+  { titulo: "Reglamento escolar", tipo: "Reglamento", descripcion: "Normas de convivencia, uniforme y puntualidad.", dondeSePide: "Coordinación Prueba" },
   { titulo: "Formato de justificante de falta", tipo: "Formato", descripcion: "Se llena cuando faltas por enfermedad o un motivo familiar.", dondeSePide: "Control escolar" },
   { titulo: "Solicitud de constancia de estudios", tipo: "Formato", descripcion: "Para pedir una constancia que diga que eres estudiante del colegio.", dondeSePide: "Oficina Prueba 1" },
   { titulo: "Permiso de salida anticipada", tipo: "Formato", descripcion: "Para salir antes de la hora con autorización de tu familia.", dondeSePide: "Coordinación Prueba" },
@@ -94,10 +94,10 @@ export const pisos = [
 ];
 
 export const horarios = [
-  { que: "Entrada", cuando: "7:00 (ejemplo)" },
-  { que: "Inicio de clases", cuando: "7:15 (ejemplo)" },
-  { que: "Recreo", cuando: "10:00 a 10:30 (ejemplo)" },
-  { que: "Salida", cuando: "14:00 (ejemplo)" },
+  { que: "Entrada", cuando: "7:00" },
+  { que: "Inicio de clases", cuando: "7:15" },
+  { que: "Recreo", cuando: "10:00 a 10:30" },
+  { que: "Salida", cuando: "14:00" },
 ];
 
 export const reglas = [
@@ -109,8 +109,8 @@ export const reglas = [
 ];
 
 export const servicios = [
-  { nombre: "Biblioteca Prueba", detalle: "Préstamo de libros y espacio para estudiar.", horario: "7:30 a 15:00 (ejemplo)" },
-  { nombre: "Enfermería Prueba", detalle: "Primeros auxilios y atención si te sientes mal.", horario: "7:00 a 14:30 (ejemplo)" },
-  { nombre: "Cafetería Prueba", detalle: "Desayunos y comida durante el recreo.", horario: "7:00 a 14:00 (ejemplo)" },
-  { nombre: "Sala de cómputo Prueba", detalle: "Computadoras e impresión de tareas.", horario: "8:00 a 14:00 (ejemplo)" },
+  { nombre: "Biblioteca Prueba", detalle: "Préstamo de libros y espacio para estudiar.", horario: "7:30 a 15:00" },
+  { nombre: "Enfermería Prueba", detalle: "Primeros auxilios y atención si te sientes mal.", horario: "7:00 a 14:30" },
+  { nombre: "Cafetería Prueba", detalle: "Desayunos y comida durante el recreo.", horario: "7:00 a 14:00" },
+  { nombre: "Sala de cómputo Prueba", detalle: "Computadoras e impresión de tareas.", horario: "8:00 a 14:00" },
 ];
