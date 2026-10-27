@@ -95,7 +95,6 @@ export const pisos = [
 
 export const horarios = [
   { que: "Entrada", cuando: "8:00 a. m." },
-  { que: "Recreo", cuando: "10:00 a 10:30 a. m." },
   { que: "Salida", cuando: "3:30 p. m." },
 ];
 

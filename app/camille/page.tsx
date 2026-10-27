@@ -111,7 +111,7 @@ export default function Page() {
           {/* Horario del día */}
           <section className={anim.aparecer} style={retraso(8)}>
             <TituloBloque titulo="Horario del día" href="/camille/informacion" />
-            <div className={`${tarjeta} grid grid-cols-3 divide-x divide-sky-50 dark:divide-sky-900/40`}>
+            <div className={`${tarjeta} grid grid-cols-2 divide-x divide-sky-50 dark:divide-sky-900/40`}>
               {horarios.map((h) => (
                 <div key={h.que} className="p-3 text-center">
                   <Icono nombre="reloj" className="mx-auto size-5 text-sky-500" />
