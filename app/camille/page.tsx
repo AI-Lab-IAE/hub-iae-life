@@ -21,7 +21,7 @@ export default function Page() {
       <Bienvenida ultimoAnuncio={ultimoAnuncio} />
 
       <div className={`mt-4 flex justify-center ${anim.aparecer}`} style={retraso(1)}>
-        <span className="rounded-full bg-sky-100 px-3 py-1 text-xs font-medium text-sky-700 dark:bg-sky-950 dark:text-sky-300">
+        <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-900 dark:bg-blue-950 dark:text-blue-300">
           Los datos de esta guía son de ejemplo y ficticios
         </span>
       </div>
@@ -46,12 +46,12 @@ export default function Page() {
             const { dia, mes } = diaYMes(e.fecha);
             return (
               <li key={e.titulo} className={`${tarjeta} w-36 shrink-0 snap-start p-3 sm:w-auto`}>
-                <span className="flex size-12 flex-col items-center justify-center rounded-xl bg-sky-500 leading-none text-white shadow-sm shadow-sky-500/30">
+                <span className="flex size-12 flex-col items-center justify-center rounded-xl bg-blue-900 leading-none text-white shadow-sm shadow-blue-950/20">
                   <span className="text-lg font-bold">{dia}</span>
                   <span className="text-[10px] uppercase">{mes}</span>
                 </span>
                 <p className="mt-2 line-clamp-2 text-sm font-medium">{e.titulo}</p>
-                <p className="mt-1 text-xs text-sky-600 dark:text-sky-400">{e.tipo}</p>
+                <p className="mt-1 text-xs text-blue-900 dark:text-blue-400">{e.tipo}</p>
               </li>
             );
           })}
@@ -62,11 +62,11 @@ export default function Page() {
         {/* Anuncios recientes */}
         <section className={anim.aparecer} style={retraso(7)}>
           <TituloBloque titulo="Anuncios recientes" href="/camille/anuncios" />
-          <ul className={`${tarjeta} divide-y divide-sky-50 dark:divide-sky-900/40`}>
+          <ul className={`${tarjeta} divide-y divide-slate-100 dark:divide-slate-800`}>
             {anunciosRecientes.slice(0, 3).map((a) => (
               <li key={a.titulo} className="flex items-start gap-3 p-3">
                 <span
-                  className={`mt-1.5 size-2 shrink-0 rounded-full ${a.importante ? "bg-rose-500" : "bg-sky-300"}`}
+                  className={`mt-1.5 size-2 shrink-0 rounded-full ${a.importante ? "bg-rose-500" : "bg-blue-300"}`}
                   aria-hidden="true"
                 />
                 <span className="min-w-0">
@@ -85,14 +85,14 @@ export default function Page() {
           {/* Horario del día */}
           <section className={anim.aparecer} style={retraso(8)}>
             <TituloBloque titulo="Horario de secundaria" href="/camille/informacion" />
-            <div className={`${tarjeta} grid grid-cols-3 divide-x divide-sky-50 dark:divide-sky-900/40`}>
+            <div className={`${tarjeta} grid grid-cols-3 divide-x divide-slate-100 dark:divide-slate-800`}>
               {[
                 { que: "Entrada", cuando: horarioSecundaria.entrada },
                 { que: "Salida", cuando: horarioSecundaria.salida },
                 { que: "Salida viernes", cuando: horarioSecundaria.salidaViernes },
               ].map((h) => (
                 <div key={h.que} className="p-3 text-center">
-                  <Icono nombre="reloj" className="mx-auto size-5 text-sky-500" />
+                  <Icono nombre="reloj" className="mx-auto size-5 text-blue-700" />
                   <p className="mt-1 text-sm font-semibold tabular-nums">{h.cuando}</p>
                   <p className="text-xs text-slate-500 dark:text-slate-400">{h.que}</p>
                 </div>
@@ -106,7 +106,7 @@ export default function Page() {
               href={`mailto:${coordinacion.correo}`}
               className={`${tarjeta} ${elevar} ${tocar} flex items-center gap-3 p-4`}
             >
-              <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-sky-50 text-sky-600 dark:bg-sky-950 dark:text-sky-400">
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-900 dark:bg-blue-950 dark:text-blue-400">
                 <Icono nombre="correo" />
               </span>
               <span className="min-w-0 flex-1">

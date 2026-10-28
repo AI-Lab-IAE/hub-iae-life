@@ -23,15 +23,16 @@ export function Bienvenida({ ultimoAnuncio }: Props) {
 
   return (
     <section
-      className={`relative overflow-hidden rounded-3xl bg-linear-to-br from-sky-400 via-sky-500 to-sky-600 p-6 text-white shadow-lg shadow-sky-500/25 ${anim.aparecer}`}
+      className={`relative overflow-hidden rounded-3xl bg-linear-to-br from-blue-950 via-blue-900 to-indigo-900 p-6 text-white shadow-lg shadow-blue-950/20 ${anim.aparecer}`}
     >
       <span className="absolute -top-12 -right-10 size-44 rounded-full bg-white/10" aria-hidden="true" />
       <span className="absolute -bottom-16 -left-8 size-36 rounded-full bg-white/10" aria-hidden="true" />
 
       <div className="relative">
-        <p className="text-sm text-sky-100">{dia ? `${mayuscula(dia.nombre)}, ${formatearFecha(hoy!)}` : "Te damos la bienvenida"}</p>
+        <span className="mb-3 block h-1 w-10 rounded-full bg-amber-400" aria-hidden="true" />
+        <p className="text-sm text-blue-200">{dia ? `${mayuscula(dia.nombre)}, ${formatearFecha(hoy!)}` : "Te damos la bienvenida"}</p>
         <h1 className="mt-1 text-2xl font-bold sm:text-3xl">{perfil ? `¡Hola, ${perfil.nombre}!` : "Tu guía del IAE"}</h1>
-        <p className="mt-2 max-w-xl text-sm text-sky-50/90">{perfil ? descripcionPerfil(perfil) : info.descripcion}</p>
+        <p className="mt-2 max-w-xl text-sm text-blue-100/90">{perfil ? descripcionPerfil(perfil) : info.descripcion}</p>
 
         {/* Qué toca hoy: solo para secundaria, que es el horario que tenemos. */}
         {perfil && dia && esSecundaria(perfil) && (
@@ -46,7 +47,7 @@ export function Bienvenida({ ultimoAnuncio }: Props) {
         {listo && !perfil && (
           <Link
             href="/camille/perfil"
-            className={`${tocar} ${anim.aparecer} mt-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-sky-700 shadow-md hover:bg-sky-50`}
+            className={`${tocar} ${anim.aparecer} mt-4 inline-flex items-center gap-2 rounded-full bg-amber-400 px-4 py-2 text-sm font-semibold text-blue-950 shadow-md hover:bg-amber-300`}
           >
             <Icono nombre="perfil" className="size-4" /> Crear mi perfil
           </Link>
@@ -56,15 +57,15 @@ export function Bienvenida({ ultimoAnuncio }: Props) {
           href="/camille/anuncios"
           className={`${tocar} mt-5 flex items-center gap-3 rounded-2xl bg-white/15 p-3 ring-1 ring-white/20 backdrop-blur-sm hover:bg-white/25`}
         >
-          <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white text-sky-600">
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white text-blue-900">
             <Icono nombre="anuncios" className="size-5" />
           </span>
           <span className="min-w-0 flex-1">
-            <span className="block text-[11px] tracking-wide text-sky-100 uppercase">Último anuncio</span>
+            <span className="block text-[11px] tracking-wide text-blue-200 uppercase">Último anuncio</span>
             <span className="block truncate font-semibold">{ultimoAnuncio.titulo}</span>
-            <span className="block text-xs text-sky-100">{formatearFecha(ultimoAnuncio.fecha)}</span>
+            <span className="block text-xs text-blue-200">{formatearFecha(ultimoAnuncio.fecha)}</span>
           </span>
-          <Icono nombre="adelante" className="size-5 shrink-0 text-sky-100" />
+          <Icono nombre="adelante" className="size-5 shrink-0 text-blue-200" />
         </Link>
       </div>
     </section>

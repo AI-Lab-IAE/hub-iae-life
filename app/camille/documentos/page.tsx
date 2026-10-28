@@ -29,7 +29,7 @@ export default function Page() {
         <ol className="mt-3 flex flex-col gap-2.5">
           {pasos.map((paso, i) => (
             <li key={paso} className="flex items-center gap-3 text-sm">
-              <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-sky-500 text-xs font-bold text-white">
+              <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-blue-900 text-xs font-bold text-white">
                 {i + 1}
               </span>
               {paso}
@@ -46,13 +46,13 @@ export default function Page() {
             <ul className="grid gap-3 sm:grid-cols-2">
               {lista.map((d) => (
                 <li key={d.titulo} className={`${tarjeta} flex gap-3 p-4`}>
-                  <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-sky-50 text-sky-600 dark:bg-sky-950 dark:text-sky-400">
+                  <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-900 dark:bg-blue-950 dark:text-blue-400">
                     <Icono nombre="documentos" />
                   </span>
                   <span className="min-w-0">
                     <span className="block font-semibold">{d.titulo}</span>
                     <span className="mt-0.5 block text-sm text-slate-500 dark:text-slate-400">{d.descripcion}</span>
-                    <span className="mt-2 flex items-center gap-1.5 text-xs font-medium text-sky-700 dark:text-sky-300">
+                    <span className="mt-2 flex items-center gap-1.5 text-xs font-medium text-blue-900 dark:text-blue-300">
                       <Icono nombre="ubicacion" className="size-4" /> Dónde se pide: {d.dondeSePide}
                     </span>
                   </span>

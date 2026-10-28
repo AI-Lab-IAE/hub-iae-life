@@ -7,7 +7,7 @@ import { retraso, tarjeta, tocar } from "./estilos";
 
 const colores = {
   rezo: "bg-violet-400",
-  clase: "bg-sky-500",
+  clase: "bg-blue-900",
   descanso: "bg-amber-400",
 };
 
@@ -26,7 +26,7 @@ export function HorarioSemana() {
 
   return (
     <div>
-      <div role="tablist" className="grid grid-cols-5 gap-1 rounded-xl bg-sky-100/70 p-1 dark:bg-sky-950">
+      <div role="tablist" className="grid grid-cols-5 gap-1 rounded-xl bg-blue-100/70 p-1 dark:bg-blue-950">
         {semanaSecundaria.map((d, i) => (
           <button
             key={d.dia}
@@ -36,8 +36,8 @@ export function HorarioSemana() {
             onClick={() => setElegido(i)}
             className={`${tocar} rounded-lg py-2 text-sm font-semibold ${
               i === elegido
-                ? "bg-white text-sky-700 shadow-sm dark:bg-slate-900 dark:text-sky-300"
-                : "text-slate-500 hover:text-sky-700 dark:text-slate-400"
+                ? "bg-white text-blue-900 shadow-sm dark:bg-slate-900 dark:text-blue-300"
+                : "text-slate-500 hover:text-blue-900 dark:text-slate-400"
             }`}
           >
             {d.corto}
@@ -50,11 +50,11 @@ export function HorarioSemana() {
         <p className="bg-amber-50 px-4 py-2 text-xs text-amber-800 dark:bg-amber-950 dark:text-amber-200">
           Cada grupo tiene sus propias materias; aquí solo van las horas de clase.
         </p>
-        <ol className="divide-y divide-sky-50 dark:divide-sky-900/40">
+        <ol className="divide-y divide-slate-100 dark:divide-slate-800">
           {filas.map((b, i) => (
             <li
               key={b.nombre}
-              className={`flex items-center gap-3 px-4 py-2.5 ${anim.aparecer} ${b.clase ? "" : "bg-sky-50/50 dark:bg-sky-950/30"}`}
+              className={`flex items-center gap-3 px-4 py-2.5 ${anim.aparecer} ${b.clase ? "" : "bg-blue-50/50 dark:bg-blue-950/30"}`}
               style={retraso(i * 0.5)}
             >
               <span className={`h-9 w-1 shrink-0 rounded-full ${colores[b.tipo]}`} aria-hidden="true" />
@@ -68,8 +68,8 @@ export function HorarioSemana() {
             </li>
           ))}
         </ol>
-        <p className="flex items-center justify-between gap-3 border-t border-sky-100 px-4 py-3 text-sm dark:border-sky-900/60">
-          <span className="font-semibold text-sky-700 dark:text-sky-300">Salida</span>
+        <p className="flex items-center justify-between gap-3 border-t border-slate-200 px-4 py-3 text-sm dark:border-slate-800">
+          <span className="font-semibold text-blue-900 dark:text-blue-300">Salida</span>
           <span className="tabular-nums">{esViernes ? horarioSecundaria.salidaViernes : horarioSecundaria.salida}</span>
         </p>
       </div>

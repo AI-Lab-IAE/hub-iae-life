@@ -6,7 +6,7 @@ export function TituloBloque({ titulo, href }: { titulo: string; href?: string }
     <div className="mb-3 flex items-baseline justify-between">
       <h2 className="text-xs font-semibold tracking-wider text-slate-500 uppercase dark:text-slate-400">{titulo}</h2>
       {href && (
-        <Link href={href} className="text-sm font-medium text-sky-600 hover:text-sky-700 dark:text-sky-400">
+        <Link href={href} className="text-sm font-medium text-blue-900 hover:text-blue-900 dark:text-blue-400">
           Ver todo
         </Link>
       )}

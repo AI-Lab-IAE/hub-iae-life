@@ -33,7 +33,7 @@ export function ListaContactos() {
           value={busqueda}
           onChange={(e) => setBusqueda(e.target.value)}
           placeholder="Buscar por nombre, materia u oficina"
-          className="w-full rounded-2xl border border-sky-100 bg-white py-3 pr-4 pl-11 shadow-sm shadow-sky-100/60 outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-100 dark:border-sky-900/60 dark:bg-slate-900 dark:shadow-none dark:focus:ring-sky-950"
+          className="w-full rounded-2xl border border-slate-200 bg-white py-3 pr-4 pl-11 shadow-sm shadow-slate-200/60 outline-none focus:border-blue-400 focus:ring-4 focus:ring-blue-100 dark:border-slate-800 dark:bg-slate-900 dark:shadow-none dark:focus:ring-blue-950"
         />
       </label>
 
@@ -50,12 +50,12 @@ export function ListaContactos() {
           {visibles.map((c, i) => (
             <li key={c.correo} className={`${tarjeta} ${elevar} flex flex-col p-4 transition ${anim.aparecer}`} style={retraso(i * 0.5)}>
               <div className="flex items-center gap-3">
-                <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-sky-300 to-sky-500 font-bold text-white">
+                <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-blue-800 to-blue-950 font-bold text-white">
                   {inicialesContacto(c.nombre)}
                 </span>
                 <span className="min-w-0">
                   <span className="block truncate font-semibold">{c.nombre}</span>
-                  <span className="block text-sm text-sky-700 dark:text-sky-300">{c.cargo}</span>
+                  <span className="block text-sm text-blue-900 dark:text-blue-300">{c.cargo}</span>
                 </span>
               </div>
               <p className="mt-3 flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
@@ -66,7 +66,7 @@ export function ListaContactos() {
               </p>
               <a
                 href={`mailto:${c.correo}`}
-                className={`${tocar} mt-4 flex items-center justify-center gap-2 rounded-xl bg-sky-50 py-2.5 text-sm font-semibold text-sky-700 hover:bg-sky-500 hover:text-white dark:bg-sky-950 dark:text-sky-300`}
+                className={`${tocar} mt-4 flex items-center justify-center gap-2 rounded-xl bg-blue-50 py-2.5 text-sm font-semibold text-blue-900 hover:bg-blue-900 hover:text-white dark:bg-blue-950 dark:text-blue-300`}
               >
                 <Icono nombre="correo" className="size-4" /> Escribir correo
               </a>

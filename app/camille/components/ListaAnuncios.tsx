@@ -31,9 +31,9 @@ export function ListaAnuncios() {
           const { dia, mes } = diaYMes(a.fecha);
           return (
             <li key={a.titulo} className={anim.aparecer} style={retraso(i)}>
-              <details className={`${tarjeta} group overflow-hidden open:ring-2 open:ring-sky-200 dark:open:ring-sky-900`}>
+              <details className={`${tarjeta} group overflow-hidden open:ring-2 open:ring-blue-200 dark:open:ring-blue-900`}>
                 <summary className="flex cursor-pointer list-none items-start gap-3 p-4 [&::-webkit-details-marker]:hidden">
-                  <span className="flex size-12 shrink-0 flex-col items-center justify-center rounded-xl bg-sky-50 leading-none text-sky-700 dark:bg-sky-950 dark:text-sky-300">
+                  <span className="flex size-12 shrink-0 flex-col items-center justify-center rounded-xl bg-blue-50 leading-none text-blue-900 dark:bg-blue-950 dark:text-blue-300">
                     <span className="text-lg font-bold">{dia}</span>
                     <span className="text-[10px] uppercase">{mes}</span>
                   </span>
@@ -48,7 +48,7 @@ export function ListaAnuncios() {
                   </span>
                   <Icono nombre="adelante" className="mt-1 size-5 shrink-0 text-slate-400 transition group-open:rotate-90" />
                 </summary>
-                <div className="border-t border-sky-50 bg-sky-50/50 px-4 py-3 text-sm dark:border-sky-900/40 dark:bg-sky-950/30">
+                <div className="border-t border-slate-100 bg-blue-50/50 px-4 py-3 text-sm dark:border-slate-800 dark:bg-blue-950/30">
                   <p>{a.detalle}</p>
                   <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">Publicado el {formatearFecha(a.fecha)}</p>
                 </div>
