@@ -12,8 +12,8 @@ type Tipo = (typeof eventos)[number]["tipo"];
 
 const estilos: Record<Tipo, { fecha: string; etiqueta: string; plural: string }> = {
   Examen: {
-    fecha: "bg-blue-900 text-white",
-    etiqueta: "bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-200",
+    fecha: "bg-indigo-600 text-white",
+    etiqueta: "bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-200",
     plural: "Exámenes",
   },
   Evento: {
@@ -76,7 +76,7 @@ export function ListaEventos() {
                       <span className="mt-1 flex flex-wrap items-center gap-2">
                         <span className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${estilos[e.tipo].etiqueta}`}>{e.tipo}</span>
                         {faltan != null && (
-                          <span className="text-xs font-medium text-blue-900 dark:text-blue-400">{textoFaltan(faltan)}</span>
+                          <span className="text-xs font-medium text-indigo-700 dark:text-indigo-400">{textoFaltan(faltan)}</span>
                         )}
                       </span>
                     </span>

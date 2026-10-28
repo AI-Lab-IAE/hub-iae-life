@@ -20,12 +20,12 @@ export function BarraPestanas() {
                 href={p.href}
                 aria-current={activa ? "page" : undefined}
                 className={`flex flex-col items-center gap-0.5 pt-2 pb-2 text-[11px] font-medium transition active:scale-90 ${
-                  activa ? "font-semibold text-blue-950 dark:text-blue-200" : "text-slate-400 dark:text-slate-500"
+                  activa ? "font-semibold text-indigo-700 dark:text-indigo-300" : "text-slate-400 dark:text-slate-500"
                 }`}
               >
                 <span
                   className={`flex h-7 w-12 items-center justify-center rounded-full transition duration-300 ${
-                    activa ? "bg-blue-950 text-amber-300 shadow-sm shadow-blue-950/20 dark:bg-blue-900" : ""
+                    activa ? "bg-indigo-600 text-white shadow-sm shadow-indigo-500/30" : ""
                   }`}
                 >
                   <Icono nombre={p.icono} className="size-5" />

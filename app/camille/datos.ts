@@ -100,19 +100,20 @@ export const pisos = [
 
 // Horario de secundaria con las horas del timbre del colegio. No se ponen materias ni salones,
 // porque cada grupo tiene su propio horario.
+// "desde" y "hasta" van en formato de 24 horas para saber qué bloque toca ahora.
 export const bloquesSecundaria = [
-  { nombre: "Rezo", hora: "7:15 – 8:00 a. m.", tipo: "rezo" },
-  { nombre: "Período 2", hora: "8:05 – 8:45 a. m.", tipo: "clase" },
-  { nombre: "Período 3", hora: "8:50 – 9:30 a. m.", tipo: "clase" },
-  { nombre: "Recreo", hora: "9:30 – 9:55 a. m.", tipo: "descanso" },
-  { nombre: "Período 4", hora: "9:55 – 10:35 a. m.", tipo: "clase" },
-  { nombre: "Período 5", hora: "10:40 – 11:20 a. m.", tipo: "clase" },
-  { nombre: "Período 6", hora: "11:25 a. m. – 12:05 p. m.", tipo: "clase" },
-  { nombre: "Período 7", hora: "12:10 – 12:50 p. m.", tipo: "clase" },
-  { nombre: "Almuerzo", hora: "12:50 – 1:25 p. m.", tipo: "descanso" },
-  { nombre: "Período 9", hora: "1:30 – 2:05 p. m.", tipo: "clase" },
-  { nombre: "Período 10", hora: "2:10 – 2:50 p. m.", tipo: "clase" },
-  { nombre: "Período 11", hora: "2:55 – 3:30 p. m.", tipo: "clase" },
+  { nombre: "Rezo", hora: "7:15 – 8:00 a. m.", tipo: "rezo", desde: "07:15", hasta: "08:00" },
+  { nombre: "Período 2", hora: "8:05 – 8:45 a. m.", tipo: "clase", desde: "08:05", hasta: "08:45" },
+  { nombre: "Período 3", hora: "8:50 – 9:30 a. m.", tipo: "clase", desde: "08:50", hasta: "09:30" },
+  { nombre: "Recreo", hora: "9:30 – 9:55 a. m.", tipo: "descanso", desde: "09:30", hasta: "09:55" },
+  { nombre: "Período 4", hora: "9:55 – 10:35 a. m.", tipo: "clase", desde: "09:55", hasta: "10:35" },
+  { nombre: "Período 5", hora: "10:40 – 11:20 a. m.", tipo: "clase", desde: "10:40", hasta: "11:20" },
+  { nombre: "Período 6", hora: "11:25 a. m. – 12:05 p. m.", tipo: "clase", desde: "11:25", hasta: "12:05" },
+  { nombre: "Período 7", hora: "12:10 – 12:50 p. m.", tipo: "clase", desde: "12:10", hasta: "12:50" },
+  { nombre: "Almuerzo", hora: "12:50 – 1:25 p. m.", tipo: "descanso", desde: "12:50", hasta: "13:25" },
+  { nombre: "Período 9", hora: "1:30 – 2:05 p. m.", tipo: "clase", desde: "13:30", hasta: "14:05" },
+  { nombre: "Período 10", hora: "2:10 – 2:50 p. m.", tipo: "clase", desde: "14:10", hasta: "14:50" },
+  { nombre: "Período 11", hora: "2:55 – 3:30 p. m.", tipo: "clase", desde: "14:55", hasta: "15:30" },
 ] as const;
 
 // Cuántas clases hay cada día. El viernes la salida es a las 12:50 p. m.: solo hasta el periodo 7.

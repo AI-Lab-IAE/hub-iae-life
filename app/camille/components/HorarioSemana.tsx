@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import anim from "../animaciones.module.css";
-import { bloquesSecundaria, horarioSecundaria, semanaSecundaria } from "../datos";
+import { horarioSecundaria, semanaSecundaria } from "../datos";
+import { filasDelDia } from "./horario";
 import { retraso, tarjeta, tocar } from "./estilos";
 
 const colores = {
   rezo: "bg-violet-400",
-  clase: "bg-blue-900",
+  clase: "bg-indigo-600",
   descanso: "bg-amber-400",
 };
 
@@ -17,16 +18,11 @@ export function HorarioSemana() {
   const dia = semanaSecundaria[elegido];
   const esViernes = dia.dia === "Viernes";
 
-  // Numera las clases del día (Clase número 1, 2, 3...) y quita las que no hay ese día.
-  let numero = 0;
-  const filas = bloquesSecundaria
-    .map((b) => (b.tipo === "clase" ? { ...b, clase: ++numero } : { ...b, clase: undefined }))
-    .filter((b) => b.clase === undefined || b.clase <= dia.clases)
-    .filter((b) => !(esViernes && b.nombre === "Almuerzo"));
+  const filas = filasDelDia(elegido);
 
   return (
     <div>
-      <div role="tablist" className="grid grid-cols-5 gap-1 rounded-xl bg-blue-100/70 p-1 dark:bg-blue-950">
+      <div role="tablist" className="grid grid-cols-5 gap-1 rounded-xl bg-indigo-100/70 p-1 dark:bg-indigo-950">
         {semanaSecundaria.map((d, i) => (
           <button
             key={d.dia}
@@ -36,8 +32,8 @@ export function HorarioSemana() {
             onClick={() => setElegido(i)}
             className={`${tocar} rounded-lg py-2 text-sm font-semibold ${
               i === elegido
-                ? "bg-white text-blue-900 shadow-sm dark:bg-slate-900 dark:text-blue-300"
-                : "text-slate-500 hover:text-blue-900 dark:text-slate-400"
+                ? "bg-white text-indigo-700 shadow-sm dark:bg-slate-900 dark:text-indigo-300"
+                : "text-slate-500 hover:text-indigo-700 dark:text-slate-400"
             }`}
           >
             {d.corto}
@@ -54,7 +50,7 @@ export function HorarioSemana() {
           {filas.map((b, i) => (
             <li
               key={b.nombre}
-              className={`flex items-center gap-3 px-4 py-2.5 ${anim.aparecer} ${b.clase ? "" : "bg-blue-50/50 dark:bg-blue-950/30"}`}
+              className={`flex items-center gap-3 px-4 py-2.5 ${anim.aparecer} ${b.clase ? "" : "bg-indigo-50/50 dark:bg-indigo-950/30"}`}
               style={retraso(i * 0.5)}
             >
               <span className={`h-9 w-1 shrink-0 rounded-full ${colores[b.tipo]}`} aria-hidden="true" />
@@ -69,7 +65,7 @@ export function HorarioSemana() {
           ))}
         </ol>
         <p className="flex items-center justify-between gap-3 border-t border-slate-200 px-4 py-3 text-sm dark:border-slate-800">
-          <span className="font-semibold text-blue-900 dark:text-blue-300">Salida</span>
+          <span className="font-semibold text-indigo-700 dark:text-indigo-300">Salida</span>
           <span className="tabular-nums">{esViernes ? horarioSecundaria.salidaViernes : horarioSecundaria.salida}</span>
         </p>
       </div>

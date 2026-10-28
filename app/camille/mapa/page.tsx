@@ -11,7 +11,7 @@ const tiposLugar: Record<string, { icono: NombreIcono; color: string }> = {
   Oficina: { icono: "maletin", color: "bg-violet-100 text-violet-700 dark:bg-violet-950 dark:text-violet-300" },
   Servicio: { icono: "campana", color: "bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300" },
   Exterior: { icono: "arbol", color: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300" },
-  Salón: { icono: "libro", color: "bg-blue-100 text-blue-900 dark:bg-blue-950 dark:text-blue-300" },
+  Salón: { icono: "libro", color: "bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300" },
 };
 
 // "Planta baja" → "PB", "Primer piso" → "1", "Segundo piso" → "2".
@@ -38,8 +38,8 @@ export default function Page() {
           .reverse()
           .map((piso, i) => (
             <section key={piso.nombre} className={`${tarjeta} overflow-hidden ${anim.aparecer}`} style={retraso(i + 2)}>
-              <h2 className="flex items-center gap-3 border-b border-slate-100 bg-blue-50/60 px-4 py-3 font-semibold dark:border-slate-800 dark:bg-blue-950/40">
-                <span className="flex size-8 items-center justify-center rounded-lg bg-blue-900 text-sm font-bold text-white">
+              <h2 className="flex items-center gap-3 border-b border-slate-100 bg-indigo-50/60 px-4 py-3 font-semibold dark:border-slate-800 dark:bg-indigo-950/40">
+                <span className="flex size-8 items-center justify-center rounded-lg bg-indigo-600 text-sm font-bold text-white">
                   {piso.numero}
                 </span>
                 {piso.nombre}

@@ -2,37 +2,30 @@
 
 import Link from "next/link";
 import anim from "../animaciones.module.css";
-import { formatearFecha } from "../formato";
 import { info } from "../info";
 import { resumenDelDia, useHoy } from "./hoy";
 import { tocar } from "./estilos";
 import { Icono } from "./Icono";
 import { descripcionPerfil, esSecundaria, usePerfil } from "./perfil";
 
-// "miércoles" → "Miércoles"
-const mayuscula = (texto: string) => texto.charAt(0).toUpperCase() + texto.slice(1);
-
-type Props = { ultimoAnuncio: { titulo: string; fecha: string } };
-
-// Tarjeta grande del inicio. Con perfil saluda por nombre y dice qué toca hoy;
+// Tarjeta de saludo del inicio. Con perfil saluda por nombre y dice qué toca hoy;
 // sin perfil invita a crearlo.
-export function Bienvenida({ ultimoAnuncio }: Props) {
+export function Bienvenida() {
   const { listo, perfil } = usePerfil();
   const hoy = useHoy();
   const dia = hoy ? resumenDelDia(hoy) : null;
 
   return (
     <section
-      className={`relative overflow-hidden rounded-3xl bg-linear-to-br from-blue-950 via-blue-900 to-indigo-900 p-6 text-white shadow-lg shadow-blue-950/20 ${anim.aparecer}`}
+      className={`relative overflow-hidden rounded-3xl bg-linear-to-br from-indigo-500 via-indigo-600 to-indigo-700 p-5 text-white shadow-lg sm:p-6 shadow-indigo-500/25 ${anim.aparecer}`}
     >
       <span className="absolute -top-12 -right-10 size-44 rounded-full bg-white/10" aria-hidden="true" />
       <span className="absolute -bottom-16 -left-8 size-36 rounded-full bg-white/10" aria-hidden="true" />
 
       <div className="relative">
-        <span className="mb-3 block h-1 w-10 rounded-full bg-amber-400" aria-hidden="true" />
-        <p className="text-sm text-blue-200">{dia ? `${mayuscula(dia.nombre)}, ${formatearFecha(hoy!)}` : "Te damos la bienvenida"}</p>
+        <p className="text-sm text-indigo-200">{perfil ? "Te damos la bienvenida" : "Instituto Alberto Einstein"}</p>
         <h1 className="mt-1 text-2xl font-bold sm:text-3xl">{perfil ? `¡Hola, ${perfil.nombre}!` : "Tu guía del IAE"}</h1>
-        <p className="mt-2 max-w-xl text-sm text-blue-100/90">{perfil ? descripcionPerfil(perfil) : info.descripcion}</p>
+        <p className="mt-2 max-w-xl text-sm text-indigo-100/90">{perfil ? descripcionPerfil(perfil) : info.descripcion}</p>
 
         {/* Qué toca hoy: solo para secundaria, que es el horario que tenemos. */}
         {perfil && dia && esSecundaria(perfil) && (
@@ -47,26 +40,12 @@ export function Bienvenida({ ultimoAnuncio }: Props) {
         {listo && !perfil && (
           <Link
             href="/camille/perfil"
-            className={`${tocar} ${anim.aparecer} mt-4 inline-flex items-center gap-2 rounded-full bg-amber-400 px-4 py-2 text-sm font-semibold text-blue-950 shadow-md hover:bg-amber-300`}
+            className={`${tocar} ${anim.aparecer} mt-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-indigo-700 shadow-md hover:bg-indigo-50`}
           >
             <Icono nombre="perfil" className="size-4" /> Crear mi perfil
           </Link>
         )}
 
-        <Link
-          href="/camille/anuncios"
-          className={`${tocar} mt-5 flex items-center gap-3 rounded-2xl bg-white/15 p-3 ring-1 ring-white/20 backdrop-blur-sm hover:bg-white/25`}
-        >
-          <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white text-blue-900">
-            <Icono nombre="anuncios" className="size-5" />
-          </span>
-          <span className="min-w-0 flex-1">
-            <span className="block text-[11px] tracking-wide text-blue-200 uppercase">Último anuncio</span>
-            <span className="block truncate font-semibold">{ultimoAnuncio.titulo}</span>
-            <span className="block text-xs text-blue-200">{formatearFecha(ultimoAnuncio.fecha)}</span>
-          </span>
-          <Icono nombre="adelante" className="size-5 shrink-0 text-blue-200" />
-        </Link>
       </div>
     </section>
   );

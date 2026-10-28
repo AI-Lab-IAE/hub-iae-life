@@ -16,6 +16,22 @@ export function useHoy() {
   return useSyncExternalStore(sinCambios, fechaLocal, () => null);
 }
 
+// Revisa la hora cada 30 segundos.
+function cadaMedioMinuto(aviso: () => void) {
+  const id = setInterval(aviso, 30_000);
+  return () => clearInterval(id);
+}
+
+function minutosAhora() {
+  const d = new Date();
+  return d.getHours() * 60 + d.getMinutes();
+}
+
+// Minutos desde la medianoche en este dispositivo (null en el servidor).
+export function useAhora() {
+  return useSyncExternalStore(cadaMedioMinuto, minutosAhora, () => null);
+}
+
 // Días que faltan desde hoy hasta una fecha (negativo si ya pasó).
 export function diasHasta(hoy: string, fecha: string) {
   const dia = 24 * 60 * 60 * 1000;

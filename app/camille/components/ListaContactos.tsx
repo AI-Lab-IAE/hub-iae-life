@@ -27,7 +27,7 @@ export function ListaContactos() {
           value={busqueda}
           onChange={(e) => setBusqueda(e.target.value)}
           placeholder="Buscar por nombre, materia u oficina"
-          className="w-full rounded-2xl border border-slate-200 bg-white py-3 pr-4 pl-11 shadow-sm shadow-slate-200/60 outline-none focus:border-blue-400 focus:ring-4 focus:ring-blue-100 dark:border-slate-800 dark:bg-slate-900 dark:shadow-none dark:focus:ring-blue-950"
+          className="w-full rounded-2xl border border-slate-200 bg-white py-3 pr-4 pl-11 shadow-sm shadow-slate-200/60 outline-none focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100 dark:border-slate-800 dark:bg-slate-900 dark:shadow-none dark:focus:ring-indigo-950"
         />
       </label>
 
@@ -59,7 +59,7 @@ export function ListaContactos() {
                 </span>
                 <a
                   href={`mailto:${c.correo}`}
-                  className="flex items-center gap-1.5 rounded text-blue-800 hover:underline focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none dark:text-blue-300"
+                  className="flex items-center gap-1.5 rounded text-indigo-700 hover:underline focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none dark:text-indigo-300"
                 >
                   <Icono nombre="correo" className="size-3.5 shrink-0" />
                   <span className="break-all">{c.correo}</span>

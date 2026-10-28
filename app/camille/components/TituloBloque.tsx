@@ -4,9 +4,9 @@ import Link from "next/link";
 export function TituloBloque({ titulo, href }: { titulo: string; href?: string }) {
   return (
     <div className="mb-3 flex items-baseline justify-between">
-      <h2 className="text-xs font-semibold tracking-wider text-slate-500 uppercase dark:text-slate-400">{titulo}</h2>
+      <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">{titulo}</h2>
       {href && (
-        <Link href={href} className="text-sm font-medium text-blue-900 hover:text-blue-900 dark:text-blue-400">
+        <Link href={href} className="text-sm font-medium text-indigo-700 hover:text-indigo-700 dark:text-indigo-400">
           Ver todo
         </Link>
       )}

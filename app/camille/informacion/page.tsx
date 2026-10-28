@@ -36,13 +36,13 @@ export default function Page() {
         <ul className="grid gap-3 sm:grid-cols-2">
           {servicios.map((s) => (
             <li key={s.nombre} className={`${tarjeta} flex gap-3 p-4`}>
-              <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-900 dark:bg-blue-950 dark:text-blue-400">
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-400">
                 <Icono nombre="campana" />
               </span>
               <span className="min-w-0">
                 <span className="block font-semibold">{s.nombre}</span>
                 <span className="mt-0.5 block text-sm text-slate-500 dark:text-slate-400">{s.detalle}</span>
-                <span className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-900 dark:bg-blue-950 dark:text-blue-300">
+                <span className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">
                   <Icono nombre="reloj" className="size-3.5" /> {s.horario}
                 </span>
               </span>

@@ -2,71 +2,66 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { info } from "../info";
+import { formatearFecha } from "../formato";
 import { secciones } from "../secciones";
 import { Avatar } from "./Avatar";
+import { useHoy } from "./hoy";
 import { Icono } from "./Icono";
 import { usePerfil } from "./perfil";
-import { pestanas } from "./pestanas";
 
-// Barra fija de arriba: logo en el inicio, flecha para regresar dentro de una sección
-// y el círculo del perfil a la derecha.
+// Barra de arriba: la fecha de hoy en el inicio (o el nombre de la sección con la flecha
+// para regresar) y, a la derecha, una cápsula con el nombre y el círculo del perfil.
 export function BarraSuperior() {
   const ruta = usePathname();
   const { perfil } = usePerfil();
+  const hoy = useHoy();
   const enPerfil = ruta === "/camille/perfil";
   const titulo = enPerfil ? "Mi perfil" : secciones.find((s) => ruta === `/camille/${s.ruta}`)?.nombre;
 
-  return (
-    <header className="sticky top-0 z-20 border-b-2 border-amber-400 bg-blue-950 text-white shadow-md shadow-blue-950/20">
-      <div className="mx-auto flex h-16 w-full max-w-4xl items-center gap-3 px-4">
-        {titulo ? (
-          <Link
-            href="/camille"
-            aria-label="Volver al inicio"
-            className="-ml-2 flex size-9 items-center justify-center rounded-full text-white transition hover:bg-white/10 active:scale-90"
-          >
-            <Icono nombre="atras" />
-          </Link>
-        ) : (
-          // Espacio para el logo del IAE: se cambia por la imagen oficial cuando el coordinador lo autorice.
-          <span className="flex size-10 items-center justify-center rounded-xl border border-amber-400/70 bg-white/5 font-serif text-sm font-bold tracking-wide text-amber-300">
-            IAE
-          </span>
-        )}
-        <span className="min-w-0 truncate leading-tight">
-          <span className="block font-semibold tracking-tight">{titulo ?? info.proyecto}</span>
-          <span className="block text-[11px] tracking-wide text-blue-200 uppercase">
-            {titulo ? info.proyecto : "Instituto Alberto Einstein"}
-          </span>
-        </span>
+  const dia = hoy ? new Date(`${hoy}T12:00:00`).toLocaleDateString("es-PA", { weekday: "long" }) : "";
+  const fecha = hoy ? formatearFecha(hoy).replace(/ de \d{4}$/, "") : "";
 
-        {/* En computadora, las pestañas van aquí arriba. Perfil se abre con el círculo. */}
-        <nav className="ml-auto hidden gap-1 sm:flex">
-          {pestanas
-            .filter((p) => p.href !== "/camille/perfil")
-            .map((p) => {
-              const activa = ruta === p.href;
-              return (
-                <Link
-                  key={p.href}
-                  href={p.href}
-                  className={`rounded-full px-3 py-1.5 text-sm font-medium transition ${
-                    activa ? "bg-amber-400 text-blue-950" : "text-blue-100 hover:bg-white/10 hover:text-white"
-                  }`}
-                >
-                  {p.nombre}
-                </Link>
-              );
-            })}
-        </nav>
+  return (
+    <header className="sticky top-0 z-20 bg-indigo-50/80 backdrop-blur-md dark:bg-slate-950/80">
+      <div className="mx-auto flex h-16 w-full max-w-6xl items-center gap-3 px-4 sm:px-8">
+        {titulo ? (
+          <>
+            <Link
+              href="/camille"
+              aria-label="Volver al inicio"
+              className="-ml-2 flex size-9 items-center justify-center rounded-full bg-white text-indigo-700 shadow-sm transition hover:bg-indigo-100 active:scale-90 dark:bg-slate-900 dark:text-indigo-300"
+            >
+              <Icono nombre="atras" className="size-5" />
+            </Link>
+            <span className="truncate text-lg font-bold tracking-tight">{titulo}</span>
+          </>
+        ) : (
+          <>
+            {/* En celular no hay menú lateral: el sello va aquí. */}
+            <span className="flex size-9 items-center justify-center rounded-xl bg-indigo-950 text-white sm:hidden">
+              <Icono nombre="birrete" className="size-5" />
+            </span>
+            <span className="truncate text-sm sm:text-base">
+              {hoy ? (
+                <>
+                  <strong className="font-bold capitalize">{dia},</strong> {fecha}
+                </>
+              ) : (
+                <strong className="font-bold">IAE School Guide</strong>
+              )}
+            </span>
+          </>
+        )}
 
         <Link
           href="/camille/perfil"
           aria-label={perfil ? `Mi perfil: ${perfil.nombre}` : "Crear mi perfil"}
-          className={`ml-auto shrink-0 rounded-full transition active:scale-90 sm:ml-2 ${enPerfil ? "ring-2 ring-amber-400 ring-offset-2 ring-offset-blue-950" : ""}`}
+          className={`ml-auto flex shrink-0 items-center gap-2 rounded-full bg-white p-1 shadow-sm sm:pl-3 transition hover:shadow-md active:scale-95 dark:bg-slate-900 ${
+            enPerfil ? "ring-2 ring-indigo-400" : ""
+          }`}
         >
-          <Avatar perfil={perfil} />
+          <span className="hidden max-w-36 truncate text-sm font-semibold sm:block">{perfil ? perfil.nombre : "Mi perfil"}</span>
+          <Avatar perfil={perfil} className="size-8 text-xs" />
         </Link>
       </div>
     </header>
