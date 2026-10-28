@@ -5,7 +5,7 @@ export const secciones = [
     icono: "mapa",
     nombre: "Mapa",
     descripcion: "Encuentra salones y oficinas del colegio.",
-    explicacion: "Busca en qué piso está cada salón, oficina o servicio. Los pisos van del más alto al más bajo, como se ve el edificio desde afuera.",
+    explicacion: "Busca un salón por número o nombre y su pin brinca en el plano. Cambia de piso, filtra por tipo, acerca con + y toca un pin para ver qué lugar es. El plano es inventado.",
   },
   {
     ruta: "contactos",

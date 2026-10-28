@@ -64,36 +64,37 @@ export const documentos = [
   { titulo: "Lista de útiles de ejemplo", tipo: "Circular", descripcion: "Materiales que se necesitan para el segundo periodo.", dondeSePide: "Tablero de avisos" },
 ] as const;
 
-// Mapa simple por pisos. El mapa interactivo y el plano real van en DESPUES.md.
+// Lugares del colegio por piso. "x" y "y" son la posición del pin en el plano (en %, de 0 a 100)
+// y "codigo" es lo que dice el pin. El plano es inventado; ver components/PlanoColegio.tsx.
 export const pisos = [
   {
     nombre: "Planta baja",
     lugares: [
-      { nombre: "Entrada principal", tipo: "Acceso" },
-      { nombre: "Control escolar (Oficina Prueba 1)", tipo: "Oficina" },
-      { nombre: "Coordinación Prueba", tipo: "Oficina" },
-      { nombre: "Enfermería Prueba", tipo: "Servicio" },
-      { nombre: "Cafetería Prueba", tipo: "Servicio" },
-      { nombre: "Patio Prueba A", tipo: "Exterior" },
+      { nombre: "Entrada principal", tipo: "Acceso", codigo: "E", x: 50, y: 92 },
+      { nombre: "Control escolar (Oficina Prueba 1)", tipo: "Oficina", codigo: "O1", x: 14, y: 33 },
+      { nombre: "Coordinación Prueba", tipo: "Oficina", codigo: "CO", x: 26, y: 33 },
+      { nombre: "Enfermería Prueba", tipo: "Servicio", codigo: "+", x: 38, y: 33 },
+      { nombre: "Cafetería Prueba", tipo: "Servicio", codigo: "CAF", x: 77, y: 33 },
+      { nombre: "Patio Prueba A", tipo: "Exterior", codigo: "P", x: 31, y: 66 },
     ],
   },
   {
     nombre: "Primer piso",
     lugares: [
-      { nombre: "Salón Prueba 101", tipo: "Salón" },
-      { nombre: "Salón Prueba 102", tipo: "Salón" },
-      { nombre: "Biblioteca Prueba", tipo: "Servicio" },
-      { nombre: "Laboratorio Prueba", tipo: "Salón" },
-      { nombre: "Baños", tipo: "Servicio" },
+      { nombre: "Salón Prueba 101", tipo: "Salón", codigo: "101", x: 13, y: 33 },
+      { nombre: "Salón Prueba 102", tipo: "Salón", codigo: "102", x: 25, y: 33 },
+      { nombre: "Biblioteca Prueba", tipo: "Servicio", codigo: "BIB", x: 39, y: 33 },
+      { nombre: "Laboratorio Prueba", tipo: "Salón", codigo: "LAB", x: 72, y: 33 },
+      { nombre: "Baños", tipo: "Servicio", codigo: "WC", x: 87, y: 33 },
     ],
   },
   {
     nombre: "Segundo piso",
     lugares: [
-      { nombre: "Salón Prueba 201", tipo: "Salón" },
-      { nombre: "Salón Prueba 202", tipo: "Salón" },
-      { nombre: "Sala de cómputo Prueba", tipo: "Salón" },
-      { nombre: "Baños", tipo: "Servicio" },
+      { nombre: "Salón Prueba 201", tipo: "Salón", codigo: "201", x: 14, y: 33 },
+      { nombre: "Salón Prueba 202", tipo: "Salón", codigo: "202", x: 28, y: 33 },
+      { nombre: "Sala de cómputo Prueba", tipo: "Salón", codigo: "PC", x: 72, y: 33 },
+      { nombre: "Baños", tipo: "Servicio", codigo: "WC", x: 87, y: 33 },
     ],
   },
 ];

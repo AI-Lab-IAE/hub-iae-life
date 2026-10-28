@@ -134,20 +134,20 @@
 @keyframes caer {
   from {
     opacity: 0;
-    transform: translate(-50%, -160%);
+    transform: translateY(-30px);
   }
   to {
     opacity: 1;
-    transform: translate(-50%, -100%);
+    transform: none;
   }
 }
 
 @keyframes brincar {
   0%,
   100% {
-    transform: translate(-50%, -100%);
+    transform: none;
   }
   50% {
-    transform: translate(-50%, -130%);
+    transform: translateY(-8px);
   }
 }
