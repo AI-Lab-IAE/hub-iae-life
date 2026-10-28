@@ -6,11 +6,11 @@ export const tarjeta =
   "rounded-2xl border border-slate-200 bg-white shadow-sm shadow-slate-200/60 dark:border-slate-800 dark:bg-slate-900 dark:shadow-none";
 
 // Efecto al tocar un botón: se encoge un poco, como en una app.
-export const tocar = "transition duration-200 active:scale-[0.97]";
+export const tocar = "transition duration-300 ease-out active:scale-[0.96]";
 
 // Efecto al pasar el mouse: la tarjeta se eleva y se ilumina el borde.
 export const elevar =
-  "hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-md hover:shadow-slate-300/60 dark:hover:border-indigo-700";
+  "hover:-translate-y-1 hover:border-indigo-300 hover:shadow-lg hover:shadow-indigo-200/60 dark:hover:border-indigo-700";
 
 // Retraso de la animación para que los elementos aparezcan uno tras otro.
 export function retraso(posicion: number): CSSProperties {

@@ -1,5 +1,7 @@
 import Link from "next/link";
+import anim from "../animaciones.module.css";
 import type { RutaSeccion } from "../secciones";
+import { Contador } from "./Contador";
 import { tocar } from "./estilos";
 import { Icono, type NombreIcono } from "./Icono";
 
@@ -7,23 +9,29 @@ type Props = {
   ruta: RutaSeccion;
   icono: NombreIcono;
   nombre: string;
-  dato: string;
+  numero: number;
+  texto: string;
 };
 
-// Tarjeta índigo de "Mis secciones": nombre, ícono y un dato rápido (por ejemplo "4 anuncios").
-export function Tarjeta({ ruta, icono, nombre, dato }: Props) {
+// Tarjeta índigo de "Mis secciones": nombre, ícono y un número que sube (por ejemplo "7 contactos").
+export function Tarjeta({ ruta, icono, nombre, numero, texto }: Props) {
   return (
     <Link
       href={`/camille/${ruta}`}
-      className={`${tocar} group relative flex h-full flex-col justify-between gap-3 overflow-hidden rounded-2xl bg-linear-to-br from-indigo-800 to-indigo-950 p-3 text-white shadow-md shadow-indigo-900/20 hover:-translate-y-0.5 hover:shadow-lg sm:p-4`}
+      className={`${tocar} ${anim.brillo} group relative flex h-full flex-col justify-between gap-3 overflow-hidden rounded-2xl bg-linear-to-br from-indigo-800 to-indigo-950 p-3 text-white shadow-md shadow-indigo-900/20 hover:-translate-y-1 hover:shadow-xl hover:shadow-indigo-900/30 sm:p-4`}
     >
-      <span className="absolute -top-6 -right-6 size-16 rounded-full bg-white/5 transition group-hover:scale-125" aria-hidden="true" />
-      <span className="flex size-10 items-center justify-center rounded-xl bg-white/10 ring-1 ring-white/15">
+      <span className="absolute -top-6 -right-6 size-16 rounded-full bg-white/5 transition duration-500 group-hover:scale-150" aria-hidden="true" />
+      <span className="flex size-10 items-center justify-center rounded-xl bg-white/10 ring-1 ring-white/15 transition duration-300 group-hover:rotate-6 group-hover:bg-white/20">
         <Icono nombre={icono} className="size-5" />
       </span>
       <span>
         <span className="block text-sm leading-tight font-bold sm:text-base">{nombre}</span>
-        <span className="mt-0.5 block text-[11px] text-indigo-200 sm:text-xs">{dato}</span>
+        <span className="mt-0.5 block text-[11px] text-indigo-200 sm:text-xs">
+          <strong className="text-white">
+            <Contador valor={numero} />
+          </strong>{" "}
+          {texto}
+        </span>
       </span>
     </Link>
   );

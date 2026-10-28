@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { tarjeta } from "./estilos";
+import anim from "../animaciones.module.css";
+import { retraso, tarjeta } from "./estilos";
 import { aMinutos, filasDelDia } from "./horario";
 import { useAhora, useHoy } from "./hoy";
 import { Icono } from "./Icono";
@@ -45,18 +46,24 @@ export function HorarioHoy() {
         </span>
       </p>
       <ol className="flex flex-col gap-2">
-        {filas.map((b) => {
+        {filas.map((b, i) => {
           const desde = aMinutos(b.desde);
           const hasta = aMinutos(b.hasta);
           const esAhora = ahora >= desde && ahora < hasta;
           const yaPaso = ahora >= hasta;
+          // Cuánto lleva el bloque actual, de 0 a 100.
+          const avance = esAhora ? ((ahora - desde) / (hasta - desde)) * 100 : 0;
           return (
-            <li key={b.nombre} className={`flex gap-3 ${yaPaso ? "opacity-50" : ""}`}>
+            <li
+              key={b.nombre}
+              className={`flex gap-3 transition-opacity duration-500 ${anim.aparecer} ${yaPaso ? "opacity-50" : ""}`}
+              style={retraso(i * 0.6)}
+            >
               <span className="w-10 shrink-0 pt-2.5 text-right text-xs text-slate-400 tabular-nums">{horaCorta(b.desde)}</span>
               <span
-                className={`flex flex-1 items-start justify-between gap-2 rounded-xl px-3 py-2 ${
+                className={`relative flex flex-1 items-start justify-between gap-2 overflow-hidden rounded-xl px-3 py-2 transition duration-300 ${
                   esAhora
-                    ? "bg-indigo-600 text-white shadow-md shadow-indigo-500/30"
+                    ? "scale-[1.02] bg-indigo-600 text-white shadow-lg shadow-indigo-500/40"
                     : b.clase
                       ? "bg-slate-50 dark:bg-slate-800/60"
                       : "border border-dashed border-slate-200 dark:border-slate-700"
@@ -69,7 +76,18 @@ export function HorarioHoy() {
                     {b.hora}
                   </span>
                 </span>
-                {esAhora && <span className="shrink-0 rounded-full bg-white/20 px-2 py-0.5 text-[11px] font-semibold">Ahora</span>}
+                {esAhora && (
+                  <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-white/20 px-2 py-0.5 text-[11px] font-semibold">
+                    <span className={`size-1.5 rounded-full bg-white ${anim.latido}`} aria-hidden="true" />
+                    Ahora
+                  </span>
+                )}
+                {/* Barra que avanza mientras pasa la clase. */}
+                {esAhora && (
+                  <span className="absolute inset-x-0 bottom-0 h-1 bg-white/15" aria-hidden="true">
+                    <span className="block h-full rounded-r-full bg-white/70 transition-[width] duration-1000" style={{ width: `${avance}%` }} />
+                  </span>
+                )}
               </span>
             </li>
           );

@@ -19,8 +19,8 @@ export function Bienvenida() {
     <section
       className={`relative overflow-hidden rounded-3xl bg-linear-to-br from-indigo-500 via-indigo-600 to-indigo-700 p-5 text-white shadow-lg sm:p-6 shadow-indigo-500/25 ${anim.aparecer}`}
     >
-      <span className="absolute -top-12 -right-10 size-44 rounded-full bg-white/10" aria-hidden="true" />
-      <span className="absolute -bottom-16 -left-8 size-36 rounded-full bg-white/10" aria-hidden="true" />
+      <span className={`absolute -top-12 -right-10 size-44 rounded-full bg-white/10 ${anim.flotar}`} aria-hidden="true" />
+      <span className={`absolute -bottom-16 -left-8 size-36 rounded-full bg-white/10 ${anim.flotarLento}`} aria-hidden="true" />
 
       <div className="relative">
         <p className="text-sm text-indigo-200">{perfil ? "Te damos la bienvenida" : "Instituto Alberto Einstein"}</p>

@@ -48,7 +48,7 @@ export function ListaAnuncios() {
                   </span>
                   <Icono nombre="adelante" className="mt-1 size-5 shrink-0 text-slate-400 transition group-open:rotate-90" />
                 </summary>
-                <div className="border-t border-slate-100 bg-indigo-50/50 px-4 py-3 text-sm dark:border-slate-800 dark:bg-indigo-950/30">
+                <div className={`${anim.aparecer} border-t border-slate-100 bg-indigo-50/50 px-4 py-3 text-sm dark:border-slate-800 dark:bg-indigo-950/30`}>
                   <p>{a.detalle}</p>
                   <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">Publicado el {formatearFecha(a.fecha)}</p>
                 </div>

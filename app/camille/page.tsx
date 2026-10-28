@@ -11,14 +11,14 @@ import { diaYMes, formatearFecha } from "./formato";
 import { info } from "./info";
 import { secciones, type RutaSeccion } from "./secciones";
 
-// Dato rápido que aparece en cada tarjeta de "Mis secciones".
-const datoSeccion: Record<RutaSeccion, string> = {
-  mapa: `${pisos.length} pisos`,
-  contactos: `${contactos.length} contactos`,
-  documentos: `${documentos.length} documentos`,
-  calendario: `${eventos.length} fechas`,
-  anuncios: `${anuncios.length} anuncios · ${anuncios.filter((a) => a.importante).length} importantes`,
-  informacion: `${reglas.length} reglas · ${servicios.length} servicios`,
+// Número y texto que aparecen en cada tarjeta de "Mis secciones" (el número sube al abrir el inicio).
+const datoSeccion: Record<RutaSeccion, { numero: number; texto: string }> = {
+  mapa: { numero: pisos.length, texto: "pisos" },
+  contactos: { numero: contactos.length, texto: "contactos" },
+  documentos: { numero: documentos.length, texto: "documentos" },
+  calendario: { numero: eventos.length, texto: "fechas" },
+  anuncios: { numero: anuncios.length, texto: `anuncios · ${anuncios.filter((a) => a.importante).length} importantes` },
+  informacion: { numero: servicios.length, texto: `servicios · ${reglas.length} reglas` },
 };
 
 export default function Page() {
@@ -30,7 +30,7 @@ export default function Page() {
   const coordinacion = contactos.find((c) => c.cargo === "Coordinación académica")!;
 
   return (
-    <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-4 sm:px-8 sm:py-6">
+    <main className={`mx-auto w-full max-w-6xl flex-1 px-4 py-4 sm:px-8 sm:py-6 ${anim.entrar}`}>
       <div className="grid gap-8 lg:grid-cols-3">
         <div className="flex min-w-0 flex-col gap-8 lg:col-span-2">
           <Bienvenida />
@@ -40,8 +40,8 @@ export default function Page() {
             <TituloBloque titulo="Mis secciones" />
             <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-4">
               {secciones.map((s, i) => (
-                <div key={s.ruta} className={anim.aparecer} style={retraso(i + 2)}>
-                  <Tarjeta ruta={s.ruta} icono={s.icono} nombre={s.nombre} dato={datoSeccion[s.ruta]} />
+                <div key={s.ruta} className={anim.crecer} style={retraso(i + 2)}>
+                  <Tarjeta ruta={s.ruta} icono={s.icono} nombre={s.nombre} {...datoSeccion[s.ruta]} />
                 </div>
               ))}
             </div>
@@ -57,7 +57,7 @@ export default function Page() {
                   className={`${tocar} flex items-center gap-3 rounded-2xl bg-indigo-500 p-4 text-white shadow-lg shadow-indigo-500/30 hover:bg-indigo-600`}
                 >
                   <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-white/20">
-                    <Icono nombre="campana" className="size-5" />
+                    <Icono nombre="campana" className={`size-5 ${anim.sonar}`} />
                   </span>
                   <span className="min-w-0">
                     <span className="block text-xs text-indigo-100">
