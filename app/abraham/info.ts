@@ -2,5 +2,6 @@
 export const info = {
   estudiante: "Abraham",
   proyecto: "AvisoYa",
-  descripcion: "Escribe aquí en una frase qué hace tu proyecto y para quién es.",
+  descripcion:
+    "Avisos escolares que sí llegan: el profesor manda un aviso a un salón, un grado o un estudiante, le llega como notificación al celular y ve quién lo vio.",
 };
