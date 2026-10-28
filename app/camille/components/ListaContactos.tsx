@@ -3,18 +3,12 @@
 import { useState } from "react";
 import anim from "../animaciones.module.css";
 import { contactos } from "../datos";
-import { elevar, retraso, tarjeta, tocar } from "./estilos";
+import { retraso, tarjeta } from "./estilos";
 import { Icono } from "./Icono";
 
 // Quita acentos y mayúsculas para que "matematicas" encuentre "Matemáticas".
 function normalizar(texto: string) {
   return texto.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
-}
-
-// Iniciales para el círculo: "Profesor Prueba 1" → "P1".
-function inicialesContacto(nombre: string) {
-  const partes = nombre.split(" ");
-  return (partes[0][0] + (partes.at(-1)?.[0] ?? "")).toUpperCase();
 }
 
 // Lista de contactos con buscador por nombre, cargo u oficina.
@@ -46,30 +40,31 @@ export function ListaContactos() {
           No encontramos a nadie con «{busqueda}». Prueba con otra palabra.
         </p>
       ) : (
-        <ul className="mt-3 grid gap-3 sm:grid-cols-2">
+        // Lista limpia con líneas divisorias: nombre y cargo a la izquierda, lugar y correo a la derecha.
+        <ul className={`${tarjeta} mt-3 divide-y divide-slate-200 px-4 dark:divide-slate-800`}>
           {visibles.map((c, i) => (
-            <li key={c.correo} className={`${tarjeta} ${elevar} flex flex-col p-4 transition ${anim.aparecer}`} style={retraso(i * 0.5)}>
-              <div className="flex items-center gap-3">
-                <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-blue-800 to-blue-950 font-bold text-white">
-                  {inicialesContacto(c.nombre)}
-                </span>
-                <span className="min-w-0">
-                  <span className="block truncate font-semibold">{c.nombre}</span>
-                  <span className="block text-sm text-blue-900 dark:text-blue-300">{c.cargo}</span>
-                </span>
+            <li
+              key={c.correo}
+              className={`flex flex-col gap-2 py-5 sm:flex-row sm:items-center sm:justify-between ${anim.aparecer}`}
+              style={retraso(i * 0.5)}
+            >
+              <div>
+                <h2 className="font-medium text-slate-900 dark:text-slate-100">{c.nombre}</h2>
+                <p className="text-sm text-slate-500 dark:text-slate-400">{c.cargo}</p>
               </div>
-              <p className="mt-3 flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
-                <Icono nombre="ubicacion" className="size-4 shrink-0" /> {c.lugar}
-              </p>
-              <p className="mt-1 flex items-center gap-2 text-sm break-all text-slate-500 dark:text-slate-400">
-                <Icono nombre="correo" className="size-4 shrink-0" /> {c.correo}
-              </p>
-              <a
-                href={`mailto:${c.correo}`}
-                className={`${tocar} mt-4 flex items-center justify-center gap-2 rounded-xl bg-blue-50 py-2.5 text-sm font-semibold text-blue-900 hover:bg-blue-900 hover:text-white dark:bg-blue-950 dark:text-blue-300`}
-              >
-                <Icono nombre="correo" className="size-4" /> Escribir correo
-              </a>
+              <div className="flex flex-col gap-1 text-sm text-slate-500 sm:items-end dark:text-slate-400">
+                <span className="flex items-center gap-1.5">
+                  <Icono nombre="ubicacion" className="size-3.5 shrink-0" />
+                  {c.lugar}
+                </span>
+                <a
+                  href={`mailto:${c.correo}`}
+                  className="flex items-center gap-1.5 rounded text-blue-800 hover:underline focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none dark:text-blue-300"
+                >
+                  <Icono nombre="correo" className="size-3.5 shrink-0" />
+                  <span className="break-all">{c.correo}</span>
+                </a>
+              </div>
             </li>
           ))}
         </ul>

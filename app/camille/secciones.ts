@@ -12,7 +12,7 @@ export const secciones = [
     icono: "contactos",
     nombre: "Contactos",
     descripcion: "Profesores y personal del colegio.",
-    explicacion: "Escribe un nombre, una materia o una oficina en el buscador. Toca «Escribir correo» para abrir tu aplicación de correo con la dirección lista.",
+    explicacion: "Escribe un nombre, una materia o una oficina en el buscador. Toca un correo para abrir tu aplicación de correo con la dirección lista.",
   },
   {
     ruta: "documentos",
