@@ -29,8 +29,8 @@ export function Bienvenida({ ultimoAnuncio }: Props) {
       <span className="absolute -bottom-16 -left-8 size-36 rounded-full bg-white/10" aria-hidden="true" />
 
       <div className="relative">
-        <p className="text-sm text-sky-100">{dia ? `${mayuscula(dia.nombre)}, ${formatearFecha(hoy!)}` : "¡Hola! 👋"}</p>
-        <h1 className="mt-1 text-2xl font-bold sm:text-3xl">{perfil ? `¡Hola, ${perfil.nombre}! 👋` : "Tu guía del IAE"}</h1>
+        <p className="text-sm text-sky-100">{dia ? `${mayuscula(dia.nombre)}, ${formatearFecha(hoy!)}` : "Te damos la bienvenida"}</p>
+        <h1 className="mt-1 text-2xl font-bold sm:text-3xl">{perfil ? `¡Hola, ${perfil.nombre}!` : "Tu guía del IAE"}</h1>
         <p className="mt-2 max-w-xl text-sm text-sky-50/90">{perfil ? descripcionPerfil(perfil) : info.descripcion}</p>
 
         {/* Qué toca hoy: solo para secundaria, que es el horario que tenemos. */}

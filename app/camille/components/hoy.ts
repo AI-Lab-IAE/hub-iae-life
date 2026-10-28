@@ -29,12 +29,19 @@ export function textoFaltan(dias: number) {
   return `En ${dias} días`;
 }
 
+// Hora de salida de secundaria hoy; null el sábado y el domingo.
+export function salidaDeHoy(hoy: string) {
+  const diaSemana = new Date(`${hoy}T12:00:00`).getDay();
+  if (diaSemana === 0 || diaSemana === 6) return null;
+  return diaSemana === 5 ? horarioSecundaria.salidaViernes : horarioSecundaria.salida;
+}
+
 // Qué pasa hoy en secundaria: fin de semana o la hora de salida.
 export function resumenDelDia(hoy: string) {
-  const d = new Date(`${hoy}T12:00:00`);
-  const nombre = d.toLocaleDateString("es-PA", { weekday: "long" });
-  const diaSemana = d.getDay();
-  if (diaSemana === 0 || diaSemana === 6) return { nombre, texto: "No hay clases. ¡Buen fin de semana!" };
-  const salida = diaSemana === 5 ? horarioSecundaria.salidaViernes : horarioSecundaria.salida;
-  return { nombre, texto: `Entrada ${horarioSecundaria.entrada} · Salida ${salida}` };
+  const nombre = new Date(`${hoy}T12:00:00`).toLocaleDateString("es-PA", { weekday: "long" });
+  const salida = salidaDeHoy(hoy);
+  if (!salida) return { nombre, texto: "No hay clases. ¡Buen fin de semana!" };
+  // Espacios que no se cortan, para que "3:30 p. m." no se parta en dos líneas.
+  const junto = (hora: string) => hora.replaceAll(" ", " ");
+  return { nombre, texto: `Entrada ${junto(horarioSecundaria.entrada)} · Salida ${junto(salida)}` };
 }

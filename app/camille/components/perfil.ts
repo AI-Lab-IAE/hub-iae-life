@@ -1,12 +1,14 @@
 import { useMemo, useSyncExternalStore } from "react";
 
-// Perfil de quien usa la guía. Se guarda SOLO en el navegador de este dispositivo (localStorage):
-// no se sube al repositorio ni a ningún servidor, y nadie más lo puede ver.
+// Perfil del estudiante que usa la guía. Se guarda SOLO en el navegador de este dispositivo
+// (localStorage): no se sube al repositorio ni a ningún servidor, y nadie más lo puede ver.
 
-export const roles = ["Estudiante", "Familia", "Docente o personal"] as const;
-export type Rol = (typeof roles)[number];
-
-export const grados = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+// Grados agrupados por nivel, como en el sistema educativo de Panamá.
+export const niveles = [
+  { nombre: "Primaria", grados: [1, 2, 3, 4, 5, 6] },
+  { nombre: "Premedia", grados: [7, 8, 9] },
+  { nombre: "Media", grados: [10, 11, 12] },
+];
 
 // Colores que se pueden elegir para el círculo con las iniciales.
 export const coloresAvatar = {
@@ -20,8 +22,7 @@ export type ColorAvatar = keyof typeof coloresAvatar;
 
 export type Perfil = {
   nombre: string;
-  rol: Rol;
-  grado: number | null; // null para docentes y personal
+  grado: number;
   color: ColorAvatar;
 };
 
@@ -55,11 +56,10 @@ function convertir(texto: string | null | undefined): Perfil | null {
   if (!texto) return null;
   try {
     const p = JSON.parse(texto);
-    if (typeof p?.nombre !== "string" || !roles.includes(p.rol)) return null;
+    if (typeof p?.nombre !== "string" || !(p.grado >= 1 && p.grado <= 12)) return null;
     return {
       nombre: p.nombre,
-      rol: p.rol,
-      grado: grados.includes(p.grado) ? p.grado : null,
+      grado: p.grado,
       color: p.color in coloresAvatar ? p.color : "celeste",
     };
   } catch {
@@ -92,15 +92,13 @@ export function borrarPerfil() {
   avisar();
 }
 
-// Niveles del sistema educativo de Panamá.
 export function nivelDe(grado: number) {
-  if (grado <= 6) return "Primaria";
-  if (grado <= 9) return "Premedia";
-  return "Media";
+  return niveles.find((n) => n.grados.includes(grado))!.nombre;
 }
 
+// Premedia y media forman la secundaria, que es el horario que tenemos.
 export function esSecundaria(perfil: Perfil | null) {
-  return perfil?.grado != null && perfil.grado >= 7;
+  return perfil != null && perfil.grado >= 7;
 }
 
 export function iniciales(nombre: string) {
@@ -108,9 +106,7 @@ export function iniciales(nombre: string) {
   return (partes[0]?.[0] ?? "?").concat(partes[1]?.[0] ?? "").toUpperCase();
 }
 
-// Texto corto debajo del nombre, por ejemplo "Estudiante · 9.º grado".
+// Texto corto debajo del nombre, por ejemplo "Estudiante de 9.º grado · Premedia".
 export function descripcionPerfil(perfil: Perfil) {
-  if (perfil.grado == null) return perfil.rol;
-  const quien = perfil.rol === "Familia" ? "Familia de" : "Estudiante de";
-  return `${quien} ${perfil.grado}.º grado · ${nivelDe(perfil.grado)}`;
+  return `Estudiante de ${perfil.grado}.º grado · ${nivelDe(perfil.grado)}`;
 }
