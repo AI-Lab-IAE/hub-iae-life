@@ -1,40 +1,55 @@
+import anim from "../animaciones.module.css";
 import { EncabezadoSeccion } from "../components/EncabezadoSeccion";
 import { HorarioSemana } from "../components/HorarioSemana";
+import { Icono } from "../components/Icono";
+import { Pantalla } from "../components/Pantalla";
+import { TituloBloque } from "../components/TituloBloque";
+import { retraso, tarjeta } from "../components/estilos";
 import { reglas, servicios } from "../datos";
-
-const caja = "rounded-2xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900";
 
 export default function Page() {
   return (
-    <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-8">
+    <Pantalla>
       <EncabezadoSeccion ruta="informacion" />
 
-      <section className="mt-8">
-        <h2 className="mb-3 text-lg font-semibold">🕒 Horario de secundaria</h2>
+      <section className={`mt-8 ${anim.aparecer}`} style={retraso(1)}>
+        <TituloBloque titulo="Horario de secundaria" />
         <HorarioSemana />
       </section>
 
-      <section className="mt-8">
-        <h2 className="text-lg font-semibold">📋 Reglas básicas</h2>
-        <ul className={`${caja} mt-3 list-disc space-y-2 pl-8 text-sm`}>
+      <section className={`mt-8 ${anim.aparecer}`} style={retraso(2)}>
+        <TituloBloque titulo="Reglas básicas" />
+        <ul className={`${tarjeta} divide-y divide-sky-50 dark:divide-sky-900/40`}>
           {reglas.map((r) => (
-            <li key={r}>{r}</li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="mt-8">
-        <h2 className="text-lg font-semibold">🛎️ Servicios</h2>
-        <ul className="mt-3 grid gap-3 sm:grid-cols-2">
-          {servicios.map((s) => (
-            <li key={s.nombre} className={caja}>
-              <h3 className="font-medium">{s.nombre}</h3>
-              <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{s.detalle}</p>
-              <p className="mt-2 text-sm text-zinc-500">Horario: {s.horario}</p>
+            <li key={r} className="flex gap-3 p-3 text-sm">
+              <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
+                <Icono nombre="check" className="size-4" />
+              </span>
+              {r}
             </li>
           ))}
         </ul>
       </section>
-    </main>
+
+      <section className={`mt-8 ${anim.aparecer}`} style={retraso(3)}>
+        <TituloBloque titulo="Servicios" />
+        <ul className="grid gap-3 sm:grid-cols-2">
+          {servicios.map((s) => (
+            <li key={s.nombre} className={`${tarjeta} flex gap-3 p-4`}>
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-sky-50 text-sky-600 dark:bg-sky-950 dark:text-sky-400">
+                <Icono nombre="campana" />
+              </span>
+              <span className="min-w-0">
+                <span className="block font-semibold">{s.nombre}</span>
+                <span className="mt-0.5 block text-sm text-slate-500 dark:text-slate-400">{s.detalle}</span>
+                <span className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-sky-50 px-2 py-0.5 text-xs font-medium text-sky-700 dark:bg-sky-950 dark:text-sky-300">
+                  <Icono nombre="reloj" className="size-3.5" /> {s.horario}
+                </span>
+              </span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </Pantalla>
   );
 }
