@@ -6,36 +6,41 @@ export const anuncios = [
     fecha: "2026-11-10",
     titulo: "Feria de Ciencias de Prueba",
     texto: "La feria será en el Patio Prueba A. Cada grupo presenta su proyecto de 8:00 a 11:00.",
+    detalle:
+      "Trae tu cartel y tu proyecto armado desde las 7:30 a. m. Los jueces de ejemplo pasarán por cada mesa. Las familias pueden visitar la feria de 10:00 a 11:00.",
     importante: true,
   },
   {
     fecha: "2026-11-03",
     titulo: "Cambio de horario de la biblioteca",
     texto: "Durante esta semana, la Biblioteca Prueba abre de 7:30 a 13:00.",
+    detalle: "Si necesitas devolver un libro después de la 1:00 p. m., déjalo en Coordinación Prueba. La próxima semana vuelve el horario normal.",
     importante: false,
   },
   {
     fecha: "2026-10-27",
     titulo: "Entrega de boletas de ejemplo",
     texto: "Las boletas del primer periodo se entregan en Coordinación Prueba.",
+    detalle: "Cada familia recoge la boleta en el horario que le toca. Si no puedes ir ese día, escribe a Coordinación Prueba para pedir otra fecha.",
     importante: true,
   },
   {
     fecha: "2026-10-20",
     titulo: "Nuevo club de lectura",
     texto: "El Profesor Prueba 3 abre inscripciones al club de lectura de los viernes.",
+    detalle: "El club se reúne los viernes en la Biblioteca Prueba. Para inscribirte, habla con el Profesor Prueba 3 o escríbele desde Contactos.",
     importante: false,
   },
 ];
 
 export const eventos = [
-  { fecha: "2026-11-02", titulo: "Día sin clases", tipo: "Vacaciones" },
-  { fecha: "2026-11-10", titulo: "Feria de Ciencias de Prueba", tipo: "Evento" },
-  { fecha: "2026-11-16", titulo: "Inicio de exámenes del segundo periodo", tipo: "Examen" },
-  { fecha: "2026-11-20", titulo: "Fin de exámenes del segundo periodo", tipo: "Examen" },
-  { fecha: "2026-11-27", titulo: "Junta de padres de ejemplo", tipo: "Evento" },
-  { fecha: "2026-12-18", titulo: "Último día de clases del año", tipo: "Evento" },
-  { fecha: "2026-12-21", titulo: "Inicio de vacaciones de invierno", tipo: "Vacaciones" },
+  { fecha: "2026-11-02", titulo: "Día sin clases", tipo: "Vacaciones", descripcion: "No hay clases ni actividades en el colegio." },
+  { fecha: "2026-11-10", titulo: "Feria de Ciencias de Prueba", tipo: "Evento", descripcion: "Presentación de proyectos en el Patio Prueba A." },
+  { fecha: "2026-11-16", titulo: "Inicio de exámenes del segundo periodo", tipo: "Examen", descripcion: "Revisa con cada profesor qué temas entran." },
+  { fecha: "2026-11-20", titulo: "Fin de exámenes del segundo periodo", tipo: "Examen", descripcion: "Último día de exámenes de la semana." },
+  { fecha: "2026-11-27", titulo: "Junta de padres de ejemplo", tipo: "Evento", descripcion: "Reunión de familias con los profesores guía." },
+  { fecha: "2026-12-18", titulo: "Último día de clases del año", tipo: "Evento", descripcion: "La salida es a la hora normal." },
+  { fecha: "2026-12-21", titulo: "Inicio de vacaciones de fin de año", tipo: "Vacaciones", descripcion: "Las clases regresan en la fecha que anuncie el colegio." },
 ] as const;
 
 // Los correos usan example.com, un dominio reservado oficialmente para ejemplos.
@@ -124,9 +129,6 @@ export const horarioSecundaria = {
   salida: "3:30 p. m.",
   salidaViernes: "12:50 p. m.",
 };
-
-
-
 
 export const reglas = [
   "Llega a tiempo: después de la hora de entrada se registra un retardo.",

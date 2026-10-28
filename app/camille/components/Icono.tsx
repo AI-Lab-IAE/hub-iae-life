@@ -66,6 +66,68 @@ const trazos = {
       <path d="M12 7v5l3 2" />
     </>
   ),
+  perfil: (
+    <>
+      <circle cx="12" cy="8" r="4" />
+      <path d="M4 21a8 8 0 0 1 16 0" />
+    </>
+  ),
+  buscar: (
+    <>
+      <circle cx="11" cy="11" r="7" />
+      <path d="M20 20l-3.5-3.5" />
+    </>
+  ),
+  editar: (
+    <>
+      <path d="M4 20h4L19 9l-4-4L4 16z" />
+      <path d="M13 7l4 4" />
+    </>
+  ),
+  basura: (
+    <>
+      <path d="M4 7h16M10 11v6M14 11v6" />
+      <path d="M6 7l1 13h10l1-13M9 7V4h6v3" />
+    </>
+  ),
+  check: <path d="M5 12l5 5L20 7" />,
+  escudo: (
+    <>
+      <path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z" />
+      <path d="M9 12l2 2 4-4" />
+    </>
+  ),
+  puerta: (
+    <>
+      <path d="M6 21V4h12v17M3 21h18" />
+      <circle cx="14.5" cy="12.5" r="0.6" fill="currentColor" />
+    </>
+  ),
+  maletin: (
+    <>
+      <rect x="3" y="7" width="18" height="13" rx="2" />
+      <path d="M9 7V5h6v2M3 13h18" />
+    </>
+  ),
+  campana: (
+    <>
+      <path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z" />
+      <path d="M10 21h4" />
+    </>
+  ),
+  arbol: (
+    <>
+      <path d="M12 3a5 5 0 0 1 5 5 4 4 0 0 1-1 7.5H8A4 4 0 0 1 7 8a5 5 0 0 1 5-5z" />
+      <path d="M12 15.5V21M9 21h6" />
+    </>
+  ),
+  libro: (
+    <>
+      <path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z" />
+      <path d="M4 21V5M8 7h7" />
+    </>
+  ),
+  estrella: <path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z" />,
 };
 
 export type NombreIcono = keyof typeof trazos;
