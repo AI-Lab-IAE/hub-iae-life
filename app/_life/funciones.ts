@@ -13,7 +13,7 @@ const EXTRAS: Record<string, Extra> = {
   marco: { icono: Brain, resumen: "Encuentra lo que no sabes antes del examen", estado: "lista" },
   daniela: { icono: CalendarCheck, resumen: "Organiza tus tareas en tu horario", estado: "lista" },
   abraham: { icono: Megaphone, resumen: "Avisos que sí llegan a cada estudiante", estado: "lista" },
-  jonathan: { icono: Mail, resumen: "Avisa tu ausencia a cada profesor", estado: "proximamente" },
+  jonathan: { icono: Mail, resumen: "Avisa tu ausencia a cada profesor", estado: "lista" },
 };
 
 const ORDEN = ["camille", "marco", "daniela", "abraham", "jonathan"];
