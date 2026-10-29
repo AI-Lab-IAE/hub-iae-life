@@ -5,6 +5,7 @@ import { HORARIO, type Clase, type Dia } from "../lib/horario";
 import { diaDeFecha, NOMBRES_DIAS } from "../lib/fechas";
 
 export type Ausencia = {
+  nombre: string;
   fecha: string;
   dia: Dia;
   clases: Clase[];
@@ -12,6 +13,7 @@ export type Ausencia = {
 };
 
 export default function FormularioAusencia({ onEnviar }: { onEnviar: (a: Ausencia) => void }) {
+  const [nombre, setNombre] = useState("");
   const [fecha, setFecha] = useState("");
   // Guarda la hora de inicio de cada clase marcada.
   const [marcadas, setMarcadas] = useState<string[]>([]);
@@ -24,6 +26,7 @@ export default function FormularioAusencia({ onEnviar }: { onEnviar: (a: Ausenci
 
   // Lo que falta para poder generar los correos.
   const faltan: string[] = [];
+  if (nombre.trim() === "") faltan.push("escribir tu nombre");
   if (!fecha) faltan.push("elegir la fecha");
   else if (!dia) faltan.push("elegir un día de lunes a viernes");
   else if (marcadas.length === 0) faltan.push("marcar al menos una clase");
@@ -43,6 +46,7 @@ export default function FormularioAusencia({ onEnviar }: { onEnviar: (a: Ausenci
     setIntentoEnviar(true);
     if (faltan.length > 0 || !dia) return;
     onEnviar({
+      nombre: nombre.trim(),
       fecha,
       dia,
       clases: clasesDelDia.filter((c) => marcadas.includes(c.inicio)),
@@ -53,8 +57,22 @@ export default function FormularioAusencia({ onEnviar }: { onEnviar: (a: Ausenci
   return (
     <form onSubmit={enviar} className="space-y-6 rounded-2xl border border-zinc-200 p-5 dark:border-zinc-800">
       <div>
+        <label htmlFor="nombre" className="block text-sm font-medium">
+          1. ¿Cómo te llamas?
+        </label>
+        <input
+          id="nombre"
+          type="text"
+          value={nombre}
+          onChange={(e) => setNombre(e.target.value)}
+          placeholder="Tu nombre y apellido (así se firman los correos)"
+          className="mt-2 w-full rounded-lg border border-zinc-300 bg-transparent px-3 py-2 dark:border-zinc-700"
+        />
+      </div>
+
+      <div>
         <label htmlFor="fecha" className="block text-sm font-medium">
-          1. ¿Qué día vas a faltar?
+          2. ¿Qué día vas a faltar?
         </label>
         <input
           id="fecha"
@@ -71,7 +89,7 @@ export default function FormularioAusencia({ onEnviar }: { onEnviar: (a: Ausenci
       {dia && (
         <fieldset>
           <div className="flex items-center justify-between gap-2">
-            <legend className="text-sm font-medium">2. ¿Qué clases vas a perder el {NOMBRES_DIAS[dia].toLowerCase()}?</legend>
+            <legend className="text-sm font-medium">3. ¿Qué clases vas a perder el {NOMBRES_DIAS[dia].toLowerCase()}?</legend>
             <button
               type="button"
               onClick={() => setMarcadas(todasMarcadas ? [] : clasesDelDia.map((c) => c.inicio))}
@@ -106,7 +124,7 @@ export default function FormularioAusencia({ onEnviar }: { onEnviar: (a: Ausenci
 
       <div>
         <label htmlFor="motivo" className="block text-sm font-medium">
-          3. ¿Por qué vas a faltar?
+          4. ¿Por qué vas a faltar?
         </label>
         <textarea
           id="motivo"
@@ -126,7 +144,7 @@ export default function FormularioAusencia({ onEnviar }: { onEnviar: (a: Ausenci
           Generar correos
         </button>
         {intentoEnviar && faltan.length > 0 && (
-          <p className="mt-2 text-sm text-red-600">Te falta: {faltan.join(" y ")}.</p>
+          <p className="mt-2 text-sm text-red-600">Te falta: {faltan.join(", ")}.</p>
         )}
       </div>
     </form>
