@@ -22,7 +22,7 @@ export function BarraSuperior() {
   const fecha = hoy ? formatearFecha(hoy).replace(/ de \d{4}$/, "") : "";
 
   return (
-    <header className="sticky top-0 z-20 bg-indigo-50/80 backdrop-blur-md dark:bg-slate-950/80">
+    <header className="sticky top-14 z-20 bg-indigo-50/80 backdrop-blur-md dark:bg-slate-950/80">
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center gap-3 px-4 sm:px-8">
         {titulo ? (
           <>
