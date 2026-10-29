@@ -57,7 +57,7 @@ export function PasoSubir({
     const todos = [...archivos, ...nuevos];
     const total = todos.reduce((s, a) => s + a.bytes, 0);
     if (total > TOTAL_MAXIMO) {
-      errores.push(`Entre todos los archivos pesan ${formatoPeso(total)}. El máximo es 4 MB: quita alguno.`);
+      errores.push(`Entre todos los archivos pesan ${formatoPeso(total)}. El máximo es ${formatoPeso(TOTAL_MAXIMO)}: quita alguno.`);
     }
     setArchivos(todos);
     setProblema(errores.length ? errores.join(" ") : null);
@@ -131,7 +131,9 @@ export function PasoSubir({
               elígelos
             </label>
           </p>
-          <p className="mt-1 text-sm text-[#7c849e]">Hasta 8 archivos · 4 MB en total · En el celular puedes tomar la foto directo</p>
+          <p className="mt-1 text-sm text-[#7c849e]">
+            Hasta 8 archivos · {formatoPeso(TOTAL_MAXIMO)} en total · En el celular puedes tomar la foto directo
+          </p>
           {procesando && <p className="mt-3 text-sm text-[#4a5475]">Preparando archivos…</p>}
         </div>
 

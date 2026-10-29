@@ -9,7 +9,9 @@ export type ArchivoListo = {
 const LADO_MAXIMO = 1568;
 const DIMENSION_MINIMA = 250;
 const PDF_MAXIMO = 3 * 1024 * 1024;
-export const TOTAL_MAXIMO = 4 * 1024 * 1024;
+// Los archivos viajan en base64 (+33%) y Vercel rechaza pedidos de más de 4.5 MB (decimales):
+// 3 MiB en base64 son ~4.19 MB, y quedan ~300 KB para el texto pegado y el resto del JSON.
+export const TOTAL_MAXIMO = 3 * 1024 * 1024;
 
 function aBase64(buffer: ArrayBuffer): string {
   const bytes = new Uint8Array(buffer);

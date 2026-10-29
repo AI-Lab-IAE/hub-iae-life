@@ -3,7 +3,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
 import type { z } from "zod";
 
-export const MODELO = "claude-opus-5";
+export const MODELO = "claude-opus-5-5";
 
 const cliente = new Anthropic();
 
@@ -72,9 +72,20 @@ export async function pedirJSON<T extends z.ZodType>(opciones: {
         console.error("[claude] pedido rechazado:", error.message);
         throw new ErrorIA("No pude leer ese material. Revisa que los archivos no estén dañados.", 400);
       }
-      // RateLimitError y APIError (5xx, sobrecarga, cortes de red) sí valen la pena reintentar:
-      // suelen ser tropiezos momentáneos del lado de Anthropic, no un problema del pedido.
-      const reintentable = error instanceof Anthropic.RateLimitError || error instanceof Anthropic.APIError;
+      if (error instanceof Anthropic.PermissionDeniedError) {
+        console.error("[claude] sin permiso para usar este modelo:", error.message);
+        throw new ErrorIA("El servidor no tiene permiso para usar la IA. Avisa a soporte.", 500);
+      }
+      if (error instanceof Anthropic.NotFoundError) {
+        console.error("[claude] modelo no encontrado:", error.message);
+        throw new ErrorIA("El servidor no tiene configurada la conexión con la IA.", 500);
+      }
+      // Solo vale la pena reintentar tropiezos momentáneos del lado de Anthropic: límite de
+      // uso, errores 5xx/sobrecarga, o cortes de conexión. Un 403 o 404 no se arregla reintentando.
+      const reintentable =
+        error instanceof Anthropic.RateLimitError ||
+        error instanceof Anthropic.InternalServerError ||
+        error instanceof Anthropic.APIConnectionError;
       if (reintentable && intento < INTENTOS) {
         console.error(`[claude] intento ${intento} falló (${error.status ?? "?"}), reintentando:`, error.message);
         await new Promise((resolver) => setTimeout(resolver, 1500 * intento));
