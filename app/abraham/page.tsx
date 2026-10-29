@@ -1,4 +1,5 @@
 import { info } from "./info";
+import { AvisoYa } from "./components/AvisoYa";
 
 export default function Page() {
   return (
@@ -6,6 +7,7 @@ export default function Page() {
       <h1 className="text-3xl font-bold">{info.proyecto}</h1>
       <p className="mt-1 text-zinc-500">de {info.estudiante}</p>
       <p className="mt-4 text-zinc-600 dark:text-zinc-400">{info.descripcion}</p>
+      <AvisoYa />
     </main>
   );
 }
