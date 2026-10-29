@@ -16,11 +16,18 @@ export default function FormularioAusencia({ onEnviar }: { onEnviar: (a: Ausenci
   // Guarda la hora de inicio de cada clase marcada.
   const [marcadas, setMarcadas] = useState<string[]>([]);
   const [motivo, setMotivo] = useState("");
+  const [intentoEnviar, setIntentoEnviar] = useState(false);
 
   const dia = fecha ? diaDeFecha(fecha) : null;
   const clasesDelDia = dia ? HORARIO[dia] : [];
   const todasMarcadas = clasesDelDia.length > 0 && marcadas.length === clasesDelDia.length;
-  const listo = dia !== null && marcadas.length > 0 && motivo.trim() !== "";
+
+  // Lo que falta para poder generar los correos.
+  const faltan: string[] = [];
+  if (!fecha) faltan.push("elegir la fecha");
+  else if (!dia) faltan.push("elegir un día de lunes a viernes");
+  else if (marcadas.length === 0) faltan.push("marcar al menos una clase");
+  if (motivo.trim() === "") faltan.push("escribir el motivo");
 
   function cambiarFecha(nueva: string) {
     setFecha(nueva);
@@ -33,7 +40,8 @@ export default function FormularioAusencia({ onEnviar }: { onEnviar: (a: Ausenci
 
   function enviar(e: React.FormEvent) {
     e.preventDefault();
-    if (!listo) return;
+    setIntentoEnviar(true);
+    if (faltan.length > 0 || !dia) return;
     onEnviar({
       fecha,
       dia,
@@ -110,13 +118,17 @@ export default function FormularioAusencia({ onEnviar }: { onEnviar: (a: Ausenci
         />
       </div>
 
-      <button
-        type="submit"
-        disabled={!listo}
-        className="w-full rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
-      >
-        Generar correos
-      </button>
+      <div>
+        <button
+          type="submit"
+          className="w-full rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white hover:bg-blue-700"
+        >
+          Generar correos
+        </button>
+        {intentoEnviar && faltan.length > 0 && (
+          <p className="mt-2 text-sm text-red-600">Te falta: {faltan.join(" y ")}.</p>
+        )}
+      </div>
     </form>
   );
 }
