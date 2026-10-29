@@ -7,29 +7,45 @@ import DiasParaMvp from "./_hub/DiasParaMvp";
 import Escena3D from "./_hub/Escena3D";
 import TarjetaModulo from "./_hub/TarjetaModulo";
 import { colorDe, fuenteHub } from "./_hub/estilo";
-import { modulos, tarjetaCompleta } from "./modulos";
+import { funciones } from "./_life/funciones";
 
 const TITULO = "IAE LIFE";
 const TONOS = ["#67e8f9", "#67e8f9", "#a78bfa", "", "#a78bfa", "#c084fc", "#f472b6", "#f472b6"];
 
-const PASOS = [
+// Qué resuelve IAE LIFE en el día a día, agrupado por momento.
+const MOMENTOS = [
   {
-    titulo: "Cada estudiante crea su módulo",
-    texto: "Una idea con IA para la vida escolar del IAE, construida en su propia carpeta con Claude Code.",
+    titulo: "Encontrar",
+    texto: "Mapa, contactos, documentos, calendario, anuncios y horario del colegio en un solo lugar.",
+    slugs: ["camille"],
   },
   {
-    titulo: "Revisión y vista previa",
-    texto: "Cada cambio llega como un Pull Request con su enlace de prueba. Nada se publica sin revisión.",
+    titulo: "Estudiar y organizarse",
+    texto: "La IA encuentra lo que no sabes antes del examen y reparte tus tareas en tu horario real.",
+    slugs: ["marco", "daniela"],
   },
   {
-    titulo: "Todo se une en IAE LIFE",
-    texto: "Cuando los módulos estén listos, se integran en una sola app con un mismo diseño.",
+    titulo: "Comunicarse",
+    texto: "Avisos que sí llegan a cada estudiante y correos a profesores redactados por la IA.",
+    slugs: ["abraham", "jonathan"],
+  },
+];
+
+const RUTA = [
+  { cuando: "13 nov 2026", titulo: "MVP", texto: "Las funciones publicadas, con datos de ejemplo y probadas en celular." },
+  { cuando: "16–27 nov", titulo: "Piloto", texto: "Un grupo pequeño de estudiantes y profesores la usa y da su opinión." },
+  { cuando: "Diciembre", titulo: "Ajustes", texto: "Cambios según el piloto y decisión de qué funciones siguen." },
+  {
+    cuando: "2027",
+    titulo: "Versión final",
+    texto: "Entrada con la cuenta @iae.edu, base de datos y datos reales del colegio, con autorización.",
   },
 ];
 
 export default function Home() {
-  const colores = modulos.map((m, i) => colorDe(m.slug, i));
-  const enMarcha = modulos.filter(tarjetaCompleta).length;
+  const colores = funciones.map((f, i) => colorDe(f.slug, i));
+  const listas = funciones.filter((f) => f.estado === "lista").length;
+  const nombre = (slug: string) => funciones.find((f) => f.slug === slug)!.proyecto;
 
   return (
     <ViewTransition enter="hub-llegar" exit="hub-salir" default="none">
@@ -54,15 +70,9 @@ export default function Home() {
                 AI Lab · Instituto Alberto Einstein
               </p>
 
-              <p
-                className="hub-entrar mt-8 font-mono text-sm uppercase tracking-[0.5em] text-white/50"
-                style={{ animationDelay: "0.2s" }}
-              >
-                HUB
-              </p>
               <h1
                 aria-label={TITULO}
-                className="mt-2 text-[clamp(4.2rem,14vw,10.5rem)] font-bold leading-[0.85] tracking-tighter [perspective:800px]"
+                className="mt-8 text-[clamp(4.2rem,14vw,10.5rem)] font-bold leading-[0.85] tracking-tighter [perspective:800px]"
               >
                 {TITULO.split("").map((letra, i) => (
                   <span
@@ -71,7 +81,7 @@ export default function Home() {
                     className="hub-letra"
                     style={{ "--tono": TONOS[i] || "#fff", animationDelay: `${0.3 + i * 0.07}s` } as CSSProperties}
                   >
-                    {letra === " " ? " " : letra}
+                    {letra === " " ? " " : letra}
                   </span>
                 ))}
               </h1>
@@ -80,24 +90,24 @@ export default function Home() {
                 className="hub-entrar mt-8 max-w-xl text-lg leading-relaxed text-white/70 md:text-xl"
                 style={{ animationDelay: "0.9s" }}
               >
-                Cada estudiante del AI Lab construye un módulo con inteligencia artificial.{" "}
-                <span className="hub-degradado font-semibold">Juntos forman IAE LIFE</span>, la app para la vida
-                escolar del IAE.
+                La app para la vida escolar del IAE.{" "}
+                <span className="hub-degradado font-semibold">Creada por estudiantes del AI Lab</span> con
+                inteligencia artificial.
               </p>
 
               <div className="hub-entrar mt-10 flex flex-wrap gap-3" style={{ animationDelay: "1.05s" }}>
-                <a href="#proyectos" className="hub-boton">
-                  Explorar los proyectos <span aria-hidden>↓</span>
+                <a href="#funciones" className="hub-boton">
+                  Explorar las funciones <span aria-hidden>↓</span>
                 </a>
-                <Link href="/coordinador" className="hub-boton-fantasma">
-                  Coordinador
+                <Link href="/creditos" className="hub-boton-fantasma">
+                  Quién la hizo
                 </Link>
               </div>
 
               <dl className="hub-entrar mt-12 grid max-w-lg grid-cols-3 gap-3" style={{ animationDelay: "1.2s" }}>
                 {[
-                  { valor: modulos.length, etiqueta: "Proyectos" },
-                  { valor: enMarcha, etiqueta: "En construcción" },
+                  { valor: funciones.length, etiqueta: "Funciones" },
+                  { valor: listas, etiqueta: "Para probar" },
                   { valor: <DiasParaMvp />, etiqueta: "Días para el MVP" },
                 ].map((d) => (
                   <div key={d.etiqueta} className="hub-vidrio rounded-2xl px-4 py-3">
@@ -114,38 +124,42 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Proyectos */}
-        <section id="proyectos" className="relative mx-auto max-w-6xl scroll-mt-24 px-4 py-28">
+        {/* Funciones */}
+        <section id="funciones" className="relative mx-auto max-w-6xl scroll-mt-24 px-4 py-28">
           <Aparecer>
-            <p className="font-mono text-sm uppercase tracking-[0.3em] text-cyan-300/80">01 — Los módulos</p>
+            <p className="font-mono text-sm uppercase tracking-[0.3em] text-cyan-300/80">01 — Las funciones</p>
             <h2 className="mt-4 max-w-2xl text-4xl font-bold tracking-tight text-white md:text-6xl">
-              {modulos.length} ideas, <span className="hub-degradado">una sola app</span>.
+              {funciones.length} ideas, <span className="hub-degradado">una sola app</span>.
             </h2>
             <p className="mt-4 max-w-xl text-white/60">
-              Toca un proyecto para abrir su módulo. Cada uno está en construcción rumbo al MVP del 13 de
-              noviembre.
+              Toca una función para probarla. Es una vista previa: todos los datos son de ejemplo y ficticios, y lo
+              que guardes se queda solo en este navegador.
             </p>
           </Aparecer>
 
           <ul className="mt-16 grid gap-6 [perspective:1200px] sm:grid-cols-2 lg:grid-cols-3">
-            {modulos.map((m, i) => (
-              <li key={m.slug}>
+            {funciones.map((f, i) => (
+              <li key={f.slug}>
                 <Aparecer retraso={(i % 3) * 120} className="h-full">
                   <TarjetaModulo
-                    href={`/${m.slug}`}
+                    href={f.href}
                     numero={String(i + 1).padStart(2, "0")}
-                    proyecto={m.proyecto}
-                    estudiante={m.estudiante}
-                    descripcion={m.descripcion}
+                    proyecto={f.proyecto}
+                    estudiante={f.estudiante}
+                    descripcion={f.descripcion}
                     color={colores[i]}
-                    completa={tarjetaCompleta(m)}
+                    completa={f.estado === "lista"}
+                    etiqueta={f.estado === "lista" ? "Lista para probar" : "Próximamente"}
                   />
                 </Aparecer>
               </li>
             ))}
             <li>
-              <Aparecer retraso={(modulos.length % 3) * 120} className="h-full">
-                <div className="flex h-full min-h-72 flex-col items-center justify-center gap-6 rounded-3xl border border-dashed border-white/15 p-8 text-center">
+              <Aparecer retraso={(funciones.length % 3) * 120} className="h-full">
+                <Link
+                  href="/creditos"
+                  className="flex h-full min-h-72 flex-col items-center justify-center gap-6 rounded-3xl border border-dashed border-white/15 p-8 text-center transition-colors hover:border-white/35"
+                >
                   <span className="hub-cubo" style={{ "--l": "56px" } as CSSProperties} aria-hidden>
                     <i />
                     <i />
@@ -154,36 +168,66 @@ export default function Home() {
                     <i />
                     <i />
                   </span>
-                  <div>
-                    <p className="font-mono text-xs uppercase tracking-[0.3em] text-white/40">Próximamente</p>
-                    <p className="mt-2 text-xl font-semibold text-white">IAE LIFE</p>
-                    <p className="mt-2 text-sm text-white/50">Todos los módulos en una sola app.</p>
-                  </div>
-                </div>
+                  <span>
+                    <span className="block font-mono text-xs uppercase tracking-[0.3em] text-white/40">Créditos</span>
+                    <span className="mt-2 block text-xl font-semibold text-white">Hecha por estudiantes</span>
+                    <span className="mt-2 block text-sm text-white/50">Conoce quién creó cada función →</span>
+                  </span>
+                </Link>
               </Aparecer>
             </li>
           </ul>
         </section>
 
-        {/* Cómo nace IAE LIFE */}
+        {/* Para el día a día */}
+        <section className="relative mx-auto max-w-6xl px-4 pb-28">
+          <Aparecer>
+            <p className="font-mono text-sm uppercase tracking-[0.3em] text-violet-300/80">02 — El día a día</p>
+            <h2 className="mt-4 text-4xl font-bold tracking-tight text-white md:text-6xl">Qué resuelve</h2>
+          </Aparecer>
+          <div className="mt-16 grid gap-6 md:grid-cols-3">
+            {MOMENTOS.map((m, i) => (
+              <Aparecer key={m.titulo} retraso={i * 150} className="h-full">
+                <div className="hub-vidrio h-full rounded-3xl p-6">
+                  <h3 className="text-xl font-semibold text-white">{m.titulo}</h3>
+                  <p className="mt-2 leading-relaxed text-white/60">{m.texto}</p>
+                  <p className="mt-5 flex flex-wrap gap-2">
+                    {m.slugs.map((s) => (
+                      <span
+                        key={s}
+                        className="rounded-full border border-white/15 px-3 py-1 text-xs text-white/80"
+                        style={{ borderColor: colorDe(s, 0) }}
+                      >
+                        {nombre(s)}
+                      </span>
+                    ))}
+                  </p>
+                </div>
+              </Aparecer>
+            ))}
+          </div>
+        </section>
+
+        {/* Hoja de ruta */}
         <section className="relative mx-auto max-w-6xl px-4 pb-32">
           <Aparecer>
-            <p className="font-mono text-sm uppercase tracking-[0.3em] text-violet-300/80">02 — El proceso</p>
-            <h2 className="mt-4 text-4xl font-bold tracking-tight text-white md:text-6xl">Cómo nace IAE LIFE</h2>
+            <p className="font-mono text-sm uppercase tracking-[0.3em] text-pink-300/80">03 — Hoja de ruta</p>
+            <h2 className="mt-4 text-4xl font-bold tracking-tight text-white md:text-6xl">Hacia la versión final</h2>
           </Aparecer>
           <div className="relative mt-16">
             <div
               className="absolute left-0 right-0 top-7 hidden h-px bg-linear-to-r from-cyan-300/0 via-violet-400/60 to-pink-400/0 md:block"
               aria-hidden
             />
-            <ol className="grid gap-10 md:grid-cols-3 md:gap-6">
-              {PASOS.map((p, i) => (
+            <ol className="grid gap-10 md:grid-cols-4 md:gap-6">
+              {RUTA.map((p, i) => (
                 <li key={p.titulo}>
                   <Aparecer retraso={i * 150}>
                     <span className="hub-vidrio relative grid size-14 place-items-center rounded-2xl font-mono text-lg text-white">
                       {String(i + 1).padStart(2, "0")}
                     </span>
-                    <h3 className="mt-6 text-xl font-semibold text-white">{p.titulo}</h3>
+                    <p className="mt-6 font-mono text-xs uppercase tracking-[0.2em] text-white/40">{p.cuando}</p>
+                    <h3 className="mt-1 text-xl font-semibold text-white">{p.titulo}</h3>
                     <p className="mt-2 leading-relaxed text-white/60">{p.texto}</p>
                   </Aparecer>
                 </li>
@@ -194,9 +238,9 @@ export default function Home() {
 
         <footer className="border-t border-white/5">
           <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-8 text-sm text-white/40">
-            <p>AI Lab · Instituto Alberto Einstein · 2026</p>
-            <Link href="/coordinador" className="transition-colors hover:text-white">
-              Coordinador
+            <p>IAE LIFE · AI Lab · Instituto Alberto Einstein · 2026</p>
+            <Link href="/creditos" className="transition-colors hover:text-white">
+              Créditos
             </Link>
           </div>
         </footer>

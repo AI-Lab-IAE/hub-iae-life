@@ -1,7 +1,7 @@
 import Link from "next/link";
 
-// Barra superior del HUB, con la marca (un cubo 3D que gira) y los enlaces.
-export default function BarraHub({ actual }: { actual: "inicio" | "coordinador" }) {
+// Barra superior de IAE LIFE, con la marca (un cubo 3D que gira) y los enlaces.
+export default function BarraHub({ actual }: { actual: "inicio" | "coordinador" | "creditos" }) {
   const enlace = (activo: boolean) =>
     `rounded-full px-4 py-2 transition-colors ${activo ? "bg-white/10 text-white" : "text-white/60 hover:text-white"}`;
 
@@ -17,13 +17,16 @@ export default function BarraHub({ actual }: { actual: "inicio" | "coordinador" 
             <i />
             <i />
           </span>
-          HUB IAE LIFE
+          IAE LIFE
         </Link>
         <div className="flex items-center gap-1">
-          <Link href="/#proyectos" className={`hidden sm:block ${enlace(false)}`}>
-            Proyectos
+          <Link href="/#funciones" className={`hidden sm:block ${enlace(false)}`}>
+            Funciones
           </Link>
-          <Link href="/coordinador" className={enlace(actual === "coordinador")}>
+          <Link href="/creditos" className={enlace(actual === "creditos")}>
+            Créditos
+          </Link>
+          <Link href="/coordinador" className={`hidden sm:block ${enlace(actual === "coordinador")}`}>
             Coordinador
           </Link>
         </div>

@@ -11,10 +11,21 @@ type Props = {
   descripcion: string;
   color: string;
   completa: boolean;
+  // Texto del estado; si no se pasa, se usa el del HUB ("En construcción" o "Idea por definir").
+  etiqueta?: string;
 };
 
 // Tarjeta de un módulo que se inclina en 3D siguiendo el puntero.
-export default function TarjetaModulo({ href, numero, proyecto, estudiante, descripcion, color, completa }: Props) {
+export default function TarjetaModulo({
+  href,
+  numero,
+  proyecto,
+  estudiante,
+  descripcion,
+  color,
+  completa,
+  etiqueta,
+}: Props) {
   const ref = useRef<HTMLAnchorElement>(null);
 
   const mover = (e: PointerEvent<HTMLAnchorElement>) => {
@@ -59,7 +70,7 @@ export default function TarjetaModulo({ href, numero, proyecto, estudiante, desc
               className={`size-2 rounded-full ${completa ? "hub-latido bg-[var(--color)]" : "bg-white/30"}`}
               aria-hidden
             />
-            {completa ? "En construcción" : "Idea por definir"}
+            {etiqueta ?? (completa ? "En construcción" : "Idea por definir")}
           </span>
           <span className="font-medium text-[var(--color)] transition-transform duration-300 group-hover:translate-x-1">
             Abrir →
