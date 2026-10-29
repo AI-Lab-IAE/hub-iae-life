@@ -1,69 +1,53 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ViewTransition, type CSSProperties } from "react";
-import "../_hub/hub.css";
-import Aparecer from "../_hub/Aparecer";
-import BarraHub from "../_hub/BarraHub";
-import { colorDe, fuenteHub } from "../_hub/estilo";
+import { ArrowRight } from "lucide-react";
 import { funciones } from "../_life/funciones";
 
 export const metadata: Metadata = {
-  title: "Créditos · IAE LIFE",
+  title: "Créditos",
 };
 
 // Quién creó cada función de IAE LIFE (solo el nombre de pila, como en info.ts).
 export default function Creditos() {
   return (
-    <ViewTransition enter="hub-llegar" exit="hub-salir" default="none">
-      <main className={`hub ${fuenteHub.variable} flex-1`}>
-        <div className="hub-aurora" />
-        <div className="hub-cuadricula" />
-        <BarraHub actual="creditos" />
-
-        <div className="relative mx-auto max-w-4xl px-4 pb-24 pt-36">
-          <p className="hub-entrar font-mono text-sm uppercase tracking-[0.3em] text-cyan-300/80">Créditos</p>
-          <h1
-            className="hub-entrar mt-3 text-5xl font-bold tracking-tight text-white md:text-7xl"
-            style={{ animationDelay: "0.1s" }}
-          >
-            Hecha por <span className="hub-degradado">estudiantes</span>
+    <main className="flex-1 bg-azul-50/60">
+      <section className="bg-linear-to-br from-azul-950 via-azul-900 to-azul-700 text-white">
+        <div className="mx-auto max-w-4xl px-4 py-16 md:py-20">
+          <p className="life-entrar text-sm font-semibold uppercase tracking-[0.2em] text-azul-200">Créditos</p>
+          <h1 className="life-entrar mt-3 text-4xl font-bold tracking-tight md:text-6xl" style={{ animationDelay: "0.1s" }}>
+            Hecha por estudiantes
           </h1>
-          <p className="hub-entrar mt-4 max-w-xl text-lg text-white/60" style={{ animationDelay: "0.2s" }}>
-            Cada función de IAE LIFE nació como el proyecto de un estudiante del AI Lab del Instituto Alberto
-            Einstein, construido con inteligencia artificial.
-          </p>
-
-          <ul className="mt-14 grid gap-4">
-            {funciones.map((f, i) => (
-              <li key={f.slug}>
-                <Aparecer retraso={i * 100}>
-                  <div
-                    className="hub-vidrio flex flex-col gap-3 rounded-3xl p-6 sm:flex-row sm:items-center sm:gap-6"
-                    style={{ "--color": colorDe(f.slug, i) } as CSSProperties}
-                  >
-                    <span className="hub-orbe shrink-0" aria-hidden />
-                    <div className="min-w-0 flex-1">
-                      <p className="text-xl font-semibold text-white">{f.proyecto}</p>
-                      <p className="mt-1 text-sm leading-relaxed text-white/60">{f.descripcion}</p>
-                    </div>
-                    <div className="shrink-0 sm:text-right">
-                      <p className="text-xs uppercase tracking-[0.2em] text-white/40">Creado por</p>
-                      <p className="text-lg font-semibold text-[var(--color)]">{f.estudiante}</p>
-                    </div>
-                  </div>
-                </Aparecer>
-              </li>
-            ))}
-          </ul>
-
-          <p className="mt-12 text-sm text-white/40">
-            Coordinación: José David Saldaña, AI Lab IAE.{" "}
-            <Link href="/" className="text-white/70 underline-offset-4 hover:underline">
-              Volver al inicio
-            </Link>
+          <p className="life-entrar mt-4 max-w-xl text-lg text-azul-100" style={{ animationDelay: "0.2s" }}>
+            Cada función de IAE LIFE nació como el proyecto de un estudiante del AI Lab del Instituto Alberto Einstein,
+            construido con inteligencia artificial.
           </p>
         </div>
-      </main>
-    </ViewTransition>
+      </section>
+
+      <div className="mx-auto max-w-4xl px-4 py-12">
+        <ul className="grid gap-4">
+          {funciones.map((f) => (
+            <li key={f.slug} className="flex flex-col gap-4 rounded-3xl border border-azul-100 bg-white p-6 sm:flex-row sm:items-center">
+              <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-azul-800 text-white">
+                <f.icono className="size-6" aria-hidden />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="text-xl font-bold text-azul-950">{f.proyecto}</p>
+                <p className="mt-1 text-sm leading-relaxed text-azul-900/65">{f.descripcion}</p>
+              </div>
+              <div className="shrink-0 sm:text-right">
+                <p className="text-xs font-semibold uppercase tracking-[0.15em] text-azul-500">Creada por</p>
+                <p className="text-lg font-bold text-azul-800">{f.estudiante}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+
+        <p className="mt-10 text-sm text-azul-900/60">Coordinación: José David Saldaña, AI Lab IAE.</p>
+        <Link href="/" className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-azul-700 hover:text-azul-900">
+          Volver al inicio <ArrowRight className="size-4" aria-hidden />
+        </Link>
+      </div>
+    </main>
   );
 }

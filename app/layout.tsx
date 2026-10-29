@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import BarraLife from "./_life/BarraLife";
+import Encabezado from "./_life/Encabezado";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,8 +14,19 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "IAE LIFE",
-  description: "La app para la vida escolar del IAE, creada por los estudiantes del AI Lab del Instituto Alberto Einstein",
+  title: {
+    default: "IAE LIFE",
+    template: "%s · IAE LIFE",
+  },
+  description: "La app para la vida escolar del IAE, creada por los estudiantes del AI Lab del Instituto Alberto Einstein.",
+  applicationName: "IAE LIFE",
+  appleWebApp: { title: "IAE LIFE", capable: true, statusBarStyle: "default" },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#1d3a8a",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -25,7 +36,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <BarraLife />
+        <Encabezado />
         {children}
       </body>
     </html>

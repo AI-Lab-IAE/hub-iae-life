@@ -22,7 +22,7 @@ export function MenuLateral() {
   const indice = opciones.findIndex((o) => o.href === ruta);
 
   return (
-    <nav className="fixed top-11 bottom-0 left-0 z-30 hidden w-24 flex-col items-center overflow-y-auto rounded-r-3xl bg-indigo-950 py-5 sm:flex">
+    <nav className="fixed top-14 bottom-0 left-0 z-30 hidden w-24 flex-col items-center overflow-y-auto rounded-r-3xl bg-indigo-950 py-5 sm:flex">
       {/* Espacio para el logo del IAE: se cambia por la imagen oficial cuando el coordinador lo autorice. */}
       <Link href="/camille" aria-label="Inicio" className="mb-6 flex flex-col items-center gap-1 text-white">
         <Icono nombre="birrete" className="size-8" />
