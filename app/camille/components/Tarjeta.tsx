@@ -1,24 +1,38 @@
 import Link from "next/link";
+import anim from "../animaciones.module.css";
+import type { RutaSeccion } from "../secciones";
+import { Contador } from "./Contador";
+import { tocar } from "./estilos";
+import { Icono, type NombreIcono } from "./Icono";
 
 type Props = {
-  ruta: string;
-  icono: string;
+  ruta: RutaSeccion;
+  icono: NombreIcono;
   nombre: string;
-  descripcion: string;
+  numero: number;
+  texto: string;
 };
 
-// Tarjeta de la página principal: lleva a una sección de la guía.
-export function Tarjeta({ ruta, icono, nombre, descripcion }: Props) {
+// Tarjeta índigo de "Mis secciones": nombre, ícono y un número que sube (por ejemplo "7 contactos").
+export function Tarjeta({ ruta, icono, nombre, numero, texto }: Props) {
   return (
     <Link
       href={`/camille/${ruta}`}
-      className="flex flex-col gap-2 rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-zinc-400 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-600"
+      className={`${tocar} ${anim.brillo} group relative flex h-full flex-col justify-between gap-3 overflow-hidden rounded-2xl bg-linear-to-br from-indigo-800 to-indigo-950 p-3 text-white shadow-md shadow-indigo-900/20 hover:-translate-y-1 hover:shadow-xl hover:shadow-indigo-900/30 sm:p-4`}
     >
-      <span className="text-3xl" aria-hidden="true">
-        {icono}
+      <span className="absolute -top-6 -right-6 size-16 rounded-full bg-white/5 transition duration-500 group-hover:scale-150" aria-hidden="true" />
+      <span className="flex size-10 items-center justify-center rounded-xl bg-white/10 ring-1 ring-white/15 transition duration-300 group-hover:rotate-6 group-hover:bg-white/20">
+        <Icono nombre={icono} className="size-5" />
       </span>
-      <span className="font-semibold">{nombre}</span>
-      <span className="text-sm text-zinc-500 dark:text-zinc-400">{descripcion}</span>
+      <span>
+        <span className="block text-sm leading-tight font-bold sm:text-base">{nombre}</span>
+        <span className="mt-0.5 block text-[11px] text-indigo-200 sm:text-xs">
+          <strong className="text-white">
+            <Contador valor={numero} />
+          </strong>{" "}
+          {texto}
+        </span>
+      </span>
     </Link>
   );
 }
