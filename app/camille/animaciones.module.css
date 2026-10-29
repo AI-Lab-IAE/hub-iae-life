@@ -1,0 +1,153 @@
+/* Animaciones del módulo. Todas se apagan si el usuario activó "reducir movimiento". */
+@media (prefers-reduced-motion: no-preference) {
+  /* Aparece subiendo un poco. Con --retraso, los elementos entran uno tras otro. */
+  .aparecer {
+    animation: aparecer 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    animation-delay: var(--retraso, 0ms);
+  }
+
+  /* Cada pantalla entra deslizándose desde la derecha al cambiar de pestaña. */
+  .entrar {
+    animation: entrar 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+
+  /* Crece desde pequeño con un rebote (tarjetas de "Mis secciones"). */
+  .crecer {
+    animation: crecer 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    animation-delay: var(--retraso, 0ms);
+  }
+
+  /* Círculos de fondo que flotan despacio. */
+  .flotar {
+    animation: flotar 7s ease-in-out infinite;
+  }
+  .flotarLento {
+    animation: flotar 10s ease-in-out infinite reverse;
+  }
+
+  /* Punto que late (por ejemplo, junto a "Ahora"). */
+  .latido {
+    animation: latido 1.6s ease-out infinite;
+  }
+
+  /* Ícono que se mueve un poco, como una campana sonando. */
+  .sonar {
+    animation: sonar 2.4s ease-in-out infinite;
+    transform-origin: 50% 10%;
+  }
+
+  /* Pin del mapa que cae desde arriba. */
+  .caer {
+    animation: caer 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    animation-delay: var(--retraso, 0ms);
+  }
+
+  /* Pin elegido o encontrado: brinca. */
+  .brincar {
+    animation: brincar 0.9s ease-in-out infinite;
+  }
+
+  /* Brillo que cruza la tarjeta al pasar el mouse. */
+  .brillo::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / 0.18) 50%, transparent 70%);
+    transform: translateX(-120%);
+    transition: transform 0.8s ease;
+    pointer-events: none;
+  }
+  .brillo:hover::after {
+    transform: translateX(120%);
+  }
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes entrar {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes crecer {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes flotar {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-12px, 10px);
+  }
+}
+
+@keyframes latido {
+  0% {
+    box-shadow: 0 0 0 0 rgb(255 255 255 / 0.7);
+  }
+  100% {
+    box-shadow: 0 0 0 10px rgb(255 255 255 / 0);
+  }
+}
+
+@keyframes sonar {
+  0%,
+  60%,
+  100% {
+    transform: rotate(0);
+  }
+  10%,
+  30%,
+  50% {
+    transform: rotate(-12deg);
+  }
+  20%,
+  40% {
+    transform: rotate(12deg);
+  }
+}
+
+@keyframes caer {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes brincar {
+  0%,
+  100% {
+    transform: none;
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
