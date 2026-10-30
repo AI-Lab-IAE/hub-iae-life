@@ -1,13 +1,21 @@
+import type { Metadata } from "next";
+import { Inter, Space_Grotesk } from "next/font/google";
+import AvisIACliente from "./components/AvisIACliente";
 import { info } from "./info";
-import AvisIA from "./components/AvisIA";
+import "./avisia.css";
+
+const titulo = Space_Grotesk({ subsets: ["latin"], weight: ["500", "600", "700"], variable: "--font-avisia-titulo" });
+const texto = Inter({ subsets: ["latin"], variable: "--font-avisia-texto" });
+
+export const metadata: Metadata = {
+  title: `${info.proyecto} — Avisa a tus profesores en segundos`,
+  description: info.descripcion,
+};
 
 export default function Page() {
   return (
-    <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-12">
-      <h1 className="text-3xl font-bold">{info.proyecto}</h1>
-      <p className="mt-1 text-zinc-500">de {info.estudiante}</p>
-      <p className="mt-4 text-zinc-600 dark:text-zinc-400">{info.descripcion}</p>
-      <AvisIA />
-    </main>
+    <div className={`avisia ${titulo.variable} ${texto.variable}`}>
+      <AvisIACliente />
+    </div>
   );
 }
