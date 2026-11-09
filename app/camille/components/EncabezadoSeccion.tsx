@@ -21,9 +21,12 @@ export function EncabezadoSeccion({ ruta }: { ruta: RutaSeccion }) {
             <p className="text-sm text-indigo-100/90">{seccion.descripcion}</p>
           </div>
         </div>
-        <span className="relative mt-4 inline-block rounded-full bg-white/15 px-2.5 py-0.5 text-[11px] font-medium text-white ring-1 ring-white/25">
-          Datos de ejemplo, ficticios
-        </span>
+        {/* Los pendientes los escribe el estudiante: no son datos de ejemplo. */}
+        {ruta !== "pendientes" && (
+          <span className="relative mt-4 inline-block rounded-full bg-white/15 px-2.5 py-0.5 text-[11px] font-medium text-white ring-1 ring-white/25">
+            Datos de ejemplo, ficticios
+          </span>
+        )}
       </div>
       <p className="flex gap-3 p-4 text-sm text-slate-600 dark:text-slate-300">
         <Icono nombre="informacion" className="size-5 shrink-0 text-indigo-500" />

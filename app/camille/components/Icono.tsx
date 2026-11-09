@@ -134,6 +134,13 @@ const trazos = {
     </>
   ),
   estrella: <path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z" />,
+  lista: (
+    <>
+      <path d="M4 6l1.5 1.5L8 5M4 12l1.5 1.5L8 11M4 18l1.5 1.5L8 17" />
+      <path d="M12 6.5h8M12 12.5h8M12 18.5h8" />
+    </>
+  ),
+  mas: <path d="M12 5v14M5 12h14" />,
 };
 
 export type NombreIcono = keyof typeof trazos;
