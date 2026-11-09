@@ -29,13 +29,6 @@ export const secciones = [
     explicacion: "Toca un club para ver de qué se trata, cuándo se reúne y quiénes lo forman. No todos reciben integrantes siempre: puedes preguntarle al encargado o intentar unirte si está abierto.",
   },
   {
-    ruta: "preguntas",
-    icono: "pregunta",
-    nombre: "Preguntas frecuentes",
-    descripcion: "Respuestas a las dudas más comunes.",
-    explicacion: "Las dudas más comunes, agrupadas por tema. Toca una pregunta para ver la respuesta.",
-  },
-  {
     ruta: "calendario",
     icono: "calendario",
     nombre: "Calendario",

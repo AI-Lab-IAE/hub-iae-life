@@ -129,13 +129,6 @@ const trazos = {
     </>
   ),
   mas: <path d="M12 5v14M5 12h14" />,
-  pregunta: (
-    <>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M9.5 9.5a2.5 2.5 0 1 1 3.8 2.1c-.8.5-1.3 1-1.3 1.9" />
-      <circle cx="12" cy="16.75" r="0.6" fill="currentColor" />
-    </>
-  ),
   robot: (
     <>
       <rect x="4" y="8" width="16" height="12" rx="3" />

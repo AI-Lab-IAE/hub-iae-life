@@ -14,7 +14,6 @@ const opciones: { href: string; nombre: string; icono: NombreIcono }[] = [
   { href: "/camille/contactos", nombre: "Contactos", icono: "contactos" },
   { href: "/camille/pendientes", nombre: "Pendientes", icono: "lista" },
   { href: "/camille/clubes", nombre: "Clubes", icono: "estrella" },
-  { href: "/camille/preguntas", nombre: "Preguntas", icono: "pregunta" },
   { href: "/camille/mapa", nombre: "Mapa", icono: "mapa" },
   { href: "/camille/informacion", nombre: "Información", icono: "informacion" },
   { href: "/camille/perfil", nombre: "Perfil", icono: "perfil" },

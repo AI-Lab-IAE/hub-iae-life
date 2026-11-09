@@ -1,6 +1,6 @@
 import type { NombreIcono } from "./Icono";
 
-// Pestañas de la barra de navegación. Contactos, Mapa, Clubes, Preguntas e Información se abren desde el inicio.
+// Pestañas de la barra de navegación. Contactos, Mapa, Clubes e Información se abren desde el inicio.
 export const pestanas: { href: string; nombre: string; icono: NombreIcono }[] = [
   { href: "/camille", nombre: "Inicio", icono: "inicio" },
   { href: "/camille/anuncios", nombre: "Anuncios", icono: "anuncios" },
