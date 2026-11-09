@@ -1,19 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <defs>
-    <linearGradient id="fondo" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#a855f7" />
-      <stop offset="0.55" stop-color="#4f46e5" />
-      <stop offset="1" stop-color="#06b6d4" />
-    </linearGradient>
-    <linearGradient id="aguja" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#fde047" />
-      <stop offset="1" stop-color="#fb7185" />
+    <linearGradient id="fondo" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#4338ca" />
+      <stop offset="0.6" stop-color="#7c3aed" />
+      <stop offset="1" stop-color="#ec4899" />
     </linearGradient>
   </defs>
   <rect width="64" height="64" rx="16" fill="url(#fondo)" />
-  <path d="M43.5 15.6A20 20 0 1 0 52 32H42" fill="none" stroke="#fff" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" />
-  <g transform="rotate(63 32 32)">
-    <path d="M32 4l4.5 28h-9z" fill="url(#aguja)" />
-    <path d="M27.5 32h9L32 45z" fill="#ddd6fe" />
-  </g>
+  <path d="M31 15A20 20 0 1 0 50 35H40" fill="none" stroke="#fff" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M60 5L38.5 13l7.5 4 4 7.5z" fill="#fde047" />
+  <path d="M60 5L46 17l1.5 5.5 2.5 2z" fill="#fb923c" />
 </svg>
