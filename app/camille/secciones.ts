@@ -29,11 +29,11 @@ export const secciones = [
     explicacion: "Toca un club para ver su logo, cuándo se reúne y quiénes lo forman. Con «Me quiero unir» se anota en tus pendientes hablar con el encargado.",
   },
   {
-    ruta: "documentos",
-    icono: "documentos",
-    nombre: "Documentos",
-    descripcion: "Reglamentos, formatos y circulares.",
-    explicacion: "Mira qué documentos existen, para qué sirve cada uno y en qué oficina se piden. Están agrupados por tipo.",
+    ruta: "preguntas",
+    icono: "pregunta",
+    nombre: "Preguntas frecuentes",
+    descripcion: "Respuestas a las dudas más comunes.",
+    explicacion: "Las dudas más comunes, agrupadas por tema. Toca una pregunta para ver la respuesta.",
   },
   {
     ruta: "calendario",

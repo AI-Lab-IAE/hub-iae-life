@@ -161,14 +161,17 @@ export const clubes = [
 
 export type Club = (typeof clubes)[number];
 
-// Por ahora son solo descripciones; los archivos reales van en DESPUES.md.
-export const documentos = [
-  { titulo: "Reglamento escolar", tipo: "Reglamento", descripcion: "Normas de convivencia, uniforme y puntualidad.", dondeSePide: "Coordinación Prueba" },
-  { titulo: "Formato de justificante de falta", tipo: "Formato", descripcion: "Se llena cuando faltas por enfermedad o un motivo familiar.", dondeSePide: "Control escolar" },
-  { titulo: "Solicitud de constancia de estudios", tipo: "Formato", descripcion: "Para pedir una constancia que diga que eres estudiante del colegio.", dondeSePide: "Oficina Prueba 1" },
-  { titulo: "Permiso de salida anticipada", tipo: "Formato", descripcion: "Para salir antes de la hora con autorización de tu familia.", dondeSePide: "Coordinación Prueba" },
-  { titulo: "Circular de la Feria de Ciencias de Prueba", tipo: "Circular", descripcion: "Fechas, horarios y reglas para presentar tu proyecto.", dondeSePide: "Tablero de avisos" },
-  { titulo: "Lista de útiles de ejemplo", tipo: "Circular", descripcion: "Materiales que se necesitan para el segundo periodo.", dondeSePide: "Tablero de avisos" },
+// Preguntas de ejemplo: las respuestas son inventadas y hay que confirmarlas con el colegio.
+export const preguntas = [
+  { tema: "Primeros días", pregunta: "¿Dónde encuentro mi salón?", respuesta: "Búscalo en la sección Mapa por número o nombre. El pin te muestra en qué piso está." },
+  { tema: "Primeros días", pregunta: "¿Qué hago si llego tarde?", respuesta: "Pasa primero por Coordinación Prueba para que te den el pase de entrada a clase." },
+  { tema: "Primeros días", pregunta: "¿A quién le pido ayuda si estoy perdido o perdida?", respuesta: "A cualquier profesor o a Coordinación Prueba. También puedes buscar a la persona indicada en Contactos." },
+  { tema: "Trámites", pregunta: "¿Cómo pido una constancia de estudios?", respuesta: "Llena la solicitud en la Oficina Prueba 1 y entrégala ahí mismo." },
+  { tema: "Trámites", pregunta: "¿Qué hago si falté a clases?", respuesta: "Pide el formato de justificante en Control escolar y entrégalo lleno cuando regreses." },
+  { tema: "Trámites", pregunta: "¿Cómo pido permiso para salir antes?", respuesta: "Tu familia debe autorizarlo. El permiso de salida anticipada se pide en Coordinación Prueba." },
+  { tema: "Organización", pregunta: "¿Dónde anoto mis tareas?", respuesta: "En Mis pendientes. Ahí pones para cuándo es, la materia y dónde está la información, y marcas el círculo al terminar." },
+  { tema: "Organización", pregunta: "¿Cómo me organizo si tengo muchas cosas?", respuesta: "Anota todo apenas te lo dejen. La lista pone primero lo que se entrega antes, así sabes por dónde empezar." },
+  { tema: "Organización", pregunta: "¿Cómo conozco a más estudiantes?", respuesta: "Entra a Clubes, elige uno que te guste y toca «Me quiero unir» para acordarte de hablar con el encargado." },
 ] as const;
 
 // Lugares del colegio por piso. "x" y "y" son la posición del pin en el plano (en %, de 0 a 100)
@@ -244,7 +247,7 @@ export const reglas = [
   "Usa el uniforme completo de lunes a viernes.",
   "El celular se guarda durante las clases, salvo que el profesor indique lo contrario.",
   "Cuida los salones, la biblioteca y los laboratorios.",
-  "Si faltas, entrega tu justificante en Control escolar (ver Documentos).",
+  "Si faltas, entrega tu justificante en Control escolar.",
 ];
 
 export const servicios = [

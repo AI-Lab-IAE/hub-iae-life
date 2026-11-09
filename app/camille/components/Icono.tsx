@@ -27,12 +27,6 @@ const trazos = {
       <path d="M16 14.5a5 5 0 0 1 5.5 5.5" />
     </>
   ),
-  documentos: (
-    <>
-      <path d="M6 3h8l4 4v14H6z" />
-      <path d="M14 3v4h4M9 12h6M9 16h6" />
-    </>
-  ),
   mapa: (
     <>
       <path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z" />
@@ -141,6 +135,13 @@ const trazos = {
     </>
   ),
   mas: <path d="M12 5v14M5 12h14" />,
+  pregunta: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M9.5 9.5a2.5 2.5 0 1 1 3.8 2.1c-.8.5-1.3 1-1.3 1.9" />
+      <circle cx="12" cy="16.75" r="0.6" fill="currentColor" />
+    </>
+  ),
   robot: (
     <>
       <rect x="4" y="8" width="16" height="12" rx="3" />
