@@ -7,6 +7,7 @@ import { secciones } from "../secciones";
 import { Avatar } from "./Avatar";
 import { useHoy } from "./hoy";
 import { Icono } from "./Icono";
+import { LogoApp } from "./LogoApp";
 import { usePerfil } from "./perfil";
 
 // Barra de arriba: la fecha de hoy en el inicio (o el nombre de la sección con la flecha
@@ -38,10 +39,8 @@ export function BarraSuperior() {
           </>
         ) : (
           <>
-            {/* En celular no hay menú lateral: el sello va aquí. */}
-            <span className="flex size-9 items-center justify-center rounded-xl bg-indigo-950 text-white sm:hidden">
-              <Icono nombre="birrete" className="size-5" />
-            </span>
+            {/* En celular no hay menú lateral: el logo va aquí. */}
+            <LogoApp className="size-9 rounded-xl sm:hidden" />
             <span className="truncate text-sm sm:text-base">
               {hoy ? (
                 <>

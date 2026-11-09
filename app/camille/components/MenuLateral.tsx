@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { NombreIcono } from "./Icono";
 import { Icono } from "./Icono";
+import { LogoApp } from "./LogoApp";
 
 // Menú lateral oscuro, solo en computadora. En celular se usa la barra de pestañas de abajo.
 const opciones: { href: string; nombre: string; icono: NombreIcono }[] = [
@@ -26,10 +27,10 @@ export function MenuLateral() {
 
   return (
     <nav className="fixed inset-y-0 left-0 z-30 hidden w-24 flex-col items-center overflow-y-auto rounded-r-3xl bg-indigo-950 py-5 sm:flex">
-      {/* Espacio para el logo del IAE: se cambia por la imagen oficial cuando el coordinador lo autorice. */}
+      {/* Logo propio de la app. El oficial del IAE solo se usa si el coordinador lo autoriza. */}
       <Link href="/camille" aria-label="Inicio" className="mb-6 flex flex-col items-center gap-1 text-white">
-        <Icono nombre="birrete" className="size-8" />
-        <span className="text-[10px] font-bold tracking-widest">IAE</span>
+        <LogoApp className="size-12 rounded-2xl" />
+        <span className="text-[10px] font-bold tracking-widest">GUIDE</span>
       </Link>
       <ul className="relative flex w-full flex-col gap-1 px-2">
         {/* Fondo claro que se desliza hasta la opción activa (cada opción mide 4rem + 0.25rem de espacio). */}
