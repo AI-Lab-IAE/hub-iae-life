@@ -18,3 +18,18 @@ export function LogoClub({ club, className = "size-14", icono = "size-7" }: { cl
     </span>
   );
 }
+
+// Etiqueta que dice si el club está recibiendo integrantes.
+export function EstadoClub({ abierto }: { abierto: boolean }) {
+  return (
+    <span
+      className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${
+        abierto
+          ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300"
+          : "bg-slate-200 text-slate-600 dark:bg-slate-800 dark:text-slate-300"
+      }`}
+    >
+      {abierto ? "Abierto" : "Cerrado por ahora"}
+    </span>
+  );
+}

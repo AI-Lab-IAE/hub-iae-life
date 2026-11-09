@@ -3,7 +3,7 @@ import anim from "../../animaciones.module.css";
 import { Avatar } from "../../components/Avatar";
 import { BotonUnirme } from "../../components/BotonUnirme";
 import { Icono, type NombreIcono } from "../../components/Icono";
-import { LogoClub } from "../../components/LogoClub";
+import { EstadoClub, LogoClub } from "../../components/LogoClub";
 import { Pantalla } from "../../components/Pantalla";
 import { TituloBloque } from "../../components/TituloBloque";
 import { retraso, tarjeta } from "../../components/estilos";
@@ -13,7 +13,7 @@ export function generateStaticParams() {
   return clubes.map((c) => ({ id: c.id }));
 }
 
-// Página de un club: logo, cuándo se reúne, cómo unirse e integrantes.
+// Página de un club: logo, de qué se trata, si está abierto, cuándo se reúne e integrantes.
 export default async function Page({ params }: PageProps<"/camille/clubes/[id]">) {
   const { id } = await params;
   const club = clubes.find((c) => c.id === id);
@@ -33,6 +33,9 @@ export default async function Page({ params }: PageProps<"/camille/clubes/[id]">
           <LogoClub club={club} className="size-20 ring-4 ring-white dark:ring-slate-900" icono="size-10" />
           <h1 className="mt-3 text-2xl font-bold">{club.nombre}</h1>
           <p className="mt-1 max-w-md text-sm text-slate-500 dark:text-slate-400">{club.descripcion}</p>
+          <span className="mt-2">
+            <EstadoClub abierto={club.abierto} />
+          </span>
           <span className="mt-2 inline-block rounded-full bg-indigo-100 px-2.5 py-0.5 text-[11px] font-medium text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">
             Datos de ejemplo, ficticios
           </span>
@@ -40,7 +43,7 @@ export default async function Page({ params }: PageProps<"/camille/clubes/[id]">
       </section>
 
       <section className={`mt-8 ${anim.aparecer}`} style={retraso(1)}>
-        <TituloBloque titulo="Cómo unirte" />
+        <TituloBloque titulo="¿Te interesa?" />
         <div className={`${tarjeta} p-4`}>
           <dl className="mb-4 flex flex-col gap-2.5 text-sm">
             {datos.map((d) => (
@@ -52,7 +55,9 @@ export default async function Page({ params }: PageProps<"/camille/clubes/[id]">
             ))}
           </dl>
           <BotonUnirme club={club} />
-          <p className="mt-2 text-center text-xs text-slate-500 dark:text-slate-400">Se anota en tus pendientes para que no se te olvide hablar con el encargado.</p>
+          <p className="mt-2 text-center text-xs text-slate-500 dark:text-slate-400">{club.abierto
+              ? "Por ahora recibe integrantes, pero confirma con el encargado si hay cupo. Se anota en tus pendientes."
+              : "Por ahora no recibe integrantes. Igual puedes ver de qué se trata y preguntarle al encargado."}</p>
         </div>
       </section>
 

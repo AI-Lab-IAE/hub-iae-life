@@ -56,6 +56,7 @@ export const contactos = [
 
 // Clubes inventados. Nombres, encargados e integrantes son de prueba: el repositorio es público
 // y los estudiantes son menores, así que aquí nunca van personas reales.
+// "abierto" dice si el club está recibiendo integrantes ahora: no siempre lo está.
 export const clubes = [
   {
     id: "robotica",
@@ -67,6 +68,7 @@ export const clubes = [
     hora: "3:45 p. m.",
     lugar: "Laboratorio Prueba",
     encargado: "Profesor Prueba 3",
+    abierto: true,
     integrantes: [
       { nombre: "Estudiante Prueba 1", grado: "11.º", rol: "Presidencia" },
       { nombre: "Estudiante Prueba 2", grado: "10.º", rol: "Secretaría" },
@@ -84,6 +86,7 @@ export const clubes = [
     hora: "3:45 p. m.",
     lugar: "Biblioteca Prueba",
     encargado: "Profesora Prueba 4",
+    abierto: false,
     integrantes: [
       { nombre: "Estudiante Prueba 5", grado: "12.º", rol: "Presidencia" },
       { nombre: "Estudiante Prueba 6", grado: "9.º", rol: "Integrante" },
@@ -100,6 +103,7 @@ export const clubes = [
     hora: "3:45 p. m.",
     lugar: "Salón Prueba 102",
     encargado: "Profesora Prueba 2",
+    abierto: true,
     integrantes: [
       { nombre: "Estudiante Prueba 8", grado: "10.º", rol: "Presidencia" },
       { nombre: "Estudiante Prueba 9", grado: "10.º", rol: "Tesorería" },
@@ -118,6 +122,7 @@ export const clubes = [
     hora: "3:45 p. m.",
     lugar: "Salón Prueba 201",
     encargado: "Profesor Prueba 1",
+    abierto: false,
     integrantes: [
       { nombre: "Estudiante Prueba 13", grado: "11.º", rol: "Presidencia" },
       { nombre: "Estudiante Prueba 14", grado: "9.º", rol: "Integrante" },
@@ -134,6 +139,7 @@ export const clubes = [
     hora: "3:45 p. m.",
     lugar: "Patio Prueba A",
     encargado: "Profesor Prueba 3",
+    abierto: true,
     integrantes: [
       { nombre: "Estudiante Prueba 16", grado: "12.º", rol: "Presidencia" },
       { nombre: "Estudiante Prueba 17", grado: "10.º", rol: "Secretaría" },
@@ -151,6 +157,7 @@ export const clubes = [
     hora: "3:45 p. m.",
     lugar: "Salón Prueba 101",
     encargado: "Profesora Prueba 2",
+    abierto: true,
     integrantes: [
       { nombre: "Estudiante Prueba 20", grado: "12.º", rol: "Presidencia" },
       { nombre: "Estudiante Prueba 21", grado: "11.º", rol: "Integrante" },
@@ -171,7 +178,6 @@ export const preguntas = [
   { tema: "Trámites", pregunta: "¿Cómo pido permiso para salir antes?", respuesta: "Tu familia debe autorizarlo. El permiso de salida anticipada se pide en Coordinación Prueba." },
   { tema: "Organización", pregunta: "¿Dónde anoto mis tareas?", respuesta: "En Mis pendientes. Ahí pones para cuándo es, la materia y dónde está la información, y marcas el círculo al terminar." },
   { tema: "Organización", pregunta: "¿Cómo me organizo si tengo muchas cosas?", respuesta: "Anota todo apenas te lo dejen. La lista pone primero lo que se entrega antes, así sabes por dónde empezar." },
-  { tema: "Organización", pregunta: "¿Cómo conozco a más estudiantes?", respuesta: "Entra a Clubes, elige uno que te guste y toca «Me quiero unir» para acordarte de hablar con el encargado." },
 ] as const;
 
 // Lugares del colegio por piso. "x" y "y" son la posición del pin en el plano (en %, de 0 a 100)

@@ -26,7 +26,7 @@ export const secciones = [
     icono: "estrella",
     nombre: "Clubes",
     descripcion: "Grupos para conocer gente y aprender.",
-    explicacion: "Toca un club para ver su logo, cuándo se reúne y quiénes lo forman. Con «Me quiero unir» se anota en tus pendientes hablar con el encargado.",
+    explicacion: "Toca un club para ver de qué se trata, cuándo se reúne y quiénes lo forman. No todos reciben integrantes siempre: puedes preguntarle al encargado o intentar unirte si está abierto.",
   },
   {
     ruta: "preguntas",
