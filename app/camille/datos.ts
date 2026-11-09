@@ -54,6 +54,113 @@ export const contactos = [
   { nombre: "Persona Prueba de Control Escolar", cargo: "Control escolar", correo: "control@example.com", lugar: "Oficina Prueba 1" },
 ];
 
+// Clubes inventados. Nombres, encargados e integrantes son de prueba: el repositorio es público
+// y los estudiantes son menores, así que aquí nunca van personas reales.
+export const clubes = [
+  {
+    id: "robotica",
+    nombre: "Club Prueba de Robótica",
+    logo: "robot",
+    color: "sky",
+    descripcion: "Armamos y programamos robots pequeños para retos entre equipos.",
+    dia: "Martes",
+    hora: "3:45 p. m.",
+    lugar: "Laboratorio Prueba",
+    encargado: "Profesor Prueba 3",
+    integrantes: [
+      { nombre: "Estudiante Prueba 1", grado: "11.º", rol: "Presidencia" },
+      { nombre: "Estudiante Prueba 2", grado: "10.º", rol: "Secretaría" },
+      { nombre: "Estudiante Prueba 3", grado: "9.º", rol: "Integrante" },
+      { nombre: "Estudiante Prueba 4", grado: "8.º", rol: "Integrante" },
+    ],
+  },
+  {
+    id: "ajedrez",
+    nombre: "Club Prueba de Ajedrez",
+    logo: "corona",
+    color: "amber",
+    descripcion: "Partidas amistosas, problemas de ajedrez y torneos internos.",
+    dia: "Miércoles",
+    hora: "3:45 p. m.",
+    lugar: "Biblioteca Prueba",
+    encargado: "Profesora Prueba 4",
+    integrantes: [
+      { nombre: "Estudiante Prueba 5", grado: "12.º", rol: "Presidencia" },
+      { nombre: "Estudiante Prueba 6", grado: "9.º", rol: "Integrante" },
+      { nombre: "Estudiante Prueba 7", grado: "7.º", rol: "Integrante" },
+    ],
+  },
+  {
+    id: "arte",
+    nombre: "Club Prueba de Arte",
+    logo: "paleta",
+    color: "rose",
+    descripcion: "Dibujo, pintura y murales para decorar el colegio.",
+    dia: "Jueves",
+    hora: "3:45 p. m.",
+    lugar: "Salón Prueba 102",
+    encargado: "Profesora Prueba 2",
+    integrantes: [
+      { nombre: "Estudiante Prueba 8", grado: "10.º", rol: "Presidencia" },
+      { nombre: "Estudiante Prueba 9", grado: "10.º", rol: "Tesorería" },
+      { nombre: "Estudiante Prueba 10", grado: "8.º", rol: "Integrante" },
+      { nombre: "Estudiante Prueba 11", grado: "7.º", rol: "Integrante" },
+      { nombre: "Estudiante Prueba 12", grado: "7.º", rol: "Integrante" },
+    ],
+  },
+  {
+    id: "musica",
+    nombre: "Club Prueba de Música",
+    logo: "musica",
+    color: "violet",
+    descripcion: "Practicamos canciones en grupo y tocamos en los eventos del colegio.",
+    dia: "Lunes",
+    hora: "3:45 p. m.",
+    lugar: "Salón Prueba 201",
+    encargado: "Profesor Prueba 1",
+    integrantes: [
+      { nombre: "Estudiante Prueba 13", grado: "11.º", rol: "Presidencia" },
+      { nombre: "Estudiante Prueba 14", grado: "9.º", rol: "Integrante" },
+      { nombre: "Estudiante Prueba 15", grado: "8.º", rol: "Integrante" },
+    ],
+  },
+  {
+    id: "ambiente",
+    nombre: "Club Prueba de Ambiente",
+    logo: "arbol",
+    color: "emerald",
+    descripcion: "Cuidamos el huerto y organizamos campañas de reciclaje.",
+    dia: "Jueves",
+    hora: "3:45 p. m.",
+    lugar: "Patio Prueba A",
+    encargado: "Profesor Prueba 3",
+    integrantes: [
+      { nombre: "Estudiante Prueba 16", grado: "12.º", rol: "Presidencia" },
+      { nombre: "Estudiante Prueba 17", grado: "10.º", rol: "Secretaría" },
+      { nombre: "Estudiante Prueba 18", grado: "7.º", rol: "Integrante" },
+      { nombre: "Estudiante Prueba 19", grado: "7.º", rol: "Integrante" },
+    ],
+  },
+  {
+    id: "debate",
+    nombre: "Club Prueba de Debate",
+    logo: "burbuja",
+    color: "indigo",
+    descripcion: "Aprendemos a defender ideas con respeto y a hablar en público.",
+    dia: "Miércoles",
+    hora: "3:45 p. m.",
+    lugar: "Salón Prueba 101",
+    encargado: "Profesora Prueba 2",
+    integrantes: [
+      { nombre: "Estudiante Prueba 20", grado: "12.º", rol: "Presidencia" },
+      { nombre: "Estudiante Prueba 21", grado: "11.º", rol: "Integrante" },
+      { nombre: "Estudiante Prueba 22", grado: "9.º", rol: "Integrante" },
+    ],
+  },
+] as const;
+
+export type Club = (typeof clubes)[number];
+
 // Por ahora son solo descripciones; los archivos reales van en DESPUES.md.
 export const documentos = [
   { titulo: "Reglamento escolar", tipo: "Reglamento", descripcion: "Normas de convivencia, uniforme y puntualidad.", dondeSePide: "Coordinación Prueba" },

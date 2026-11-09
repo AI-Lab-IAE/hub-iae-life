@@ -22,6 +22,7 @@ export const colorSeccion: Record<RutaSeccion, string> = {
   mapa: "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400",
   contactos: "bg-sky-50 text-sky-700 dark:bg-sky-500/10 dark:text-sky-400",
   pendientes: "bg-teal-50 text-teal-700 dark:bg-teal-500/10 dark:text-teal-400",
+  clubes: "bg-pink-50 text-pink-700 dark:bg-pink-500/10 dark:text-pink-400",
   documentos: "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400",
   calendario: "bg-violet-50 text-violet-700 dark:bg-violet-500/10 dark:text-violet-400",
   anuncios: "bg-rose-50 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400",

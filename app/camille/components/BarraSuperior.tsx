@@ -16,7 +16,8 @@ export function BarraSuperior() {
   const { perfil } = usePerfil();
   const hoy = useHoy();
   const enPerfil = ruta === "/camille/perfil";
-  const titulo = enPerfil ? "Mi perfil" : secciones.find((s) => ruta === `/camille/${s.ruta}`)?.nombre;
+  const enClub = ruta.startsWith("/camille/clubes/");
+  const titulo = enPerfil ? "Mi perfil" : enClub ? "Club" : secciones.find((s) => ruta === `/camille/${s.ruta}`)?.nombre;
 
   const dia = hoy ? new Date(`${hoy}T12:00:00`).toLocaleDateString("es-PA", { weekday: "long" }) : "";
   const fecha = hoy ? formatearFecha(hoy).replace(/ de \d{4}$/, "") : "";
@@ -27,8 +28,8 @@ export function BarraSuperior() {
         {titulo ? (
           <>
             <Link
-              href="/camille"
-              aria-label="Volver al inicio"
+              href={enClub ? "/camille/clubes" : "/camille"}
+              aria-label={enClub ? "Volver a Clubes" : "Volver al inicio"}
               className="-ml-2 flex size-9 items-center justify-center rounded-full bg-white text-indigo-700 shadow-sm transition hover:bg-indigo-100 active:scale-90 dark:bg-slate-900 dark:text-indigo-300"
             >
               <Icono nombre="atras" className="size-5" />

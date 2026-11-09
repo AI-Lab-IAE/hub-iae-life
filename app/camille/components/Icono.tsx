@@ -141,6 +141,35 @@ const trazos = {
     </>
   ),
   mas: <path d="M12 5v14M5 12h14" />,
+  robot: (
+    <>
+      <rect x="4" y="8" width="16" height="12" rx="3" />
+      <path d="M12 4v4M9 13v1M15 13v1M9 17h6" />
+      <circle cx="12" cy="3.5" r="0.6" fill="currentColor" />
+    </>
+  ),
+  corona: <path d="M4 18L3 7l5 4 4-7 4 7 5-4-1 11zM5 21h14" />,
+  paleta: (
+    <>
+      <path d="M12 3a9 9 0 1 0 0 18c1.5 0 2-1 2-2 0-1.5 1-2.5 2.5-2.5H18a3 3 0 0 0 3-3C21 7 17 3 12 3z" />
+      <circle cx="8" cy="11" r="0.8" fill="currentColor" />
+      <circle cx="12" cy="7.5" r="0.8" fill="currentColor" />
+      <circle cx="16" cy="10" r="0.8" fill="currentColor" />
+    </>
+  ),
+  musica: (
+    <>
+      <path d="M9 18V6l11-2v12" />
+      <circle cx="6.5" cy="18" r="2.5" />
+      <circle cx="17.5" cy="16" r="2.5" />
+    </>
+  ),
+  burbuja: (
+    <>
+      <path d="M21 12a8 8 0 0 1-8 8H4l2-3.5A8 8 0 1 1 21 12z" />
+      <path d="M9 10.5h7M9 14h4" />
+    </>
+  ),
 };
 
 export type NombreIcono = keyof typeof trazos;

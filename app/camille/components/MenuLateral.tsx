@@ -12,6 +12,7 @@ const opciones: { href: string; nombre: string; icono: NombreIcono }[] = [
   { href: "/camille/calendario", nombre: "Calendario", icono: "calendario" },
   { href: "/camille/contactos", nombre: "Contactos", icono: "contactos" },
   { href: "/camille/pendientes", nombre: "Pendientes", icono: "lista" },
+  { href: "/camille/clubes", nombre: "Clubes", icono: "estrella" },
   { href: "/camille/documentos", nombre: "Documentos", icono: "documentos" },
   { href: "/camille/mapa", nombre: "Mapa", icono: "mapa" },
   { href: "/camille/informacion", nombre: "Información", icono: "informacion" },
@@ -20,7 +21,8 @@ const opciones: { href: string; nombre: string; icono: NombreIcono }[] = [
 
 export function MenuLateral() {
   const ruta = usePathname();
-  const indice = opciones.findIndex((o) => o.href === ruta);
+  // Dentro de un club sigue resaltado "Clubes".
+  const indice = opciones.findIndex((o) => o.href === ruta || (o.href !== "/camille" && ruta.startsWith(`${o.href}/`)));
 
   return (
     <nav className="fixed inset-y-0 left-0 z-30 hidden w-24 flex-col items-center overflow-y-auto rounded-r-3xl bg-indigo-950 py-5 sm:flex">
@@ -38,8 +40,8 @@ export function MenuLateral() {
             style={{ transform: `translateY(${indice * 4.25}rem)` }}
           />
         )}
-        {opciones.map((o) => {
-          const activa = ruta === o.href;
+        {opciones.map((o, i) => {
+          const activa = i === indice;
           return (
             <li key={o.href}>
               <Link

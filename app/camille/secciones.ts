@@ -22,6 +22,13 @@ export const secciones = [
     explicacion: "Anota lo que debes hacer, para cuándo es y dónde está la información. Toca el círculo cuando lo termines. Lo que falta se ordena por fecha de entrega.",
   },
   {
+    ruta: "clubes",
+    icono: "estrella",
+    nombre: "Clubes",
+    descripcion: "Grupos para conocer gente y aprender.",
+    explicacion: "Toca un club para ver su logo, cuándo se reúne y quiénes lo forman. Con «Me quiero unir» se anota en tus pendientes hablar con el encargado.",
+  },
+  {
     ruta: "documentos",
     icono: "documentos",
     nombre: "Documentos",
