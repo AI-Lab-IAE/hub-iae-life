@@ -1,14 +1,31 @@
-// Logo propio de IAE School Guide: un pin de mapa con un birrete. Es inventado, no es el logo oficial del IAE.
-// El mismo dibujo está en icon.svg, que es el ícono de la pestaña del navegador.
-export function LogoApp({ className = "size-9 rounded-xl" }: { className?: string }) {
+import { useId } from "react";
+
+// Logo propio de IAE School Guide: un búho con brújulas en los ojos, porque te guía por el colegio.
+// Es inventado, no es el logo oficial del IAE. El mismo dibujo está en icon.svg (pestaña del navegador).
+export function LogoApp({ className = "size-9" }: { className?: string }) {
+  // Cada logo necesita su propio degradado: en celular el del menú lateral está oculto.
+  const fondo = useId();
   return (
-    <span className={`flex shrink-0 items-center justify-center bg-linear-to-br from-indigo-400 to-indigo-700 shadow-md shadow-indigo-500/30 ${className}`}>
-      <svg viewBox="0 0 24 24" className="size-[78%]" aria-hidden="true">
-        <path d="M12 22.5s-8-6.9-8-12.8a8 8 0 0 1 16 0c0 5.9-8 12.8-8 12.8z" fill="#fff" />
-        <path d="M12 5.2l5.6 2.8-5.6 2.8L6.4 8z" fill="#4338ca" />
-        <path d="M8.8 10.2v2.2c1.8 1.5 4.6 1.5 6.4 0v-2.2L12 11.8z" fill="#4338ca" />
-        <path d="M17.6 8v3.6" stroke="#a78bfa" strokeWidth="1.3" strokeLinecap="round" />
-      </svg>
-    </span>
+    <svg viewBox="0 0 64 64" className={`shrink-0 drop-shadow-md ${className}`} aria-hidden="true">
+      <defs>
+        <linearGradient id={fondo} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#6366f1" />
+          <stop offset="1" stopColor="#7e22ce" />
+        </linearGradient>
+      </defs>
+      <rect width="64" height="64" rx="16" fill={`url(#${fondo})`} />
+      <path d="M12 12l12 8q8-3 16 0l12-8v28q0 16-20 19-20-3-20-19z" fill="#1e1b4b" />
+      <circle cx="23" cy="31" r="10.5" fill="#fff" />
+      <circle cx="41" cy="31" r="10.5" fill="#fff" />
+      <g transform="rotate(40 23 31)">
+        <path d="M23 22l3 9h-6z" fill="#f43f5e" />
+        <path d="M20 31h6l-3 9z" fill="#4338ca" />
+      </g>
+      <g transform="rotate(40 41 31)">
+        <path d="M41 22l3 9h-6z" fill="#f43f5e" />
+        <path d="M38 31h6l-3 9z" fill="#4338ca" />
+      </g>
+      <path d="M32 40l4 5-4 5-4-5z" fill="#fbbf24" />
+    </svg>
   );
 }

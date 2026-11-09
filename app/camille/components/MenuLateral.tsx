@@ -28,7 +28,7 @@ export function MenuLateral() {
     <nav className="fixed inset-y-0 left-0 z-30 hidden w-24 flex-col items-center overflow-y-auto rounded-r-3xl bg-indigo-950 py-5 sm:flex">
       {/* Logo propio de la app. El oficial del IAE solo se usa si el coordinador lo autoriza. */}
       <Link href="/camille" aria-label="Inicio" className="mb-6 flex flex-col items-center gap-1 text-white">
-        <LogoApp className="size-12 rounded-2xl" />
+        <LogoApp className="size-13" />
         <span className="text-[10px] font-bold tracking-widest">GUIDE</span>
       </Link>
       <ul className="relative flex w-full flex-col gap-1 px-2">
