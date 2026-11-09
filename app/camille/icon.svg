@@ -1,21 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <defs>
     <linearGradient id="fondo" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#6366f1" />
-      <stop offset="1" stop-color="#7e22ce" />
+      <stop offset="0" stop-color="#a855f7" />
+      <stop offset="0.55" stop-color="#4f46e5" />
+      <stop offset="1" stop-color="#06b6d4" />
+    </linearGradient>
+    <linearGradient id="aguja" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fde047" />
+      <stop offset="1" stop-color="#fb7185" />
     </linearGradient>
   </defs>
   <rect width="64" height="64" rx="16" fill="url(#fondo)" />
-  <path d="M12 12l12 8q8-3 16 0l12-8v28q0 16-20 19-20-3-20-19z" fill="#1e1b4b" />
-  <circle cx="23" cy="31" r="10.5" fill="#fff" />
-  <circle cx="41" cy="31" r="10.5" fill="#fff" />
-  <g transform="rotate(40 23 31)">
-    <path d="M23 22l3 9h-6z" fill="#f43f5e" />
-    <path d="M20 31h6l-3 9z" fill="#4338ca" />
+  <path d="M43.5 15.6A20 20 0 1 0 52 32H42" fill="none" stroke="#fff" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" />
+  <g transform="rotate(63 32 32)">
+    <path d="M32 4l4.5 28h-9z" fill="url(#aguja)" />
+    <path d="M27.5 32h9L32 45z" fill="#ddd6fe" />
   </g>
-  <g transform="rotate(40 41 31)">
-    <path d="M41 22l3 9h-6z" fill="#f43f5e" />
-    <path d="M38 31h6l-3 9z" fill="#4338ca" />
-  </g>
-  <path d="M32 40l4 5-4 5-4-5z" fill="#fbbf24" />
 </svg>
