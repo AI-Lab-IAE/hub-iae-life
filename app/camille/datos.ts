@@ -243,10 +243,3 @@ export const reglas = [
   "Cuida los salones, la biblioteca y los laboratorios.",
   "Si faltas, entrega tu justificante en Control escolar.",
 ];
-
-export const servicios = [
-  { nombre: "Biblioteca Prueba", detalle: "Préstamo de libros y espacio para estudiar.", horario: "7:30 a 15:00" },
-  { nombre: "Enfermería Prueba", detalle: "Primeros auxilios y atención si te sientes mal.", horario: "7:00 a 14:30" },
-  { nombre: "Cafetería Prueba", detalle: "Desayunos y comida durante el recreo.", horario: "7:00 a 14:00" },
-  { nombre: "Sala de cómputo Prueba", detalle: "Computadoras e impresión de tareas.", horario: "8:00 a 14:00" },
-];

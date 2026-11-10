@@ -5,7 +5,7 @@ import { Icono } from "../components/Icono";
 import { Pantalla } from "../components/Pantalla";
 import { TituloBloque } from "../components/TituloBloque";
 import { retraso, tarjeta } from "../components/estilos";
-import { reglas, servicios } from "../datos";
+import { reglas } from "../datos";
 
 export default function Page() {
   return (
@@ -26,26 +26,6 @@ export default function Page() {
                 <Icono nombre="check" className="size-4" />
               </span>
               {r}
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className={`mt-8 ${anim.aparecer}`} style={retraso(3)}>
-        <TituloBloque titulo="Servicios" />
-        <ul className="grid gap-3 sm:grid-cols-2">
-          {servicios.map((s) => (
-            <li key={s.nombre} className={`${tarjeta} flex gap-3 p-4`}>
-              <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-400">
-                <Icono nombre="campana" />
-              </span>
-              <span className="min-w-0">
-                <span className="block font-semibold">{s.nombre}</span>
-                <span className="mt-0.5 block text-sm text-slate-500 dark:text-slate-400">{s.detalle}</span>
-                <span className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">
-                  <Icono nombre="reloj" className="size-3.5" /> {s.horario}
-                </span>
-              </span>
             </li>
           ))}
         </ul>

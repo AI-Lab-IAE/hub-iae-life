@@ -8,7 +8,7 @@ import { Tarjeta } from "./components/Tarjeta";
 import { TarjetaPendientes } from "./components/TarjetaPendientes";
 import { TituloBloque } from "./components/TituloBloque";
 import { elevar, retraso, tarjeta, tocar } from "./components/estilos";
-import { anuncios, clubes, contactos, eventos, pisos, reglas, servicios } from "./datos";
+import { anuncios, clubes, contactos, eventos, pisos, reglas } from "./datos";
 import { diaYMes, formatearFecha } from "./formato";
 import { info } from "./info";
 import { secciones, type RutaSeccion } from "./secciones";
@@ -20,7 +20,7 @@ const datoSeccion: Record<Exclude<RutaSeccion, "pendientes">, { numero: number; 
   clubes: { numero: clubes.length, texto: "clubes" },
   calendario: { numero: eventos.length, texto: "fechas" },
   anuncios: { numero: anuncios.length, texto: `anuncios · ${anuncios.filter((a) => a.importante).length} importantes` },
-  informacion: { numero: servicios.length, texto: `servicios · ${reglas.length} reglas` },
+  informacion: { numero: reglas.length, texto: "reglas" },
 };
 
 export default function Page() {

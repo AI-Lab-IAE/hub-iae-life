@@ -46,8 +46,8 @@ export const secciones = [
     ruta: "informacion",
     icono: "informacion",
     nombre: "Información general",
-    descripcion: "Horarios, reglas y servicios.",
-    explicacion: "El horario de clases de secundaria día por día, las reglas básicas de convivencia y los servicios del colegio con su horario.",
+    descripcion: "Horarios y reglas.",
+    explicacion: "El horario de clases de secundaria día por día y las reglas básicas de convivencia.",
   },
 ] as const;
 
