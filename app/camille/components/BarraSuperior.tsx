@@ -40,7 +40,7 @@ export function BarraSuperior() {
         ) : (
           <>
             {/* En celular no hay menú lateral: el logo va aquí. */}
-            <LogoApp className="size-9 sm:hidden" />
+            <LogoApp className="size-8 sm:hidden" />
             <span className="truncate text-sm sm:text-base">
               {hoy ? (
                 <>
