@@ -74,11 +74,11 @@ const EVENT_COLORS = ["#2F80ED", "#EB5757", "#9B51E0", "#219653", "#F2994A", "#2
 
 const THEMES = {
   dia: {
-    bg: "#F6F5FC", bgSoft: "#EEF0FB", surface: "#FFFFFF", surfaceAlt: "#F1F2FA",
-    text: "#191C34", textMuted: "#666C8C", border: "#E3E5F3",
-    primary: "#5B5FEF", primarySoft: "#E7E7FD", primaryText: "#FFFFFF",
+    bg: "#F2F6FE", bgSoft: "#E3EBFC", surface: "#FFFFFF", surfaceAlt: "#EEF3FD",
+    text: "#10193A", textMuted: "#5A6488", border: "#DCE5F8",
+    primary: "#1D3A8A", primarySoft: "#E3EBFC", primaryText: "#FFFFFF",
     accent: "#FF6B57", accentSoft: "#FFE6E1", shadow: "0 8px 24px -12px rgba(35,38,90,0.18)",
-    headerGrad: "linear-gradient(135deg, #EDEBFF 0%, #F9EFFB 60%, #FFF3EA 100%)",
+    headerGrad: "linear-gradient(135deg, #E3EBFC 0%, #F2F6FE 60%, #FFFFFF 100%)",
   },
   noche: {
     bg: "#0E1020", bgSoft: "#151833", surface: "#1B1E3A", surfaceAlt: "#232748",
@@ -940,7 +940,7 @@ function UserBadge({ user, lang, th }) {
 function Sidebar({ view, setView, user }) {
   const { th, lang } = useApp();
   return (
-    <div className="hidden md:flex flex-col w-64 shrink-0 h-screen sticky top-0 px-4 py-6" style={{ background: th.surface, borderRight: `1px solid ${th.border}` }}>
+    <div className="hidden md:flex flex-col w-64 shrink-0 h-[calc(100vh-3.5rem)] sticky top-14 px-4 py-6" style={{ background: th.surface, borderRight: `1px solid ${th.border}` }}>
       <div className="flex items-center gap-2.5 px-2 mb-8">
         <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: th.primary }}>
           <Sparkles size={18} color="#fff" />
@@ -961,7 +961,7 @@ function Sidebar({ view, setView, user }) {
 function MobileTopBar({ setDrawerOpen, title }) {
   const { th } = useApp();
   return (
-    <div className="md:hidden flex items-center justify-between px-4 py-4 sticky top-0 z-30" style={{ background: th.surface, borderBottom: `1px solid ${th.border}` }}>
+    <div className="md:hidden flex items-center justify-between px-4 py-4 sticky top-14 z-30" style={{ background: th.surface, borderBottom: `1px solid ${th.border}` }}>
       <button onClick={() => setDrawerOpen(true)} className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: th.surfaceAlt, color: th.text }}>
         <Menu size={18} />
       </button>

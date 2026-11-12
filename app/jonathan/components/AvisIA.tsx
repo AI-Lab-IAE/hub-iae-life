@@ -22,7 +22,7 @@ export default function AvisIA() {
       <FormularioAusencia onEnviar={setAusencia} />
 
       {ausencia && (
-        <section ref={resultado} className="scroll-mt-4 space-y-4">
+        <section ref={resultado} className="scroll-mt-20 space-y-4">
           <div>
             <h2 className="text-xl font-bold">
               {correos.length === 1 ? "1 correo listo" : `${correos.length} correos listos`}
