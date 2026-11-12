@@ -1,4 +1,4 @@
-// Las seis secciones de la guía. Para cambiar el nombre, el ícono, la descripción o la explicación de una tarjeta, edita esta lista.
+// Las secciones de la guía. Para cambiar el nombre, el ícono, la descripción o la explicación de una tarjeta, edita esta lista.
 export const secciones = [
   {
     ruta: "mapa",
@@ -15,11 +15,18 @@ export const secciones = [
     explicacion: "Escribe un nombre, una materia o una oficina en el buscador. Toca un correo para abrir tu aplicación de correo con la dirección lista.",
   },
   {
-    ruta: "documentos",
-    icono: "documentos",
-    nombre: "Documentos",
-    descripcion: "Reglamentos, formatos y circulares.",
-    explicacion: "Mira qué documentos existen, para qué sirve cada uno y en qué oficina se piden. Están agrupados por tipo.",
+    ruta: "pendientes",
+    icono: "lista",
+    nombre: "Mis pendientes",
+    descripcion: "Tus tareas, exámenes y proyectos.",
+    explicacion: "Anota lo que debes hacer, para cuándo es y dónde está la información. Toca el círculo cuando lo termines. Lo que falta se ordena por fecha de entrega.",
+  },
+  {
+    ruta: "clubes",
+    icono: "estrella",
+    nombre: "Clubes",
+    descripcion: "Grupos para conocer gente y aprender.",
+    explicacion: "Toca un club para ver de qué se trata, cuándo se reúne y quiénes lo forman. No todos reciben integrantes siempre: puedes preguntarle al encargado o intentar unirte si está abierto.",
   },
   {
     ruta: "calendario",
@@ -39,8 +46,8 @@ export const secciones = [
     ruta: "informacion",
     icono: "informacion",
     nombre: "Información general",
-    descripcion: "Horarios, reglas y servicios.",
-    explicacion: "El horario de clases de secundaria día por día, las reglas básicas de convivencia y los servicios del colegio con su horario.",
+    descripcion: "Horarios y reglas.",
+    explicacion: "El horario de clases de secundaria día por día y las reglas básicas de convivencia.",
   },
 ] as const;
 

@@ -1,3 +1,5 @@
+"use client";
+
 import { Icono } from "./Icono";
 import { coloresAvatar, iniciales, type Perfil } from "./perfil";
 
