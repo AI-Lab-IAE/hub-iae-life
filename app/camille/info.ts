@@ -2,5 +2,5 @@
 export const info = {
   estudiante: "Camille",
   proyecto: "IAE School Guide",
-  descripcion: "Reúne en un solo lugar el mapa, los contactos, los documentos, el calendario y los anuncios del IAE para que los estudiantes encuentren rápido lo que necesitan.",
+  descripcion: "Reúne en un solo lugar el mapa, los contactos, los clubes, el calendario y los anuncios del IAE, y ayuda a cada estudiante a organizar sus pendientes.",
 };

@@ -3,22 +3,24 @@ import anim from "./animaciones.module.css";
 import { Bienvenida } from "./components/Bienvenida";
 import { HorarioHoy } from "./components/HorarioHoy";
 import { Icono } from "./components/Icono";
+import { ProximosPendientes } from "./components/ProximosPendientes";
 import { Tarjeta } from "./components/Tarjeta";
+import { TarjetaPendientes } from "./components/TarjetaPendientes";
 import { TituloBloque } from "./components/TituloBloque";
 import { elevar, retraso, tarjeta, tocar } from "./components/estilos";
-import { anuncios, contactos, documentos, eventos, pisos, reglas, servicios } from "./datos";
+import { anuncios, clubes, contactos, eventos, pisos, reglas } from "./datos";
 import { diaYMes, formatearFecha } from "./formato";
 import { info } from "./info";
 import { secciones, type RutaSeccion } from "./secciones";
 
 // Número y texto que aparecen en cada tarjeta de "Mis secciones" (el número sube al abrir el inicio).
-const datoSeccion: Record<RutaSeccion, { numero: number; texto: string }> = {
+const datoSeccion: Record<Exclude<RutaSeccion, "pendientes">, { numero: number; texto: string }> = {
   mapa: { numero: pisos.length, texto: "pisos" },
   contactos: { numero: contactos.length, texto: "contactos" },
-  documentos: { numero: documentos.length, texto: "documentos" },
+  clubes: { numero: clubes.length, texto: "clubes" },
   calendario: { numero: eventos.length, texto: "fechas" },
   anuncios: { numero: anuncios.length, texto: `anuncios · ${anuncios.filter((a) => a.importante).length} importantes` },
-  informacion: { numero: servicios.length, texto: `servicios · ${reglas.length} reglas` },
+  informacion: { numero: reglas.length, texto: "reglas" },
 };
 
 export default function Page() {
@@ -38,13 +40,23 @@ export default function Page() {
           {/* Mis secciones */}
           <section className={anim.aparecer} style={retraso(1)}>
             <TituloBloque titulo="Mis secciones" />
-            <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-4">
+            <div className="grid grid-cols-2 gap-2.5 sm:gap-4 md:grid-cols-4">
               {secciones.map((s, i) => (
                 <div key={s.ruta} className={anim.crecer} style={retraso(i + 2)}>
-                  <Tarjeta ruta={s.ruta} icono={s.icono} nombre={s.nombre} {...datoSeccion[s.ruta]} />
+                  {s.ruta === "pendientes" ? (
+                    <TarjetaPendientes nombre={s.nombre} />
+                  ) : (
+                    <Tarjeta ruta={s.ruta} icono={s.icono} nombre={s.nombre} {...datoSeccion[s.ruta]} />
+                  )}
                 </div>
               ))}
             </div>
+          </section>
+
+          {/* Mis pendientes: se guardan solo en este dispositivo */}
+          <section className={anim.aparecer} style={retraso(3)}>
+            <TituloBloque titulo="Mis pendientes" href="/camille/pendientes" />
+            <ProximosPendientes />
           </section>
 
           <div className="grid gap-8 sm:grid-cols-2">

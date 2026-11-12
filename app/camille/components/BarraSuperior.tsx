@@ -7,6 +7,7 @@ import { secciones } from "../secciones";
 import { Avatar } from "./Avatar";
 import { useHoy } from "./hoy";
 import { Icono } from "./Icono";
+import { LogoApp } from "./LogoApp";
 import { usePerfil } from "./perfil";
 
 // Barra de arriba: la fecha de hoy en el inicio (o el nombre de la sección con la flecha
@@ -16,7 +17,8 @@ export function BarraSuperior() {
   const { perfil } = usePerfil();
   const hoy = useHoy();
   const enPerfil = ruta === "/camille/perfil";
-  const titulo = enPerfil ? "Mi perfil" : secciones.find((s) => ruta === `/camille/${s.ruta}`)?.nombre;
+  const enClub = ruta.startsWith("/camille/clubes/");
+  const titulo = enPerfil ? "Mi perfil" : enClub ? "Club" : secciones.find((s) => ruta === `/camille/${s.ruta}`)?.nombre;
 
   const dia = hoy ? new Date(`${hoy}T12:00:00`).toLocaleDateString("es-PA", { weekday: "long" }) : "";
   const fecha = hoy ? formatearFecha(hoy).replace(/ de \d{4}$/, "") : "";
@@ -27,8 +29,8 @@ export function BarraSuperior() {
         {titulo ? (
           <>
             <Link
-              href="/camille"
-              aria-label="Volver al inicio"
+              href={enClub ? "/camille/clubes" : "/camille"}
+              aria-label={enClub ? "Volver a Clubes" : "Volver al inicio"}
               className="-ml-2 flex size-9 items-center justify-center rounded-full bg-white text-indigo-700 shadow-sm transition hover:bg-indigo-100 active:scale-90 dark:bg-slate-900 dark:text-indigo-300"
             >
               <Icono nombre="atras" className="size-5" />
@@ -37,10 +39,8 @@ export function BarraSuperior() {
           </>
         ) : (
           <>
-            {/* En celular no hay menú lateral: el sello va aquí. */}
-            <span className="flex size-9 items-center justify-center rounded-xl bg-indigo-950 text-white sm:hidden">
-              <Icono nombre="birrete" className="size-5" />
-            </span>
+            {/* En celular no hay menú lateral: el logo va aquí. */}
+            <LogoApp className="size-8 sm:hidden" />
             <span className="truncate text-sm sm:text-base">
               {hoy ? (
                 <>
