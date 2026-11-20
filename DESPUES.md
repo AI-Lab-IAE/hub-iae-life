@@ -37,7 +37,7 @@ Reúne los `DESPUES.md` de cada función. El detalle sigue en `app/<nombre>/DESP
 - Escribir el aviso en lenguaje natural y que la IA lo convierta en aviso con su audiencia.
 - Cambios de horario: tachar o mover clases en el horario del estudiante y avisarle.
 
-## AvisIA
+## AusencIA
 
 - Elegir el tono (formal, neutral, casual) y el largo de cada correo.
 - Botón "Regenerar" para variar la redacción de un correo.

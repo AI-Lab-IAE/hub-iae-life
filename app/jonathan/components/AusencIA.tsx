@@ -6,7 +6,7 @@ import TarjetaCorreo from "./TarjetaCorreo";
 import { fechaEnPalabras, generarCorreos } from "../lib/correos";
 
 // Une el formulario con los correos generados.
-export default function AvisIA() {
+export default function AusencIA() {
   const [ausencia, setAusencia] = useState<Ausencia | null>(null);
   const resultado = useRef<HTMLElement>(null);
 
