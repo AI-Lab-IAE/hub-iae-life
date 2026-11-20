@@ -1,6 +1,6 @@
 # Errores y opiniones
 
-Responsable: Daniela Schneir.
+Responsable: Daniela.
 
 ## Estado (20-nov-2026)
 - Nadie ha probado todavía el piloto (hub-iae-life.vercel.app). No hay opiniones reales.
