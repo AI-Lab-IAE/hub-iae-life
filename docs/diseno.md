@@ -14,7 +14,7 @@ Responsable: Camille (guía enviada por Slack el 17-nov-2026).
 - **Regla:** el mismo estilo en todas las secciones. Ningún color fuera de la paleta sin una razón.
 
 ## Bocetos que mandó
-- Pantallas de celular: Hoy («¡Hola, Camille!», tu próxima clase, pendientes, progreso y eventos de hoy), Mensajes y Calendario.
+- Pantallas de celular: Hoy (saludo, tu próxima clase, pendientes, progreso y eventos de hoy), Mensajes y Calendario.
 - Hoja de estilo con colores, letra, botones, tarjetas, campos, íconos, espaciado y navegación (barra lateral en computadora, barra abajo en celular: Hoy · Estudiar · Tareas · Avisos · Perfil).
 
 ## Pendiente
