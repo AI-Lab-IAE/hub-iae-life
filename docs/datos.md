@@ -5,7 +5,7 @@ Responsable: Jonathan. Los estudiantes, profesores y correos de ejemplo son **in
 ## Decisiones (reunión del 20-nov-2026)
 - Se entra con la cuenta Google del colegio: nombre y correo salen solos.
 - El perfil usa la **promoción** (los 4 números del correo, ej. 2030) en vez del grado.
-- Si el correo tiene año, es **estudiante**. Quién es profesor (qué pantalla ve y qué puede hacer) lo decide una lista autorizada del colegio, porque también hay cuentas administrativas sin año.
+- Si el correo tiene año, es **estudiante**. Quién es profesor (qué pantalla ve y qué puede hacer) lo decide una lista autorizada del colegio, porque también hay cuentas administrativas sin año. Cualquier otra cuenta queda sin acceso hasta que el colegio le asigne un rol.
 - Formato de correos: profesores `nombre.apellido@iae.edu`; estudiantes `nombre.apellido.2030@iae.edu` (punto antes del año).
 - Opcional en el perfil: correo de los padres y color.
 - Cada clase del horario lleva el correo de su profesor.
