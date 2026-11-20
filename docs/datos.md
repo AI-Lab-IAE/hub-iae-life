@@ -44,4 +44,4 @@ Responsable: Jonathan. Los estudiantes, profesores y correos de ejemplo son **in
 
 Rezo 7:15–8:00, recreo 9:30–9:55, almuerzo 12:50–13:25. El viernes se sale a las 12:50.
 
-Nota: el código completo de AvisIA está en la rama `jonathan/mvp-avisia` (base para Ausencia).
+Nota: el código completo de AusencIA (antes AvisIA) está en la rama `jonathan/mvp-avisia` (base para Ausencia).

@@ -1,6 +1,6 @@
 # Prioridades — las 3 cosas de cada proyecto
 
-## AvisIA (Jonathan)
+## AusencIA, antes AvisIA (Jonathan)
 1. Reportar la ausencia una vez y que la app detecte sola las clases que se pierden: todo el día, unas horas o varios días.
 2. Un correo por profesor, listo para revisar y enviar; si pierdes varias horas con el mismo profesor, le llega uno solo. Se abre en Gmail con copia a los padres.
 3. Un horario semanal que el estudiante pueda ajustar, porque Hoy, Ausencia y Tareas dependen de él.
