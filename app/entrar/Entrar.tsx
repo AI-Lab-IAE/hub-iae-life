@@ -28,6 +28,19 @@ export default function Entrar({ clienteGoogle }: { clienteGoogle: string }) {
   const cuenta = useCuenta();
   const boton = useRef<HTMLDivElement>(null);
   const [error, setError] = useState("");
+  const enPantalla = useRef(true);
+  const cuentaActual = useRef(cuenta);
+
+  useEffect(() => {
+    cuentaActual.current = cuenta;
+  }, [cuenta]);
+
+  useEffect(() => {
+    enPantalla.current = true;
+    return () => {
+      enPantalla.current = false;
+    };
+  }, []);
 
   // Si ya entraste, vas directo a tu perfil.
   useEffect(() => {
@@ -47,6 +60,8 @@ export default function Entrar({ clienteGoogle }: { clienteGoogle: string }) {
         hd: DOMINIO,
         ux_mode: "popup",
         callback: ({ credential }) => {
+          // Si ya te fuiste de esta página, o ya entraste de otra forma, no se cambia la cuenta.
+          if (!enPantalla.current || cuentaActual.current) return;
           const nueva = cuentaDesdeTokenGoogle(credential);
           if (!nueva) {
             setError(`Solo se puede entrar con la cuenta del colegio (@${DOMINIO}).`);
@@ -79,14 +94,16 @@ export default function Entrar({ clienteGoogle }: { clienteGoogle: string }) {
       script = null;
     }
     if (!script) {
-      script = document.createElement("script");
-      script.src = SCRIPT;
-      script.async = true;
-      document.head.appendChild(script);
+      const nuevo = document.createElement("script");
+      nuevo.src = SCRIPT;
+      nuevo.async = true;
+      // Esta marca queda aunque se cierre la página, para reintentar la próxima vez.
+      nuevo.addEventListener("error", () => (nuevo.dataset.fallo = "1"), { once: true });
+      document.head.appendChild(nuevo);
+      script = nuevo;
     }
     const s = script;
     const alFallar = () => {
-      s.dataset.fallo = "1";
       if (!cancelado) setError("No se pudo cargar Google. Revisa tu conexión y vuelve a intentar.");
     };
     s.addEventListener("load", pintar);

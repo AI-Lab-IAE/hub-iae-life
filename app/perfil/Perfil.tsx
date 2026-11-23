@@ -88,7 +88,7 @@ function PerfilDe({ cuenta }: { cuenta: Cuenta }) {
                 aria-invalid={!correoPadresValido}
                 className="mt-1.5 block w-full rounded-xl border border-azul-200 px-3 py-2.5 text-base text-azul-950 outline-none focus:border-azul-500 focus:ring-2 focus:ring-azul-200"
               />
-              <span className="mt-1 block text-xs text-azul-900/50">Si lo pones, AusencIA les manda copia cuando avises una ausencia. Se queda solo en este navegador.</span>
+              <span className="mt-1 block text-xs text-azul-900/50">Más adelante, AusencIA lo usará para mandarles copia cuando avises una ausencia. Se queda solo en este navegador.</span>
               {!correoPadresValido && <span className="mt-1 block text-xs text-red-600">Ese correo no se ve bien.</span>}
             </label>
           )}

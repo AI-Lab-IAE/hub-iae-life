@@ -50,4 +50,5 @@ Reúne los `DESPUES.md` de cada función. El detalle sigue en `app/<nombre>/DESP
 
 - Verificar el token de Google en el servidor (firma, `aud`, `iss`, `exp`, `hd`) y guardar la sesión en una cookie segura. Hoy solo se lee en el navegador porque no hay datos que proteger.
 - Lista de profesores autorizada por el colegio. Hoy, un correo @iae.edu sin año se toma como profesor.
+- Que AusencIA use el correo de los padres del perfil para la copia.
 - Esconder "Probar con un usuario de ejemplo" cuando la app pase a datos reales.
