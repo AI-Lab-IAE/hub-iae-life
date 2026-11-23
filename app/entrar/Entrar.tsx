@@ -65,20 +65,37 @@ export default function Entrar({ clienteGoogle }: { clienteGoogle: string }) {
       });
     };
 
+    if ((window as unknown as { google?: Google }).google) {
+      pintar();
+      return () => {
+        cancelado = true;
+      };
+    }
+
+    // Si un intento anterior falló, se quita la etiqueta vieja para poder reintentar.
     let script = document.querySelector<HTMLScriptElement>(`script[src="${SCRIPT}"]`);
+    if (script?.dataset.fallo) {
+      script.remove();
+      script = null;
+    }
     if (!script) {
       script = document.createElement("script");
       script.src = SCRIPT;
       script.async = true;
-      script.onerror = () => setError("No se pudo cargar Google. Revisa tu conexión.");
       document.head.appendChild(script);
     }
-    if ((window as unknown as { google?: Google }).google) pintar();
-    else script.addEventListener("load", pintar);
+    const s = script;
+    const alFallar = () => {
+      s.dataset.fallo = "1";
+      if (!cancelado) setError("No se pudo cargar Google. Revisa tu conexión y vuelve a intentar.");
+    };
+    s.addEventListener("load", pintar);
+    s.addEventListener("error", alFallar);
 
     return () => {
       cancelado = true;
-      script?.removeEventListener("load", pintar);
+      s.removeEventListener("load", pintar);
+      s.removeEventListener("error", alFallar);
     };
   }, [clienteGoogle, cuenta]);
 

@@ -17,7 +17,6 @@ export type Cuenta = {
   correo: string;
   rol: Rol;
   promocion: number | null;
-  foto?: string;
   prueba?: boolean; // true si se entró con el usuario de prueba
   correoPadres?: string;
   color?: string;
@@ -33,10 +32,9 @@ export function leerCorreo(correo: string): { rol: Rol; promocion: number | null
   return { rol: "profesor", promocion: null };
 }
 
-function leer(): Cuenta | null {
+function leer(texto: string | null): Cuenta | null {
+  if (!texto) return null;
   try {
-    const texto = localStorage.getItem(CLAVE);
-    if (!texto) return null;
     const c = JSON.parse(texto) as Cuenta;
     return c && typeof c.correo === "string" && leerCorreo(c.correo) ? c : null;
   } catch {
@@ -44,20 +42,26 @@ function leer(): Cuenta | null {
   }
 }
 
+// Si el navegador no deja guardar (modo privado), la cuenta vive en memoria mientras la página esté abierta.
+let enMemoria: string | null = null;
+let usarMemoria = false;
+
 // Guardamos el texto para que useSyncExternalStore reciba siempre el mismo objeto si nada cambió.
 let cacheTexto: string | null = null;
 let cacheCuenta: Cuenta | null = null;
 
 function obtener(): Cuenta | null {
-  let texto: string | null = null;
-  try {
-    texto = localStorage.getItem(CLAVE);
-  } catch {
-    texto = null;
+  let texto: string | null = enMemoria;
+  if (!usarMemoria) {
+    try {
+      texto = localStorage.getItem(CLAVE);
+    } catch {
+      usarMemoria = true;
+    }
   }
   if (texto !== cacheTexto) {
     cacheTexto = texto;
-    cacheCuenta = leer();
+    cacheCuenta = leer(texto);
   }
   return cacheCuenta;
 }
@@ -75,14 +79,22 @@ function suscribir(aviso: () => void) {
   };
 }
 
-export function guardarCuenta(cuenta: Cuenta | null) {
-  try {
-    if (cuenta) localStorage.setItem(CLAVE, JSON.stringify(cuenta));
-    else localStorage.removeItem(CLAVE);
-  } catch {
-    // Si el navegador no deja guardar (modo privado), la cuenta solo dura mientras la página esté abierta.
+// Devuelve true si quedó guardado en el navegador; false si solo quedó en memoria (se pierde al cerrar).
+export function guardarCuenta(cuenta: Cuenta | null): boolean {
+  const texto = cuenta ? JSON.stringify(cuenta) : null;
+  enMemoria = texto;
+  let guardado = false;
+  if (!usarMemoria) {
+    try {
+      if (texto) localStorage.setItem(CLAVE, texto);
+      else localStorage.removeItem(CLAVE);
+      guardado = true;
+    } catch {
+      usarMemoria = true;
+    }
   }
   window.dispatchEvent(new Event(EVENTO));
+  return guardado;
 }
 
 export function salir() {
@@ -116,7 +128,6 @@ export function cuentaDesdeTokenGoogle(token: string): Cuenta | null {
       email_verified?: boolean;
       hd?: string;
       name?: string;
-      picture?: string;
     };
     if (!datos.email || datos.email_verified === false || datos.hd !== DOMINIO) return null;
     const info = leerCorreo(datos.email);
@@ -125,7 +136,6 @@ export function cuentaDesdeTokenGoogle(token: string): Cuenta | null {
       nombre: datos.name?.trim() || datos.email.split("@")[0],
       correo: datos.email.toLowerCase(),
       ...info,
-      foto: datos.picture,
     };
   } catch {
     return null;

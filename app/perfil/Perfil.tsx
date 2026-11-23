@@ -38,33 +38,28 @@ export default function Perfil() {
 function PerfilDe({ cuenta }: { cuenta: Cuenta }) {
   const [correoPadres, setCorreoPadres] = useState(cuenta.correoPadres ?? "");
   const [color, setColor] = useState(cuenta.color ?? COLORES[0]);
-  const [guardado, setGuardado] = useState(false);
+  const [guardado, setGuardado] = useState<"" | "si" | "memoria">("");
 
   const correoPadresValido = correoPadres.trim() === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correoPadres.trim());
 
   const guardar = (e: React.FormEvent) => {
     e.preventDefault();
     if (!correoPadresValido) return;
-    guardarCuenta({ ...cuenta, correoPadres: correoPadres.trim() || undefined, color });
-    setGuardado(true);
+    const ok = guardarCuenta({ ...cuenta, correoPadres: correoPadres.trim() || undefined, color });
+    setGuardado(ok ? "si" : "memoria");
   };
 
   return (
     <main className="flex-1 bg-azul-50/60">
       <div className="mx-auto max-w-lg px-4 py-10">
         <section className="life-entrar rounded-3xl border border-azul-100 bg-white p-6 text-center shadow-xl shadow-azul-900/5">
-          {cuenta.foto ? (
-            // eslint-disable-next-line @next/next/no-img-element -- la foto viene de Google y cambia por usuario
-            <img src={cuenta.foto} alt="" referrerPolicy="no-referrer" className="mx-auto size-20 rounded-full" />
-          ) : (
-            <span
-              className="mx-auto grid size-20 place-items-center rounded-full text-2xl font-bold text-white"
-              style={{ backgroundColor: color }}
-              aria-hidden
-            >
-              {iniciales(cuenta.nombre)}
-            </span>
-          )}
+          <span
+            className="mx-auto grid size-20 place-items-center rounded-full text-2xl font-bold text-white"
+            style={{ backgroundColor: color }}
+            aria-hidden
+          >
+            {iniciales(cuenta.nombre)}
+          </span>
           <h1 className="mt-4 text-2xl font-bold tracking-tight text-azul-950">{cuenta.nombre}</h1>
           <p className="mt-1 flex items-center justify-center gap-1.5 text-sm text-azul-900/60">
             <Mail className="size-4" aria-hidden /> {cuenta.correo}
@@ -87,38 +82,36 @@ function PerfilDe({ cuenta }: { cuenta: Cuenta }) {
                 value={correoPadres}
                 onChange={(e) => {
                   setCorreoPadres(e.target.value);
-                  setGuardado(false);
+                  setGuardado("");
                 }}
                 placeholder="papa.ejemplo@correo.com"
                 aria-invalid={!correoPadresValido}
                 className="mt-1.5 block w-full rounded-xl border border-azul-200 px-3 py-2.5 text-base text-azul-950 outline-none focus:border-azul-500 focus:ring-2 focus:ring-azul-200"
               />
-              <span className="mt-1 block text-xs text-azul-900/50">Para mandarles copia cuando avises una ausencia.</span>
+              <span className="mt-1 block text-xs text-azul-900/50">Si lo pones, AusencIA les manda copia cuando avises una ausencia. Se queda solo en este navegador.</span>
               {!correoPadresValido && <span className="mt-1 block text-xs text-red-600">Ese correo no se ve bien.</span>}
             </label>
           )}
 
-          {!cuenta.foto && (
-            <fieldset className="mt-5">
-              <legend className="text-sm font-medium text-azul-900">Color</legend>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {COLORES.map((c) => (
-                  <button
-                    key={c}
-                    type="button"
-                    onClick={() => {
-                      setColor(c);
-                      setGuardado(false);
-                    }}
-                    aria-label={`Color ${c}`}
-                    aria-pressed={color === c}
-                    className={`size-9 rounded-full transition-transform ${color === c ? "scale-110 ring-2 ring-azul-950 ring-offset-2" : ""}`}
-                    style={{ backgroundColor: c }}
-                  />
-                ))}
-              </div>
-            </fieldset>
-          )}
+          <fieldset className="mt-5">
+            <legend className="text-sm font-medium text-azul-900">Color</legend>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {COLORES.map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => {
+                    setColor(c);
+                    setGuardado("");
+                  }}
+                  aria-label={`Color ${c}`}
+                  aria-pressed={color === c}
+                  className={`size-9 rounded-full transition-transform ${color === c ? "scale-110 ring-2 ring-azul-950 ring-offset-2" : ""}`}
+                  style={{ backgroundColor: c }}
+                />
+              ))}
+            </div>
+          </fieldset>
 
           <button
             type="submit"
@@ -128,8 +121,8 @@ function PerfilDe({ cuenta }: { cuenta: Cuenta }) {
             <Save className="size-4" aria-hidden /> Guardar
           </button>
           {guardado && (
-            <span role="status" className="ml-3 text-sm text-emerald-700">
-              Guardado
+            <span role="status" className={`ml-3 text-sm ${guardado === "si" ? "text-emerald-700" : "text-amber-700"}`}>
+              {guardado === "si" ? "Guardado" : "Este navegador no deja guardar: se pierde al cerrar."}
             </span>
           )}
         </form>
