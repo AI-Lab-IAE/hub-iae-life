@@ -328,6 +328,9 @@ function FilaSemana({
                   {m && (
                     <p className={`truncate text-xs ${activo ? "text-azul-100" : "text-azul-900/50"}`}>{m.profesor}</p>
                   )}
+                  {m && (
+                    <p className={`break-all text-[11px] ${activo ? "text-azul-100" : "text-azul-900/40"}`}>{m.correo}</p>
+                  )}
                 </div>
               )}
             </td>
