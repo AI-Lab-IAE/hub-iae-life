@@ -39,7 +39,10 @@ function leer(texto: string | null): Cuenta | null {
   if (!texto) return null;
   try {
     const c = JSON.parse(texto) as Cuenta;
-    return c && typeof c.correo === "string" && leerCorreo(c.correo) ? c : null;
+    if (!c || typeof c.correo !== "string") return null;
+    // El rol y la promoción siempre se recalculan del correo y de la lista, no se confía en lo guardado.
+    const info = leerCorreo(c.correo);
+    return info ? { ...c, ...info } : null;
   } catch {
     return null;
   }
