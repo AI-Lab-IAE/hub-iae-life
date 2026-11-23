@@ -48,7 +48,14 @@ export const PAUSAS: Record<number, string> = {
 export const NOTA_DIA = "Rezo de 7:15 a 8:00. El viernes se sale a las 12:50.";
 
 // HORARIO_EJEMPLO[bloque][día] = nombre de la materia (null = no hay clase).
-const M = "Matemáticas", E = "Español", I = "Inglés", F = "Física", Q = "Química", H = "Historia", He = "Hebreo", EF = "Ed. Física";
+const M = "Matemáticas",
+  E = "Español",
+  I = "Inglés",
+  F = "Física",
+  Q = "Química",
+  H = "Historia",
+  He = "Hebreo",
+  EF = "Ed. Física";
 export type Horario = (string | null)[][];
 export const HORARIO_EJEMPLO: Horario = [
   [M, E, I, M, He],
@@ -72,12 +79,11 @@ export function aMinutos(hora: string) {
   return h * 60 + m;
 }
 
-// --- Guardado en el navegador ---
-const CLAVE = "iae-life:horario";
+// --- Guardado en el navegador, uno por cuenta ---
 const EVENTO = "iae-life:horario";
-let cacheTexto: string | null | undefined;
-let cacheHorario: Horario = HORARIO_EJEMPLO;
-let enMemoria: string | null = null;
+const clave = (correo: string) => `iae-life:horario:${correo}`;
+const cache = new Map<string, { texto: string | null; horario: Horario }>();
+const enMemoria = new Map<string, string | null>();
 let usarMemoria = false;
 
 function valido(h: unknown): h is Horario {
@@ -91,31 +97,32 @@ function valido(h: unknown): h is Horario {
   );
 }
 
-function obtener(): Horario {
-  let texto = enMemoria;
+function obtener(correo: string): Horario {
+  const k = clave(correo);
+  let texto = enMemoria.get(k) ?? null;
   if (!usarMemoria) {
     try {
-      texto = localStorage.getItem(CLAVE);
+      texto = localStorage.getItem(k);
     } catch {
       usarMemoria = true;
     }
   }
-  if (texto !== cacheTexto) {
-    cacheTexto = texto;
-    let h: unknown = null;
-    try {
-      h = texto ? JSON.parse(texto) : null;
-    } catch {
-      h = null;
-    }
-    cacheHorario = valido(h) ? h : HORARIO_EJEMPLO;
+  const previo = cache.get(k);
+  if (previo && previo.texto === texto) return previo.horario;
+  let h: unknown = null;
+  try {
+    h = texto ? JSON.parse(texto) : null;
+  } catch {
+    h = null;
   }
-  return cacheHorario;
+  const horario = valido(h) ? h : HORARIO_EJEMPLO;
+  cache.set(k, { texto, horario });
+  return horario;
 }
 
 function suscribir(aviso: () => void) {
   const alCambiar = (e: Event) => {
-    if (e instanceof StorageEvent && e.key !== CLAVE) return;
+    if (e instanceof StorageEvent && !e.key?.startsWith("iae-life:horario:")) return;
     aviso();
   };
   window.addEventListener("storage", alCambiar);
@@ -126,15 +133,17 @@ function suscribir(aviso: () => void) {
   };
 }
 
-// Devuelve true si quedó guardado en el navegador; false si solo en memoria.
-export function guardarHorario(h: Horario | null): boolean {
+// Guarda el horario de una cuenta (null = volver al de ejemplo).
+// Devuelve true si quedó guardado en el navegador; false si solo en memoria (se pierde al cerrar).
+export function guardarHorario(correo: string, h: Horario | null): boolean {
+  const k = clave(correo);
   const texto = h ? JSON.stringify(h) : null;
-  enMemoria = texto;
+  enMemoria.set(k, texto);
   let ok = false;
   if (!usarMemoria) {
     try {
-      if (texto) localStorage.setItem(CLAVE, texto);
-      else localStorage.removeItem(CLAVE);
+      if (texto) localStorage.setItem(k, texto);
+      else localStorage.removeItem(k);
       ok = true;
     } catch {
       usarMemoria = true;
@@ -144,11 +153,31 @@ export function guardarHorario(h: Horario | null): boolean {
   return ok;
 }
 
-// null mientras carga (en el servidor).
-export function useHorario(): Horario | null {
-  return useSyncExternalStore(suscribir, obtener, () => null);
+// Horario de la cuenta; sin cuenta, el de ejemplo. null mientras carga (en el servidor).
+export function useHorario(correo: string | null): Horario | null {
+  return useSyncExternalStore(
+    suscribir,
+    () => (correo ? obtener(correo) : HORARIO_EJEMPLO),
+    () => null,
+  );
 }
 
 export function esEjemplo(h: Horario) {
   return JSON.stringify(h) === JSON.stringify(HORARIO_EJEMPLO);
+}
+
+// Día de la semana (0 = lunes … 4 = viernes; null el fin de semana) y minuto del día, en hora de Panamá.
+const FORMATO_PANAMA = new Intl.DateTimeFormat("en-US", {
+  timeZone: "America/Panama",
+  weekday: "short",
+  hour: "numeric",
+  minute: "numeric",
+  hourCycle: "h23",
+});
+const DIAS_EN = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+
+export function momentoEnPanama(fecha: Date): { dia: number | null; ahora: number } {
+  const partes = Object.fromEntries(FORMATO_PANAMA.formatToParts(fecha).map((p) => [p.type, p.value]));
+  const dia = DIAS_EN.indexOf(partes.weekday);
+  return { dia: dia === -1 ? null : dia, ahora: Number(partes.hour) * 60 + Number(partes.minute) };
 }

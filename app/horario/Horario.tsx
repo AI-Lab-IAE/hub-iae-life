@@ -16,6 +16,7 @@ import {
   guardarHorario,
   hayBloque,
   materia,
+  momentoEnPanama,
   useHorario,
   type Horario as TipoHorario,
 } from "../_life/horario";
@@ -32,15 +33,9 @@ function useMinuto() {
   return useSyncExternalStore(suscribirReloj, minutoActual, () => null);
 }
 
-// Día (0 = lunes … 4 = viernes) y minuto del día; el fin de semana da día null.
 function momento(minuto: number | null) {
   if (minuto == null) return { dia: null as number | null, ahora: null as number | null };
-  const fecha = new Date(minuto * 60_000);
-  const semana = fecha.getDay();
-  return {
-    dia: semana >= 1 && semana <= 5 ? semana - 1 : null,
-    ahora: fecha.getHours() * 60 + fecha.getMinutes(),
-  };
+  return momentoEnPanama(new Date(minuto * 60_000));
 }
 
 function esAhora(bloque: number, dia: number, hoy: number | null, ahora: number | null) {
@@ -51,7 +46,8 @@ function esAhora(bloque: number, dia: number, hoy: number | null, ahora: number 
 
 export default function Horario() {
   const cuenta = useCuenta();
-  const horario = useHorario();
+  const correo = cuenta?.rol === "estudiante" ? cuenta.correo : null;
+  const horario = useHorario(correo);
   const minuto = useMinuto();
   const { dia: hoy, ahora } = momento(minuto);
   const [elegido, setElegido] = useState<number | null>(null);
@@ -68,23 +64,29 @@ export default function Horario() {
         <div className="max-w-sm rounded-3xl border border-azul-100 bg-white p-8 text-center">
           <CalendarDays className="mx-auto size-10 text-azul-300" aria-hidden />
           <h1 className="mt-4 text-xl font-bold text-azul-950">Horario de profesores</h1>
-          <p className="mt-2 text-sm text-azul-900/60">Por ahora el horario es para estudiantes. El de profesores viene después.</p>
+          <p className="mt-2 text-sm text-azul-900/60">
+            Por ahora el horario es para estudiantes. El de profesores viene después.
+          </p>
         </div>
       </main>
     );
   }
 
   const dia = elegido ?? hoy ?? 0;
+  const conEdicion = editando && correo !== null;
+
+  const NO_GUARDA = "Este navegador no deja guardar: los cambios se pierden al cerrar.";
 
   const cambiar = (bloque: number, d: number, valor: string) => {
+    if (!correo) return;
     const nuevo: TipoHorario = horario.map((fila) => [...fila]);
     nuevo[bloque][d] = valor || null;
-    setAviso(guardarHorario(nuevo) ? "" : "Este navegador no deja guardar: los cambios se pierden al cerrar.");
+    setAviso(guardarHorario(correo, nuevo) ? "" : NO_GUARDA);
   };
 
   const restaurar = () => {
-    guardarHorario(null);
-    setAviso("");
+    if (!correo) return;
+    setAviso(guardarHorario(correo, null) ? "" : NO_GUARDA);
   };
 
   return (
@@ -109,26 +111,28 @@ export default function Horario() {
               )}
             </p>
           </div>
-          <div className="flex flex-wrap gap-2">
-            {!esEjemplo(horario) && (
+          {correo && (
+            <div className="flex flex-wrap gap-2">
+              {!esEjemplo(horario) && (
+                <button
+                  type="button"
+                  onClick={restaurar}
+                  className="inline-flex items-center gap-2 rounded-full border border-azul-200 bg-white px-4 py-2 text-sm font-semibold text-azul-800 hover:bg-azul-50"
+                >
+                  <RotateCcw className="size-4" aria-hidden /> Volver al original
+                </button>
+              )}
               <button
                 type="button"
-                onClick={restaurar}
-                className="inline-flex items-center gap-2 rounded-full border border-azul-200 bg-white px-4 py-2 text-sm font-semibold text-azul-800 hover:bg-azul-50"
+                onClick={() => setEditando((e) => !e)}
+                aria-pressed={conEdicion}
+                className="inline-flex items-center gap-2 rounded-full bg-azul-800 px-4 py-2 text-sm font-semibold text-white hover:bg-azul-900"
               >
-                <RotateCcw className="size-4" aria-hidden /> Volver al original
+                {conEdicion ? <Check className="size-4" aria-hidden /> : <Pencil className="size-4" aria-hidden />}
+                {conEdicion ? "Listo" : "Ajustar"}
               </button>
-            )}
-            <button
-              type="button"
-              onClick={() => setEditando((e) => !e)}
-              aria-pressed={editando}
-              className="inline-flex items-center gap-2 rounded-full bg-azul-800 px-4 py-2 text-sm font-semibold text-white hover:bg-azul-900"
-            >
-              {editando ? <Check className="size-4" aria-hidden /> : <Pencil className="size-4" aria-hidden />}
-              {editando ? "Listo" : "Ajustar"}
-            </button>
-          </div>
+            </div>
+          )}
         </div>
 
         {aviso && (
@@ -139,7 +143,11 @@ export default function Horario() {
 
         {/* Celular: un día a la vez */}
         <div className="mt-6 md:hidden">
-          <div role="tablist" aria-label="Día" className="grid grid-cols-5 gap-1 rounded-full bg-white p-1 ring-1 ring-azul-100">
+          <div
+            role="tablist"
+            aria-label="Día"
+            className="grid grid-cols-5 gap-1 rounded-full bg-white p-1 ring-1 ring-azul-100"
+          >
             {DIAS_CORTOS.map((d, i) => (
               <button
                 key={d}
@@ -166,7 +174,7 @@ export default function Horario() {
                     dia={dia}
                     horario={horario}
                     ahora={esAhora(i, dia, hoy, ahora)}
-                    editando={editando}
+                    editando={conEdicion}
                     onCambiar={cambiar}
                   />
                   {PAUSAS[i] && hayBloque(i + 1, dia) && <Pausa texto={PAUSAS[i]} />}
@@ -188,7 +196,11 @@ export default function Horario() {
                 {DIAS.map((d, i) => (
                   <th key={d} scope="col" className="px-2 py-3 font-semibold">
                     {d}
-                    {hoy === i && <span className="ml-2 rounded-full bg-azul-800 px-2 py-0.5 text-[10px] uppercase text-white">Hoy</span>}
+                    {hoy === i && (
+                      <span className="ml-2 rounded-full bg-azul-800 px-2 py-0.5 text-[10px] uppercase text-white">
+                        Hoy
+                      </span>
+                    )}
                   </th>
                 ))}
               </tr>
@@ -201,7 +213,7 @@ export default function Horario() {
                   horario={horario}
                   hoy={hoy}
                   ahora={ahora}
-                  editando={editando}
+                  editando={conEdicion}
                   onCambiar={cambiar}
                 />
               ))}
@@ -268,7 +280,9 @@ function Clase({ bloque, dia, horario, ahora, editando, onCambiar }: PropsCelda 
           <p className={ahora ? "text-azul-100" : "text-azul-900/40"}>Sin clase</p>
         )}
       </div>
-      {ahora && !editando && <span className="rounded-full bg-white/15 px-2 py-0.5 text-[10px] font-semibold uppercase">Ahora</span>}
+      {ahora && !editando && (
+        <span className="rounded-full bg-white/15 px-2 py-0.5 text-[10px] font-semibold uppercase">Ahora</span>
+      )}
     </div>
   );
 }
@@ -313,7 +327,9 @@ function FilaSemana({
                   }`}
                 >
                   <p className="truncate font-semibold">{m?.nombre ?? "Sin clase"}</p>
-                  {m && <p className={`truncate text-xs ${activo ? "text-azul-100" : "text-azul-900/50"}`}>{m.profesor}</p>}
+                  {m && (
+                    <p className={`truncate text-xs ${activo ? "text-azul-100" : "text-azul-900/50"}`}>{m.profesor}</p>
+                  )}
                 </div>
               )}
             </td>
