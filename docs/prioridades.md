@@ -16,7 +16,7 @@
 3. La IA que explica.
 
 ## School Guide (Camille)
-1. El inicio con acceso a todas las secciones: mapa, contactos, clubes, calendario, anuncios e información.
+1. El inicio con acceso a todas las secciones: mapa, contactos, clubes, calendario, anuncios, información y Mis pendientes.
 2. El perfil del estudiante: crear, editar y borrar, guardado solo en el dispositivo.
 3. Mis pendientes: una lista personal, guardada en el dispositivo.
 
