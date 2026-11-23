@@ -64,7 +64,9 @@ export default function Entrar({ clienteGoogle }: { clienteGoogle: string }) {
           if (!enPantalla.current || cuentaActual.current) return;
           const nueva = cuentaDesdeTokenGoogle(credential);
           if (!nueva) {
-            setError(`Solo se puede entrar con la cuenta del colegio (@${DOMINIO}).`);
+            setError(
+              `Solo se puede entrar con la cuenta del colegio (@${DOMINIO}). Si eres profesor y no puedes entrar, pide que te agreguen a la lista.`,
+            );
             return;
           }
           guardarCuenta(nueva);

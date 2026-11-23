@@ -3,8 +3,9 @@
 // Cuenta de IAE LIFE: quién entró, guardado solo en este navegador.
 // Se entra con la cuenta Google del colegio (@iae.edu). El correo dice si es estudiante o profesor:
 //   estudiante → nombre.apellido.2030@iae.edu (el año es la promoción)
-//   profesor   → nombre.apellido@iae.edu
+//   profesor   → nombre.apellido@iae.edu, solo si está en la lista autorizada (profesores.ts)
 import { useSyncExternalStore } from "react";
+import { PROFESORES_AUTORIZADOS } from "./profesores";
 
 export const DOMINIO = "iae.edu";
 const CLAVE = "iae-life:cuenta";
@@ -22,14 +23,16 @@ export type Cuenta = {
   color?: string;
 };
 
-// Lee el correo del colegio y dice el rol y la promoción. Devuelve null si no es @iae.edu.
+// Lee el correo del colegio y dice el rol y la promoción.
+// Devuelve null si no es @iae.edu o si no tiene año y no está en la lista de profesores.
 export function leerCorreo(correo: string): { rol: Rol; promocion: number | null } | null {
   const limpio = correo.trim().toLowerCase();
   const [usuario, dominio] = limpio.split("@");
   if (!usuario || dominio !== DOMINIO) return null;
   const anio = usuario.match(/\.(\d{4})$/);
   if (anio) return { rol: "estudiante", promocion: Number(anio[1]) };
-  return { rol: "profesor", promocion: null };
+  if (PROFESORES_AUTORIZADOS.includes(limpio)) return { rol: "profesor", promocion: null };
+  return null;
 }
 
 function leer(texto: string | null): Cuenta | null {
