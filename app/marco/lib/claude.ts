@@ -3,7 +3,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
 import type { z } from "zod";
 
-export const MODELO = "claude-opus-5-5";
+export const MODELO = "claude-sonnet-5-5";
 
 const cliente = new Anthropic();
 
