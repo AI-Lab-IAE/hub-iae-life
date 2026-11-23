@@ -17,6 +17,7 @@ Responsable: Camille (guía enviada por Slack el 17-nov-2026).
 - Pantallas de celular: Hoy (saludo, tu próxima clase, pendientes, progreso y eventos de hoy), Mensajes y Calendario.
 - Hoja de estilo con colores, letra, botones, tarjetas, campos, íconos, espaciado y navegación (barra lateral en computadora, barra abajo en celular: Hoy · Estudiar · Tareas · Avisos · Perfil).
 
-## Pendiente
-- Pantallas de Perfil y Horario (se le pidieron el 19-nov).
-- Sus 3 cosas de School Guide.
+## Perfil y Horario (23-nov)
+- **Perfil** (`/camille/perfil`): formulario con nombre, grado y color del avatar, más una tarjeta de perfil y un mini-horario. En IAE LIFE se usa la promoción en lugar del grado (decisión del 20-nov).
+- **Horario:** no tiene pantalla propia. Está en Información general (`/camille/informacion`) como «Horario de secundaria» y también se ve en Inicio y en Perfil.
+- **Espaciado:** múltiplos de 4 px.

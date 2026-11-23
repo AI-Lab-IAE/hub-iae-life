@@ -15,5 +15,10 @@
 2. Quizzes para estudiar.
 3. La IA que explica.
 
-## AvisoYa / School Guide (Abraham, Camille)
+## School Guide (Camille)
+1. El inicio con acceso a todas las secciones: mapa, contactos, clubes, calendario, anuncios e información.
+2. El perfil del estudiante: crear, editar y borrar, guardado solo en el dispositivo.
+3. Mis pendientes: una lista personal, guardada en el dispositivo.
+
+## AvisoYa (Abraham)
 Pendiente.
