@@ -19,5 +19,5 @@ Responsable: Camille (guía enviada por Slack el 17-nov-2026).
 
 ## Perfil y Horario (23-nov)
 - **Perfil** (`/camille/perfil`): formulario con nombre, grado y color del avatar, más una tarjeta de perfil y un mini-horario (solo para secundaria; en primaria sale un aviso de que viene después). En IAE LIFE se usa la promoción en lugar del grado (decisión del 20-nov).
-- **Horario:** no tiene pantalla propia. Está en Información general (`/camille/informacion`) como «Horario de secundaria» y también se ve en Inicio y en Perfil (solo secundaria).
+- **Horario:** no tiene pantalla propia. Está en Información general (`/camille/informacion`) como «Horario de secundaria» y lo ve cualquiera. Es el horario de secundaria: en Inicio y en Perfil se oculta si el perfil es de primaria (si aún no hay perfil, Inicio lo muestra).
 - **Espaciado:** múltiplos de 4 px.
