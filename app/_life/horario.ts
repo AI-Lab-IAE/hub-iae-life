@@ -124,6 +124,7 @@ function obtener(correo: string): Horario {
 function suscribir(aviso: () => void) {
   const alCambiar = (e: Event) => {
     if (e instanceof StorageEvent) {
+      if (e.storageArea !== localStorage) return;
       if (e.key !== null && !e.key.startsWith("iae-life:horario:")) return;
       // Otra pestaña sí pudo guardar: volver a leer lo guardado.
       if (e.key === null) soloMemoria.clear();
