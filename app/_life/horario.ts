@@ -140,6 +140,11 @@ function suscribir(aviso: () => void) {
   };
 }
 
+// Lo último guardado de esa cuenta (para editar sobre lo más reciente, aunque otra pestaña haya cambiado algo).
+export function horarioGuardado(correo: string): Horario {
+  return obtener(correo);
+}
+
 // Guarda el horario de una cuenta (null = volver al de ejemplo).
 // Devuelve true si quedó guardado en el navegador; false si solo en memoria (se pierde al cerrar).
 export function guardarHorario(correo: string, h: Horario | null): boolean {

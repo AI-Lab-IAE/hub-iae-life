@@ -15,6 +15,7 @@ import {
   esEjemplo,
   guardarHorario,
   hayBloque,
+  horarioGuardado,
   materia,
   momentoEnPanama,
   useHorario,
@@ -79,7 +80,7 @@ export default function Horario() {
 
   const cambiar = (bloque: number, d: number, valor: string) => {
     if (!correo) return;
-    const nuevo: TipoHorario = horario.map((fila) => [...fila]);
+    const nuevo: TipoHorario = horarioGuardado(correo).map((fila) => [...fila]);
     nuevo[bloque][d] = valor || null;
     setAviso(guardarHorario(correo, nuevo) ? "" : NO_GUARDA);
   };
@@ -172,7 +173,7 @@ export default function Horario() {
                     bloque={i}
                     dia={dia}
                     horario={horario}
-                    ahora={esAhora(i, dia, hoy, ahora)}
+                    ahora={horario[i][dia] !== null && esAhora(i, dia, hoy, ahora)}
                     editando={conEdicion}
                     onCambiar={cambiar}
                   />
@@ -311,7 +312,7 @@ function FilaSemana({
         {DIAS.map((d, dia) => {
           if (!hayBloque(bloque, dia)) return <td key={d} className="bg-azul-50/50" />;
           const m = materia(horario[bloque][dia]);
-          const activo = esAhora(bloque, dia, hoy, ahora);
+          const activo = m !== null && esAhora(bloque, dia, hoy, ahora);
           return (
             <td key={d} className="p-1.5">
               {editando ? (
