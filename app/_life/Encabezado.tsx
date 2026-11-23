@@ -109,6 +109,7 @@ export default function Encabezado() {
             </ul>
             <Link
               href="/horario"
+              onClick={() => setAbierto(false)}
               className="mt-3 flex items-center justify-between rounded-2xl bg-azul-50 px-4 py-3 text-sm font-medium text-azul-800"
             >
               <span className="flex items-center gap-2">
@@ -118,6 +119,7 @@ export default function Encabezado() {
             </Link>
             <Link
               href="/creditos"
+              onClick={() => setAbierto(false)}
               className="mt-3 flex items-center justify-between rounded-2xl bg-azul-50 px-4 py-3 text-sm font-medium text-azul-800"
             >
               <span className="flex items-center gap-2">

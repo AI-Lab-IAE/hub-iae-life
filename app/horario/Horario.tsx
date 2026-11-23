@@ -144,7 +144,7 @@ export default function Horario() {
         {/* Celular: un día a la vez */}
         <div className="mt-6 md:hidden">
           <div
-            role="tablist"
+            role="group"
             aria-label="Día"
             className="grid grid-cols-5 gap-1 rounded-full bg-white p-1 ring-1 ring-azul-100"
           >
@@ -271,9 +271,8 @@ function Clase({ bloque, dia, horario, ahora, editando, onCambiar }: PropsCelda 
         ) : m ? (
           <>
             <p className="font-semibold">{m.nombre}</p>
-            <p className={`truncate text-xs ${ahora ? "text-azul-100" : "text-azul-900/55"}`}>
-              {m.profesor} · {m.correo}
-            </p>
+            <p className={`text-xs ${ahora ? "text-azul-100" : "text-azul-900/55"}`}>{m.profesor}</p>
+            <p className={`break-all text-xs ${ahora ? "text-azul-100" : "text-azul-900/55"}`}>{m.correo}</p>
           </>
         ) : (
           <p className={ahora ? "text-azul-100" : "text-azul-900/40"}>Sin clase</p>
