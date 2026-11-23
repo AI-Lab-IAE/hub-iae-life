@@ -45,3 +45,9 @@ Reúne los `DESPUES.md` de cada función. El detalle sigue en `app/<nombre>/DESP
 - Copia automática del aviso a los padres.
 - Historial de ausencias notificadas.
 - Editar el horario semanal arrastrando las clases en un calendario.
+
+## Cuenta (entrar con Google)
+
+- Verificar el token de Google en el servidor (firma, `aud`, `iss`, `exp`, `hd`) y guardar la sesión en una cookie segura. Hoy solo se lee en el navegador porque no hay datos que proteger.
+- Lista de profesores autorizada por el colegio. Hoy, un correo @iae.edu sin año se toma como profesor.
+- Esconder "Probar con un usuario de ejemplo" cuando la app pase a datos reales.

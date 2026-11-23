@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { ArrowRight, Menu, Users, X } from "lucide-react";
 import { funciones, type Funcion } from "./funciones";
 import { Marca } from "./Marca";
+import BotonCuenta from "./BotonCuenta";
 
 // Barra de IAE LIFE: fija arriba en todas las funciones. En computadora muestra las funciones;
 // en celular, un botón abre el menú. En el HUB (/hub y /coordinador) no se muestra.
@@ -69,12 +70,16 @@ export default function Encabezado() {
             )}
           </nav>
 
+          <div className="ml-auto lg:ml-2">
+            <BotonCuenta />
+          </div>
+
           <button
             type="button"
             onClick={() => setAbierto((a) => !a)}
             aria-expanded={abierto}
             aria-controls="menu-funciones"
-            className="ml-auto flex items-center gap-2 rounded-full border border-azul-100 px-3 py-1.5 text-sm font-medium text-azul-800 transition-colors hover:bg-azul-50 lg:hidden"
+            className="flex items-center gap-2 rounded-full border border-azul-100 px-3 py-1.5 text-sm font-medium text-azul-800 transition-colors hover:bg-azul-50 lg:hidden"
           >
             {abierto ? <X className="size-4" aria-hidden /> : <Menu className="size-4" aria-hidden />}
             Funciones
