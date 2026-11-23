@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ArrowRight, Menu, Users, X } from "lucide-react";
+import { ArrowRight, CalendarDays, Menu, Users, X } from "lucide-react";
 import { funciones, type Funcion } from "./funciones";
 import { Marca } from "./Marca";
 import BotonCuenta from "./BotonCuenta";
@@ -107,6 +107,15 @@ export default function Encabezado() {
                 </li>
               ))}
             </ul>
+            <Link
+              href="/horario"
+              className="mt-3 flex items-center justify-between rounded-2xl bg-azul-50 px-4 py-3 text-sm font-medium text-azul-800"
+            >
+              <span className="flex items-center gap-2">
+                <CalendarDays className="size-4" aria-hidden /> Mi horario
+              </span>
+              <ArrowRight className="size-4" aria-hidden />
+            </Link>
             <Link
               href="/creditos"
               className="mt-3 flex items-center justify-between rounded-2xl bg-azul-50 px-4 py-3 text-sm font-medium text-azul-800"

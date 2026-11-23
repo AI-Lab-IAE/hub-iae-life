@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { GraduationCap, LogIn, LogOut, Mail, Save, UserRound } from "lucide-react";
+import { ArrowRight, CalendarDays, GraduationCap, LogIn, LogOut, Mail, Save, UserRound } from "lucide-react";
 import { guardarCuenta, iniciales, salir, useCuenta, type Cuenta } from "../_life/cuenta";
 
 const COLORES = ["#1d3a8a", "#2c55c4", "#0e7490", "#047857", "#b45309", "#be123c", "#7c3aed"];
@@ -70,6 +70,18 @@ function PerfilDe({ cuenta }: { cuenta: Cuenta }) {
           </p>
           {cuenta.prueba && <p className="mt-3 text-xs text-azul-900/50">Usuario de ejemplo: los datos son inventados.</p>}
         </section>
+
+        {cuenta.rol === "estudiante" && (
+          <Link
+            href="/horario"
+            className="mt-6 flex items-center justify-between rounded-3xl border border-azul-100 bg-white p-5 font-semibold text-azul-900 transition-colors hover:bg-azul-50"
+          >
+            <span className="flex items-center gap-3">
+              <CalendarDays className="size-5 text-azul-700" aria-hidden /> Mi horario
+            </span>
+            <ArrowRight className="size-4" aria-hidden />
+          </Link>
+        )}
 
         <form onSubmit={guardar} className="mt-6 rounded-3xl border border-azul-100 bg-white p-6">
           <h2 className="font-bold text-azul-950">Opcional</h2>
