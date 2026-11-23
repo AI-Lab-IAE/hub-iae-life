@@ -84,7 +84,8 @@ const EVENTO = "iae-life:horario";
 const clave = (correo: string) => `iae-life:horario:${correo}`;
 const cache = new Map<string, { texto: string | null; horario: Horario }>();
 const enMemoria = new Map<string, string | null>();
-let usarMemoria = false;
+let usarMemoria = false; // el navegador no deja leer (modo privado)
+const soloMemoria = new Set<string>(); // cuentas cuyo último guardado falló
 
 function valido(h: unknown): h is Horario {
   return (
@@ -100,7 +101,7 @@ function valido(h: unknown): h is Horario {
 function obtener(correo: string): Horario {
   const k = clave(correo);
   let texto = enMemoria.get(k) ?? null;
-  if (!usarMemoria) {
+  if (!usarMemoria && !soloMemoria.has(k)) {
     try {
       texto = localStorage.getItem(k);
     } catch {
@@ -122,7 +123,7 @@ function obtener(correo: string): Horario {
 
 function suscribir(aviso: () => void) {
   const alCambiar = (e: Event) => {
-    if (e instanceof StorageEvent && !e.key?.startsWith("iae-life:horario:")) return;
+    if (e instanceof StorageEvent && e.key !== null && !e.key.startsWith("iae-life:horario:")) return;
     aviso();
   };
   window.addEventListener("storage", alCambiar);
@@ -145,8 +146,9 @@ export function guardarHorario(correo: string, h: Horario | null): boolean {
       if (texto) localStorage.setItem(k, texto);
       else localStorage.removeItem(k);
       ok = true;
+      soloMemoria.delete(k);
     } catch {
-      usarMemoria = true;
+      soloMemoria.add(k);
     }
   }
   window.dispatchEvent(new Event(EVENTO));

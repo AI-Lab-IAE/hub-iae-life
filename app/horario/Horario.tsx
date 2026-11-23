@@ -152,8 +152,7 @@ export default function Horario() {
               <button
                 key={d}
                 type="button"
-                role="tab"
-                aria-selected={dia === i}
+                aria-pressed={dia === i}
                 onClick={() => setElegido(i)}
                 className={`rounded-full py-2 text-sm font-semibold transition-colors ${
                   dia === i ? "bg-azul-800 text-white" : "text-azul-900/60"
