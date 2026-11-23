@@ -78,7 +78,7 @@ export default function Entrar({ clienteGoogle }: { clienteGoogle: string }) {
         shape: "pill",
         text: "signin_with",
         locale: "es",
-        width: 280,
+        width: 240,
       });
     };
 
