@@ -71,7 +71,7 @@ function obtener(): Cuenta | null {
 
 function suscribir(aviso: () => void) {
   const alCambiar = (e: Event) => {
-    if (e instanceof StorageEvent && e.key !== CLAVE) return;
+    if (e instanceof StorageEvent && e.key !== null && e.key !== CLAVE) return;
     aviso();
   };
   window.addEventListener("storage", alCambiar);
@@ -83,7 +83,38 @@ function suscribir(aviso: () => void) {
 }
 
 // Devuelve true si quedó guardado en el navegador; false si solo quedó en memoria (se pierde al cerrar).
+// El color y el correo de los padres se guardan aparte por cuenta, para que no se pierdan al salir.
+const clavePrefs = (correo: string) => `iae-life:prefs:${correo}`;
+type Prefs = Pick<Cuenta, "correoPadres" | "color">;
+
+function conPrefs(cuenta: Cuenta): Cuenta {
+  // Al entrar (sin color elegido aún), se recupera lo que esa cuenta había guardado.
+  if (cuenta.color !== undefined) {
+    try {
+      const prefs: Prefs = { correoPadres: cuenta.correoPadres, color: cuenta.color };
+      localStorage.setItem(clavePrefs(cuenta.correo), JSON.stringify(prefs));
+    } catch {
+      // sin espacio o modo privado: se queda solo en la cuenta
+    }
+    return cuenta;
+  }
+  try {
+    const prefs = JSON.parse(localStorage.getItem(clavePrefs(cuenta.correo)) ?? "null") as Prefs | null;
+    if (prefs && typeof prefs === "object") {
+      return {
+        ...cuenta,
+        color: typeof prefs.color === "string" ? prefs.color : undefined,
+        correoPadres: typeof prefs.correoPadres === "string" ? prefs.correoPadres : undefined,
+      };
+    }
+  } catch {
+    // nada guardado
+  }
+  return cuenta;
+}
+
 export function guardarCuenta(cuenta: Cuenta | null): boolean {
+  if (cuenta) cuenta = conPrefs(cuenta);
   const texto = cuenta ? JSON.stringify(cuenta) : null;
   enMemoria = texto;
   let guardado = false;
