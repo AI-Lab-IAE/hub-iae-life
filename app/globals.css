@@ -25,8 +25,8 @@
   --color-blue-300: var(--color-azul-300);
   --color-blue-400: var(--color-azul-400);
   --color-blue-500: var(--color-azul-500);
-  --color-blue-600: var(--color-azul-700);
-  --color-blue-700: var(--color-azul-800);
+  --color-blue-600: var(--color-azul-800);
+  --color-blue-700: var(--color-azul-900);
   --color-blue-800: var(--color-azul-900);
   --color-blue-900: var(--color-azul-950);
   --color-blue-950: var(--color-azul-950);
@@ -37,8 +37,8 @@
   --color-indigo-300: var(--color-azul-300);
   --color-indigo-400: var(--color-azul-400);
   --color-indigo-500: var(--color-azul-500);
-  --color-indigo-600: var(--color-azul-600);
-  --color-indigo-700: var(--color-azul-700);
+  --color-indigo-600: var(--color-azul-800);
+  --color-indigo-700: var(--color-azul-900);
   --color-indigo-800: var(--color-azul-800);
   --color-indigo-900: var(--color-azul-900);
   --color-indigo-950: var(--color-azul-950);

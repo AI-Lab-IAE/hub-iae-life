@@ -159,14 +159,16 @@ export default function Horario() {
               bloque={resumen?.actual ?? null}
               dia={hoy}
               horario={horario}
-              vacio={hoy === null ? "Cargando…" : "No tienes clase en este momento"}
+              vacio={
+                minuto === null ? "Cargando…" : hoy === null ? "Hoy no hay clases" : "No tienes clase en este momento"
+              }
             />
             <Resumen
               titulo="Después"
               bloque={resumen?.siguiente ?? null}
               dia={hoy}
               horario={horario}
-              vacio="No te quedan clases hoy"
+              vacio={minuto !== null && hoy === null ? "Disfruta el fin de semana" : "No te quedan clases hoy"}
             />
           </div>
         </div>
@@ -415,9 +417,9 @@ function FilaSemana({
                         : "text-azul-900/35"
                   }`}
                 >
-                  <p className="flex items-center gap-1.5 truncate font-semibold">
+                  <p className="flex min-w-0 items-center gap-1.5 font-semibold">
                     {e && <e.Icono className={`size-3.5 shrink-0 ${activo ? "" : "opacity-70"}`} aria-hidden />}
-                    {m?.nombre ?? "Sin clase"}
+                    <span className="truncate">{m?.nombre ?? "Sin clase"}</span>
                   </p>
                   {m && (
                     <p className={`truncate text-xs ${activo ? "text-azul-100" : "text-azul-900/50"}`}>{m.profesor}</p>
