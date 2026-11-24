@@ -784,7 +784,17 @@ function Onboarding() {
   });
   function usarAnteriores() {
     const partes = cuenta.nombre.trim().split(/\s+/);
-    setData({ ...anteriores, user: { ...(anteriores.user ?? {}), nombre: partes[0], apellido: partes.slice(1).join(" ") } });
+    setData({
+      ...anteriores,
+      user: {
+        nombre: partes[0],
+        apellido: partes.slice(1).join(" "),
+        rol: cuenta.rol === "profesor" ? "profesor" : "estudiante",
+        rolOtro: "",
+        genero: "",
+        nacimiento: "",
+      },
+    });
   }
   const key = steps[Math.min(step, steps.length - 1)];
 
@@ -2837,6 +2847,7 @@ function App() {
   const saveTimer = useRef(null);
   const firstLoad = useRef(true);
   const claveActual = useRef(null);
+  const pendiente = useRef(null);
   const cuenta = useCuenta(); // undefined = todavía cargando
   const correo = cuenta?.correo ?? null;
 
@@ -2847,8 +2858,11 @@ function App() {
     (async () => {
       const guardado = await loadState(clave);
       const loaded = guardado || defaultData();
-      // Sin nada guardado, TASKUP! empieza en el idioma elegido en el perfil de IAE LIFE.
-      if (!guardado && cuenta?.idioma) loaded.settings = { ...loaded.settings, lang: cuenta.idioma };
+      // Si el idioma del perfil de IAE LIFE cambió desde la última vez, TASKUP! lo sigue.
+      // Si solo se cambió dentro de TASKUP!, se respeta hasta que se cambie otra vez en el perfil.
+      if (cuenta?.idioma && loaded.settings?.idiomaPerfil !== cuenta.idioma) {
+        loaded.settings = { ...loaded.settings, lang: cuenta.idioma, idiomaPerfil: cuenta.idioma };
+      }
       if (!vigente) return;
       // El nombre y el rol salen siempre de la cuenta, para que no quede el de otra persona.
       if (cuenta && loaded.user) {
@@ -2869,9 +2883,15 @@ function App() {
     if (firstLoad.current) { firstLoad.current = false; return; }
     const clave = claveActual.current;
     if (saveTimer.current) clearTimeout(saveTimer.current);
-    saveTimer.current = setTimeout(() => { saveState(clave, data); }, 350);
+    pendiente.current = { clave, data };
+    saveTimer.current = setTimeout(() => { saveState(clave, data); pendiente.current = null; }, 350);
     return () => clearTimeout(saveTimer.current);
   }, [data, loading]);
+
+  // Si TASKUP! se cierra (o cambia la cuenta) antes de guardar, se guarda lo pendiente.
+  useEffect(() => () => {
+    if (pendiente.current) saveState(pendiente.current.clave, pendiente.current.data);
+  }, []);
 
   const setData = useCallback((updater) => {
     setDataRaw((prev) => (typeof updater === "function" ? updater(prev) : updater));

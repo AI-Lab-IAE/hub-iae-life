@@ -305,7 +305,7 @@ function Resumen({
         <p className="text-xs font-semibold uppercase tracking-wide text-lime-700">{titulo}</p>
         {m && bloque !== null ? (
           <>
-            <p className="truncate text-lg font-bold">{m.nombre}</p>
+            <p className="truncate text-lg font-bold text-azul-950">{m.nombre}</p>
             <p className="truncate text-sm text-azul-900/75">
               {BLOQUES[bloque].desde}–{BLOQUES[bloque].hasta} · {m.profesor}
             </p>
