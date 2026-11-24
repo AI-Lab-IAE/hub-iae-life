@@ -772,31 +772,6 @@ function Onboarding() {
 
   const steps = conCuenta ? ["intro1", "intro2"] : ["datos", "intro1", "intro2"];
 
-  // Tareas guardadas antes de tener cuenta (en este navegador). Solo se pasan a la cuenta si la persona lo elige.
-  const [anteriores] = useState(() => {
-    if (!conCuenta) return null;
-    try {
-      const d = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "null");
-      return d && d.onboarded ? d : null;
-    } catch {
-      return null;
-    }
-  });
-  function usarAnteriores() {
-    const partes = cuenta.nombre.trim().split(/\s+/);
-    setData({
-      ...anteriores,
-      settings: { ...anteriores.settings, ...(cuenta.idioma ? { lang: cuenta.idioma } : {}) },
-      user: {
-        nombre: partes[0],
-        apellido: partes.slice(1).join(" "),
-        rol: cuenta.rol === "profesor" ? "profesor" : "estudiante",
-        rolOtro: "",
-        genero: cuenta.genero ?? "",
-        nacimiento: cuenta.nacimiento ?? "",
-      },
-    });
-  }
   const key = steps[Math.min(step, steps.length - 1)];
 
   function next() {
@@ -849,12 +824,6 @@ function Onboarding() {
           <div className="h-full rounded-full transition-all" style={{ width: `${progress}%`, background: th.primary }} />
         </div>
 
-        {anteriores && (
-          <button onClick={usarAnteriores} className="w-full mb-4 py-3 rounded-2xl border text-sm font-semibold"
-            style={{ background: th.primarySoft, borderColor: th.primary, color: th.primary }}>
-            {tx("Usar las tareas que ya tenía en este navegador", "Use the tasks I already had in this browser")}
-          </button>
-        )}
 
         <Card>
           {key === "datos" && (
@@ -2903,6 +2872,27 @@ function App() {
     return () => { vigente = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [correo, cuenta === undefined]);
+
+  // Si cambian los Ajustes de IAE LIFE (por ejemplo en otra pestaña), TASKUP! los aplica al momento.
+  const idiomaCuenta = cuenta?.idioma;
+  const temaCuenta = cuenta?.tema;
+  const notifCuenta = cuenta?.notif;
+  useEffect(() => {
+    if (loading) return;
+    setDataRaw((d) =>
+      d
+        ? {
+            ...d,
+            settings: {
+              ...d.settings,
+              ...(idiomaCuenta ? { lang: idiomaCuenta } : {}),
+              ...(temaCuenta ? { theme: temaCuenta } : {}),
+              ...(typeof notifCuenta === "boolean" ? { notif: notifCuenta } : {}),
+            },
+          }
+        : d,
+    );
+  }, [idiomaCuenta, temaCuenta, notifCuenta, loading]);
 
   // Se guarda en cuanto cambia algo (localStorage es rápido): así no se pierde nada al cerrar o cambiar de cuenta.
   useEffect(() => {

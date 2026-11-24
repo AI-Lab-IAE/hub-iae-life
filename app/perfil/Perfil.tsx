@@ -116,7 +116,7 @@ function PerfilDe({ cuenta }: { cuenta: Cuenta }) {
           className="mt-6 scroll-mt-20 rounded-3xl border border-azul-100 bg-white p-6 shadow-sm"
         >
           <h2 className="font-bold text-azul-950">Ajustes de IAE LIFE</h2>
-          <p className="mt-1 text-sm text-azul-900/65">Sirven para todas las apps: así no te los vuelven a pedir.</p>
+          <p className="mt-1 text-sm text-azul-900/65">Las apps de IAE LIFE los usan para no volver a pedírtelos (por ahora TASKUP!; el tema y el idioma irán llegando a las demás).</p>
           {faltanDatos && (
             <p className="mt-3 rounded-2xl bg-oro/15 px-4 py-3 text-sm font-medium text-azul-950">
               Bienvenido/a 👋 Completa tus datos para empezar.
