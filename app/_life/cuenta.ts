@@ -46,15 +46,20 @@ export function leerCorreo(correo: string): { rol: Rol; promocion: number | null
 // Los azules de antes del avatar pasan a los del IAE (24-nov).
 const COLORES_VIEJOS: Record<string, string> = { "#3478a8": "#004d9c", "#255a80": "#0082ec" };
 
+function cumpleValido(v: unknown): string | undefined {
+  if (typeof v !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(v)) return undefined;
+  const mes = Number(v.slice(5, 7));
+  const dia = Number(v.slice(8, 10));
+  const f = new Date(2000, mes - 1, dia);
+  return f.getMonth() === mes - 1 && f.getDate() === dia ? `2000-${v.slice(5)}` : undefined;
+}
+
 // Solo se aceptan valores conocidos para los ajustes (lo guardado puede venir de otra versión).
 function ajustesValidos(x: Partial<Cuenta>): Pick<Cuenta, "genero" | "nacimiento" | "tema" | "notif"> {
   return {
     genero: x.genero === "mujer" || x.genero === "hombre" ? x.genero : undefined,
-    // Solo día y mes: el año se cambia siempre a 2000 para no guardar la edad.
-    nacimiento:
-      typeof x.nacimiento === "string" && /^\d{4}-\d{2}-\d{2}$/.test(x.nacimiento)
-        ? `2000-${x.nacimiento.slice(5)}`
-        : undefined,
+    // Solo día y mes: el año se cambia siempre a 2000 para no guardar la edad. Fechas imposibles = sin fecha.
+    nacimiento: cumpleValido(x.nacimiento),
     tema: x.tema === "dia" || x.tema === "noche" ? x.tema : undefined,
     notif: typeof x.notif === "boolean" ? x.notif : undefined,
   };
@@ -97,6 +102,7 @@ function obtener(): Cuenta | null {
   if (texto !== cacheTexto) {
     cacheTexto = texto;
     cacheCuenta = leer(texto);
+    migrarCumple(texto, cacheCuenta);
   }
   return cacheCuenta;
 }
@@ -112,6 +118,25 @@ function suscribir(aviso: () => void) {
     window.removeEventListener("storage", alCambiar);
     window.removeEventListener(EVENTO, alCambiar);
   };
+}
+
+// Si lo guardado tenía el año real o una fecha imposible, se reescribe limpio (una sola vez).
+function migrarCumple(texto: string | null, cuenta: Cuenta | null) {
+  if (!texto || !cuenta || usarMemoria) return;
+  try {
+    const crudo = JSON.parse(texto) as Partial<Cuenta>;
+    if (crudo.nacimiento === cuenta.nacimiento) return;
+    const limpio = JSON.stringify({ ...crudo, nacimiento: cuenta.nacimiento });
+    localStorage.setItem(CLAVE, limpio);
+    cacheTexto = limpio;
+    const clave = clavePrefs(cuenta.correo);
+    const prefs = JSON.parse(localStorage.getItem(clave) ?? "null") as Partial<Cuenta> | null;
+    if (prefs && typeof prefs === "object") {
+      localStorage.setItem(clave, JSON.stringify({ ...prefs, nacimiento: cuenta.nacimiento }));
+    }
+  } catch {
+    // si no se puede escribir, se queda como estaba
+  }
 }
 
 // Devuelve true si quedó guardado en el navegador; false si solo quedó en memoria (se pierde al cerrar).
