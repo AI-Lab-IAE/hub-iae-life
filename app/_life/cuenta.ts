@@ -21,7 +21,10 @@ export type Cuenta = {
   prueba?: boolean; // true si se entró con el usuario de prueba
   correoPadres?: string;
   color?: string;
+  idioma?: Idioma; // idioma de las apps; si no se eligió, español
 };
+
+export type Idioma = "es" | "en";
 
 // Lee el correo del colegio y dice el rol y la promoción.
 // Devuelve null si no es @iae.edu o si no tiene año y no está en la lista de profesores.
@@ -48,7 +51,8 @@ function leer(texto: string | null): Cuenta | null {
     if (!info) return null;
     const guardado = typeof c.color === "string" ? c.color : undefined;
     const color = guardado && Object.hasOwn(COLORES_VIEJOS, guardado) ? COLORES_VIEJOS[guardado] : guardado;
-    return { ...c, ...info, color };
+    const idioma = c.idioma === "en" || c.idioma === "es" ? c.idioma : undefined;
+    return { ...c, ...info, color, idioma };
   } catch {
     return null;
   }
@@ -94,13 +98,13 @@ function suscribir(aviso: () => void) {
 // Devuelve true si quedó guardado en el navegador; false si solo quedó en memoria (se pierde al cerrar).
 // El color y el correo de los padres se guardan aparte por cuenta, para que no se pierdan al salir.
 const clavePrefs = (correo: string) => `iae-life:prefs:${correo}`;
-type Prefs = Pick<Cuenta, "correoPadres" | "color">;
+type Prefs = Pick<Cuenta, "correoPadres" | "color" | "idioma">;
 
 function conPrefs(cuenta: Cuenta): Cuenta {
   // Al entrar (sin color elegido aún), se recupera lo que esa cuenta había guardado.
   if (cuenta.color !== undefined) {
     try {
-      const prefs: Prefs = { correoPadres: cuenta.correoPadres, color: cuenta.color };
+      const prefs: Prefs = { correoPadres: cuenta.correoPadres, color: cuenta.color, idioma: cuenta.idioma };
       localStorage.setItem(clavePrefs(cuenta.correo), JSON.stringify(prefs));
     } catch {
       // sin espacio o modo privado: se queda solo en la cuenta
@@ -114,6 +118,7 @@ function conPrefs(cuenta: Cuenta): Cuenta {
         ...cuenta,
         color: typeof prefs.color === "string" ? prefs.color : undefined,
         correoPadres: typeof prefs.correoPadres === "string" ? prefs.correoPadres : undefined,
+        idioma: prefs.idioma === "en" || prefs.idioma === "es" ? prefs.idioma : undefined,
       };
     }
   } catch {
@@ -164,7 +169,10 @@ export const CUENTA_PRUEBA: Cuenta = {
 export function cuentaDesdeTokenGoogle(token: string): Cuenta | null {
   try {
     const parte = token.split(".")[1];
-    const base64 = parte.replace(/-/g, "+").replace(/_/g, "/").padEnd(Math.ceil(parte.length / 4) * 4, "=");
+    const base64 = parte
+      .replace(/-/g, "+")
+      .replace(/_/g, "/")
+      .padEnd(Math.ceil(parte.length / 4) * 4, "=");
     const bytes = Uint8Array.from(atob(base64), (c) => c.charCodeAt(0));
     const datos = JSON.parse(new TextDecoder().decode(bytes)) as {
       email?: string;

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { ArrowRight, CalendarDays, GraduationCap, LogIn, LogOut, Mail, Save, UserRound } from "lucide-react";
-import { guardarCuenta, iniciales, salir, useCuenta, type Cuenta } from "../_life/cuenta";
+import { guardarCuenta, iniciales, salir, useCuenta, type Cuenta, type Idioma } from "../_life/cuenta";
 
 const COLORES = ["#004d9c", "#0082ec", "#0e7490", "#047857", "#b45309", "#be123c", "#7c3aed"];
 
@@ -38,6 +38,7 @@ export default function Perfil() {
 function PerfilDe({ cuenta }: { cuenta: Cuenta }) {
   const [correoPadres, setCorreoPadres] = useState(cuenta.correoPadres ?? "");
   const [color, setColor] = useState(cuenta.color ?? COLORES[0]);
+  const [idioma, setIdioma] = useState<Idioma>(cuenta.idioma ?? "es");
   const [guardado, setGuardado] = useState<"" | "si" | "memoria">("");
 
   const correoPadresValido = correoPadres.trim() === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correoPadres.trim());
@@ -45,7 +46,7 @@ function PerfilDe({ cuenta }: { cuenta: Cuenta }) {
   const guardar = (e: React.FormEvent) => {
     e.preventDefault();
     if (!correoPadresValido) return;
-    const ok = guardarCuenta({ ...cuenta, correoPadres: correoPadres.trim() || undefined, color });
+    const ok = guardarCuenta({ ...cuenta, correoPadres: correoPadres.trim() || undefined, color, idioma });
     setGuardado(ok ? "si" : "memoria");
   };
 
@@ -121,6 +122,33 @@ function PerfilDe({ cuenta }: { cuenta: Cuenta }) {
               )}
             </label>
           )}
+
+          <fieldset className="mt-5">
+            <legend className="text-sm font-medium text-azul-900">Idioma de las apps</legend>
+            <div className="mt-2 inline-flex rounded-full bg-azul-50 p-1">
+              {(
+                [
+                  ["es", "Español"],
+                  ["en", "English"],
+                ] as const
+              ).map(([valor, texto]) => (
+                <button
+                  key={valor}
+                  type="button"
+                  onClick={() => {
+                    setIdioma(valor);
+                    setGuardado("");
+                  }}
+                  aria-pressed={idioma === valor}
+                  className={`rounded-full px-4 py-1.5 text-sm font-semibold transition ${
+                    idioma === valor ? "bg-azul-800 text-white" : "text-azul-900"
+                  }`}
+                >
+                  {texto}
+                </button>
+              ))}
+            </div>
+          </fieldset>
 
           <fieldset className="mt-5">
             <legend className="text-sm font-medium text-azul-900">Color</legend>

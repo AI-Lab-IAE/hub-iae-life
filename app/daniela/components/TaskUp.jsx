@@ -2830,6 +2830,8 @@ export default function App() {
         const partes = cuenta.nombre.trim().split(/\s+/);
         loaded.user = { ...loaded.user, nombre: partes[0], apellido: partes.slice(1).join(" ") };
       }
+      // El idioma elegido en el perfil de IAE LIFE manda.
+      if (cuenta?.idioma) loaded.settings = { ...loaded.settings, lang: cuenta.idioma };
       claveActual.current = clave;
       firstLoad.current = true;
       setDataRaw(loaded);
@@ -2837,7 +2839,7 @@ export default function App() {
     })();
     return () => { vigente = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [correo, cuenta === undefined]);
+  }, [correo, cuenta === undefined, cuenta?.idioma]);
 
   useEffect(() => {
     if (loading || !data || !claveActual.current) return;
