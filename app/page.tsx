@@ -89,7 +89,7 @@ export default function Inicio() {
                 <Link
                   key={f.slug}
                   href={f.href}
-                  className="group flex min-h-36 flex-col justify-between rounded-2xl bg-white p-5 text-azul-950 shadow-lg shadow-azul-950/20 transition hover:-translate-y-1"
+                  className="group flex min-h-28 flex-col justify-between gap-2 rounded-2xl bg-white p-4 md:min-h-36 md:p-5 text-azul-950 shadow-lg shadow-azul-950/20 transition hover:-translate-y-1"
                 >
                   <span
                     className={`grid size-12 place-items-center rounded-full ${CIRCULOS[i % CIRCULOS.length]} transition-transform group-hover:scale-110`}
@@ -130,6 +130,12 @@ export default function Inicio() {
                 ))}
               </ol>
             </div>
+            <p className="text-xs text-azul-200 sm:col-span-2">
+              Vista previa: los datos son de ejemplo y lo que guardes se queda en este navegador ·{" "}
+              <Link href="/hub" className="font-semibold text-white underline underline-offset-2">
+                HUB del AI Lab
+              </Link>
+            </p>
           </div>
         </div>
       </section>
