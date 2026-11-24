@@ -42,7 +42,7 @@ export const BLOQUES: Bloque[] = [
 // Pausas que se muestran entre bloques (después del índice indicado).
 export const PAUSAS: Record<number, string> = {
   1: "Recreo · 9:30–9:55",
-  5: "Almuerzo · 12:50–13:25",
+  5: "Almuerzo · 12:50–13:30",
 };
 
 export const NOTA_DIA = "Rezo de 7:15 a 8:00. El viernes se sale a las 12:50.";
