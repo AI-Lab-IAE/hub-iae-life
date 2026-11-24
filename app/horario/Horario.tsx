@@ -99,7 +99,7 @@ export default function Horario() {
         <div className="mx-auto max-w-6xl px-4 pb-8 pt-8 md:pb-10 md:pt-10">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="flex items-center gap-2 text-sm font-semibold text-azul-800">
+              <p className="flex items-center gap-2 text-sm font-semibold text-azul-900">
                 <CalendarDays className="size-4" aria-hidden /> Mi horario
               </p>
               <h1 className="mt-1 text-3xl font-bold tracking-tight md:text-4xl">
@@ -110,7 +110,7 @@ export default function Horario() {
                 {!cuenta && (
                   <>
                     {" "}
-                    <Link href="/entrar" className="font-semibold text-azul-800 underline underline-offset-2">
+                    <Link href="/entrar" className="font-semibold text-azul-950 underline underline-offset-2">
                       Entra
                     </Link>{" "}
                     para ver el tuyo.

@@ -99,7 +99,7 @@ export default function Hoy() {
           Hola{nombre ? `, ${nombre}` : ""} <span aria-hidden>👋</span>
         </h1>
         <p className="mt-1 text-lg text-azul-900/75">¿Todo listo para tu día?</p>
-        <p className="mt-0.5 text-sm text-azul-900/60 first-letter:uppercase">{fecha ? FECHA.format(fecha) : " "}</p>
+        <p className="mt-0.5 text-sm text-azul-950 first-letter:uppercase">{fecha ? FECHA.format(fecha) : " "}</p>
 
         {/* Próxima clase */}
         <Link

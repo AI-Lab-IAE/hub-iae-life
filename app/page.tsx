@@ -163,7 +163,7 @@ export default function Inicio() {
       {/* Funciones */}
       <section id="funciones" className="scroll-mt-20">
         <div className="mx-auto max-w-7xl px-4 py-20 md:py-28">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-azul-600">Funciones</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-azul-900">Funciones</p>
           <h2 className="mt-3 max-w-2xl text-4xl font-bold tracking-tight text-azul-950 md:text-5xl">
             Todo lo del colegio, <span className="text-azul-600">en una sola app</span>.
           </h2>
@@ -252,7 +252,7 @@ export default function Inicio() {
       {/* Qué resuelve */}
       <section>
         <div className="mx-auto max-w-7xl px-4 py-20 md:py-28">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-azul-600">El día a día</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-azul-900">El día a día</p>
           <h2 className="mt-3 text-4xl font-bold tracking-tight text-azul-950 md:text-5xl">Qué resuelve</h2>
           <div className="mt-12 grid gap-4 md:grid-cols-3">
             {MOMENTOS.map((m) => (
@@ -278,7 +278,7 @@ export default function Inicio() {
       {/* Hoja de ruta */}
       <section>
         <div className="mx-auto max-w-7xl px-4 py-20 md:py-28">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-azul-600">Hoja de ruta</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-azul-900">Hoja de ruta</p>
           <h2 className="mt-3 text-4xl font-bold tracking-tight text-azul-950 md:text-5xl">Hacia la versión final</h2>
           <ol className="relative mt-12 grid gap-8 md:grid-cols-4 md:gap-6">
             <span
