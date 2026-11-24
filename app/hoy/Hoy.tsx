@@ -36,7 +36,7 @@ const ATAJOS = [
     titulo: "Tareas",
     texto: "Organiza tu semana",
     icono: ClipboardCheck,
-    fondo: "bg-lime-100 text-lime-800",
+    fondo: "bg-violet-100 text-violet-700",
   },
   {
     href: "/camille",

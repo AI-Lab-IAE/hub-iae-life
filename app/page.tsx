@@ -27,7 +27,7 @@ const MOMENTOS = [
 const CIRCULOS = [
   "bg-azul-100 text-azul-800",
   "bg-red-50 text-red-700",
-  "bg-lime-100 text-lime-800",
+  "bg-violet-100 text-violet-700",
   "bg-orange-50 text-orange-700",
   "bg-sky-100 text-sky-800",
 ];
@@ -158,26 +158,28 @@ export default function Inicio() {
         <div className="mx-auto max-w-7xl px-4 py-20 md:py-28">
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-lime-700">Hoja de ruta</p>
           <h2 className="mt-3 text-4xl font-bold tracking-tight text-azul-950 md:text-5xl">Hacia la versión final</h2>
-          <ol className="relative mt-12 grid gap-8 md:grid-cols-4 md:gap-6">
+          <div className="relative mt-12">
             <span
               className="absolute left-0 right-0 top-6 hidden h-0.5 bg-linear-to-r from-azul-200 via-azul-500 to-azul-200 md:block"
               aria-hidden
             />
-            {RUTA.map((p, i) => (
-              <li key={p.titulo} className="relative">
-                <span
-                  className={`grid size-12 place-items-center rounded-2xl font-mono text-lg font-bold ${
-                    i === 0 ? "bg-azul-800 text-white" : "border-2 border-azul-200 bg-white text-azul-700"
-                  }`}
-                >
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <p className="mt-5 text-xs font-semibold uppercase tracking-[0.15em] text-azul-500">{p.cuando}</p>
-                <h3 className="mt-1 text-xl font-bold text-azul-950">{p.titulo}</h3>
-                <p className="mt-2 leading-relaxed text-azul-900/65">{p.texto}</p>
-              </li>
-            ))}
-          </ol>
+            <ol className="relative grid gap-8 md:grid-cols-4 md:gap-6">
+              {RUTA.map((p, i) => (
+                <li key={p.titulo} className="relative">
+                  <span
+                    className={`grid size-12 place-items-center rounded-2xl font-mono text-lg font-bold ${
+                      i === 0 ? "bg-azul-800 text-white" : "border-2 border-azul-200 bg-white text-azul-700"
+                    }`}
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <p className="mt-5 text-xs font-semibold uppercase tracking-[0.15em] text-azul-500">{p.cuando}</p>
+                  <h3 className="mt-1 text-xl font-bold text-azul-950">{p.titulo}</h3>
+                  <p className="mt-2 leading-relaxed text-azul-900/65">{p.texto}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
         </div>
       </section>
 
