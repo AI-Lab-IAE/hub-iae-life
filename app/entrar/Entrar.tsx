@@ -42,9 +42,9 @@ export default function Entrar({ clienteGoogle }: { clienteGoogle: string }) {
     };
   }, []);
 
-  // Si ya entraste, vas directo a tu perfil.
+  // Si ya entraste, vas a tu perfil (la primera vez, directo a completar tus ajustes).
   useEffect(() => {
-    if (cuenta) router.replace("/perfil");
+    if (cuenta) router.replace(cuenta.genero && cuenta.nacimiento ? "/perfil" : "/perfil#ajustes");
   }, [cuenta, router]);
 
   // Botón oficial de Google (solo si el coordinador configuró el Client ID).
@@ -155,7 +155,9 @@ export default function Entrar({ clienteGoogle }: { clienteGoogle: string }) {
             <FlaskConical className="size-4" aria-hidden />
             Probar con un usuario de ejemplo
           </button>
-          <p className="mt-3 text-xs text-azul-900/50">{CUENTA_PRUEBA.nombre}, promoción {CUENTA_PRUEBA.promocion}. Es inventado.</p>
+          <p className="mt-3 text-xs text-azul-900/50">
+            {CUENTA_PRUEBA.nombre}, promoción {CUENTA_PRUEBA.promocion}. Es inventado.
+          </p>
         </div>
 
         <p className="mt-6 flex items-center justify-center gap-1.5 text-xs text-azul-900/50">

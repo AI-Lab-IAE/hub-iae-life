@@ -786,16 +786,14 @@ function Onboarding() {
     const partes = cuenta.nombre.trim().split(/\s+/);
     setData({
       ...anteriores,
-      settings: cuenta.idioma
-        ? { ...anteriores.settings, lang: cuenta.idioma, idiomaPerfil: cuenta.idioma }
-        : anteriores.settings,
+      settings: { ...anteriores.settings, ...(cuenta.idioma ? { lang: cuenta.idioma } : {}) },
       user: {
         nombre: partes[0],
         apellido: partes.slice(1).join(" "),
         rol: cuenta.rol === "profesor" ? "profesor" : "estudiante",
         rolOtro: "",
-        genero: "",
-        nacimiento: "",
+        genero: cuenta.genero ?? "",
+        nacimiento: cuenta.nacimiento ?? "",
       },
     });
   }
@@ -819,8 +817,8 @@ function Onboarding() {
               apellido: cuenta.nombre.trim().split(/\s+/).slice(1).join(" "),
               rol: cuenta.rol === "profesor" ? "profesor" : "estudiante",
               rolOtro: "",
-              genero: "",
-              nacimiento: "",
+              genero: cuenta.genero ?? "",
+              nacimiento: cuenta.nacimiento ?? "",
             }
           : { nombre: nombre.trim(), apellido: apellido.trim(), rol, rolOtro: rol === "otro" ? rolOtro.trim() : "", genero, nacimiento },
         onboarded: true,
@@ -2702,6 +2700,7 @@ function HistorialView() {
 ============================================================ */
 function ConfiguracionView() {
   const { data, setData, th, lang, tx } = useApp();
+  const cuenta = useCuenta();
   const u = data.user || {};
   const [nombre, setNombre] = useState(u.nombre || "");
   const [apellido, setApellido] = useState(u.apellido || "");
@@ -2727,6 +2726,18 @@ function ConfiguracionView() {
     <div className="max-w-2xl mx-auto px-4 md:px-8 py-6 md:py-10 pb-28">
       <h1 className="text-2xl md:text-3xl font-extrabold mb-6" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}>{tx("Configuración", "Settings")}</h1>
 
+      {cuenta ? (
+        <Card className="mb-5">
+          <h3 className="font-bold mb-2 flex items-center gap-2" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}><User size={17} />{tx("Ajustes de IAE LIFE", "IAE LIFE settings")}</h3>
+          <p className="text-sm mb-4" style={{ color: th.textMuted }}>
+            {tx("Tus datos, el idioma, el tema y los recordatorios se cambian en los Ajustes de IAE LIFE y sirven para todas las apps.", "Your info, language, theme and reminders are changed in IAE LIFE settings and apply to every app.")}
+          </p>
+          <a href="/perfil#ajustes" className="inline-flex px-4 py-2 rounded-xl text-sm font-semibold" style={{ background: th.primary, color: th.primaryText }}>
+            {tx("Abrir Ajustes de IAE LIFE", "Open IAE LIFE settings")}
+          </a>
+        </Card>
+      ) : (
+        <>
       <Card className="mb-5">
         <h3 className="font-bold mb-4 flex items-center gap-2" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}><User size={17} />{tx("Perfil", "Profile")}</h3>
         <div className="grid grid-cols-2 gap-4">
@@ -2769,10 +2780,13 @@ function ConfiguracionView() {
         </div>
       </Card>
 
+        </>
+      )}
+
       <Card>
         <h3 className="font-bold mb-4 flex items-center gap-2" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}>{data.settings.notif ? <Bell size={17} /> : <BellOff size={17} />}{tx("Notificaciones", "Notifications")}</h3>
         <p className="text-xs mb-4" style={{ color: th.textMuted }}>{tx("Avisos 2 días antes, 1 día antes y el mismo día de cada entrega o examen.", "Reminders 2 days before, 1 day before, and the same day of each due date or exam.")}</p>
-        <button onClick={() => setData((d) => ({ ...d, settings: { ...d.settings, notif: !d.settings.notif } }))}
+        <button disabled={Boolean(cuenta)} onClick={() => setData((d) => ({ ...d, settings: { ...d.settings, notif: !d.settings.notif } }))}
           className="px-4 py-2 rounded-xl text-sm font-semibold" style={data.settings.notif ? { background: "#27AE60", color: "#fff" } : { background: th.surfaceAlt, color: th.textMuted }}>
           {data.settings.notif ? tx("Activadas", "Enabled") : tx("Desactivadas", "Disabled")}
         </button>
@@ -2859,16 +2873,27 @@ function App() {
     (async () => {
       const guardado = await loadState(clave);
       const loaded = guardado || defaultData();
-      // Si el idioma del perfil de IAE LIFE cambió desde la última vez, TASKUP! lo sigue.
-      // Si solo se cambió dentro de TASKUP!, se respeta hasta que se cambie otra vez en el perfil.
-      if (cuenta?.idioma && loaded.settings?.idiomaPerfil !== cuenta.idioma) {
-        loaded.settings = { ...loaded.settings, lang: cuenta.idioma, idiomaPerfil: cuenta.idioma };
-      }
       if (!vigente) return;
-      // El nombre y el rol salen siempre de la cuenta, para que no quede el de otra persona.
-      if (cuenta && loaded.user) {
+      // Con cuenta, los datos y los ajustes salen de los Ajustes de IAE LIFE (sirven para todas las apps).
+      if (cuenta) {
         const partes = cuenta.nombre.trim().split(/\s+/);
-        loaded.user = { ...loaded.user, nombre: partes[0], apellido: partes.slice(1).join(" ") };
+        if (loaded.user || loaded.onboarded) {
+          loaded.user = {
+            ...(loaded.user ?? {}),
+            nombre: partes[0],
+            apellido: partes.slice(1).join(" "),
+            rol: cuenta.rol === "profesor" ? "profesor" : "estudiante",
+            rolOtro: "",
+            genero: cuenta.genero ?? "",
+            nacimiento: cuenta.nacimiento ?? "",
+          };
+        }
+        loaded.settings = {
+          ...loaded.settings,
+          ...(cuenta.idioma ? { lang: cuenta.idioma } : {}),
+          ...(cuenta.tema ? { theme: cuenta.tema } : {}),
+          ...(typeof cuenta.notif === "boolean" ? { notif: cuenta.notif } : {}),
+        };
       }
       claveActual.current = clave;
       firstLoad.current = true;

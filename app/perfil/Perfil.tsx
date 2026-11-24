@@ -39,6 +39,11 @@ function PerfilDe({ cuenta }: { cuenta: Cuenta }) {
   const [correoPadres, setCorreoPadres] = useState(cuenta.correoPadres ?? "");
   const [color, setColor] = useState(cuenta.color ?? COLORES[0]);
   const [idioma, setIdioma] = useState<Idioma>(cuenta.idioma ?? "es");
+  const [genero, setGenero] = useState(cuenta.genero ?? "");
+  const [nacimiento, setNacimiento] = useState(cuenta.nacimiento ?? "");
+  const [tema, setTema] = useState<"dia" | "noche">(cuenta.tema ?? "dia");
+  const [notif, setNotif] = useState(cuenta.notif ?? true);
+  const faltanDatos = !cuenta.genero || !cuenta.nacimiento;
   const [guardado, setGuardado] = useState<"" | "si" | "memoria">("");
 
   const correoPadresValido = correoPadres.trim() === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correoPadres.trim());
@@ -46,7 +51,16 @@ function PerfilDe({ cuenta }: { cuenta: Cuenta }) {
   const guardar = (e: React.FormEvent) => {
     e.preventDefault();
     if (!correoPadresValido) return;
-    const ok = guardarCuenta({ ...cuenta, correoPadres: correoPadres.trim() || undefined, color, idioma });
+    const ok = guardarCuenta({
+      ...cuenta,
+      correoPadres: correoPadres.trim() || undefined,
+      color,
+      idioma,
+      genero: genero === "mujer" || genero === "hombre" ? genero : undefined,
+      nacimiento: nacimiento || undefined,
+      tema,
+      notif,
+    });
     setGuardado(ok ? "si" : "memoria");
   };
 
@@ -96,8 +110,98 @@ function PerfilDe({ cuenta }: { cuenta: Cuenta }) {
           </Link>
         )}
 
-        <form onSubmit={guardar} className="mt-6 rounded-3xl border border-azul-100 bg-white p-6 shadow-sm">
-          <h2 className="font-bold text-azul-950">Opcional</h2>
+        <form
+          id="ajustes"
+          onSubmit={guardar}
+          className="mt-6 scroll-mt-20 rounded-3xl border border-azul-100 bg-white p-6 shadow-sm"
+        >
+          <h2 className="font-bold text-azul-950">Ajustes de IAE LIFE</h2>
+          <p className="mt-1 text-sm text-azul-900/65">Sirven para todas las apps: así no te los vuelven a pedir.</p>
+          {faltanDatos && (
+            <p className="mt-3 rounded-2xl bg-oro/15 px-4 py-3 text-sm font-medium text-azul-950">
+              Bienvenido/a 👋 Completa tus datos para empezar.
+            </p>
+          )}
+
+          <fieldset className="mt-5">
+            <legend className="text-sm font-medium text-azul-900">Género</legend>
+            <div className="mt-2 inline-flex rounded-full bg-azul-50 p-1">
+              {(
+                [
+                  ["mujer", "Mujer"],
+                  ["hombre", "Hombre"],
+                ] as const
+              ).map(([valor, texto]) => (
+                <button
+                  key={valor}
+                  type="button"
+                  onClick={() => {
+                    setGenero(valor);
+                    setGuardado("");
+                  }}
+                  aria-pressed={genero === valor}
+                  className={`rounded-full px-4 py-1.5 text-sm font-semibold transition ${
+                    genero === valor ? "bg-azul-800 text-white" : "text-azul-900"
+                  }`}
+                >
+                  {texto}
+                </button>
+              ))}
+            </div>
+          </fieldset>
+
+          <label className="mt-5 block text-sm font-medium text-azul-900">
+            Fecha de nacimiento
+            <input
+              type="date"
+              value={nacimiento}
+              onChange={(e) => {
+                setNacimiento(e.target.value);
+                setGuardado("");
+              }}
+              className="mt-1 block w-full rounded-xl border border-azul-100 px-3 py-2 text-azul-950"
+            />
+          </label>
+
+          <fieldset className="mt-5">
+            <legend className="text-sm font-medium text-azul-900">Tema</legend>
+            <div className="mt-2 inline-flex rounded-full bg-azul-50 p-1">
+              {(
+                [
+                  ["dia", "Día"],
+                  ["noche", "Noche"],
+                ] as const
+              ).map(([valor, texto]) => (
+                <button
+                  key={valor}
+                  type="button"
+                  onClick={() => {
+                    setTema(valor);
+                    setGuardado("");
+                  }}
+                  aria-pressed={tema === valor}
+                  className={`rounded-full px-4 py-1.5 text-sm font-semibold transition ${
+                    tema === valor ? "bg-azul-800 text-white" : "text-azul-900"
+                  }`}
+                >
+                  {texto}
+                </button>
+              ))}
+            </div>
+          </fieldset>
+
+          <label className="mt-5 flex items-center justify-between gap-3 text-sm font-medium text-azul-900">
+            Recordatorios de tareas y exámenes
+            <input
+              type="checkbox"
+              checked={notif}
+              onChange={(e) => {
+                setNotif(e.target.checked);
+                setGuardado("");
+              }}
+              className="size-5 accent-azul-800"
+            />
+          </label>
 
           {cuenta.rol === "estudiante" && (
             <label className="mt-4 block text-sm font-medium text-azul-900">

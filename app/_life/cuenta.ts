@@ -22,6 +22,11 @@ export type Cuenta = {
   correoPadres?: string;
   color?: string;
   idioma?: Idioma; // idioma de las apps; si no se eligió, español
+  // Ajustes de IAE LIFE que usan todas las apps (así TASKUP! y las demás no los vuelven a pedir).
+  genero?: "mujer" | "hombre";
+  nacimiento?: string; // AAAA-MM-DD
+  tema?: "dia" | "noche";
+  notif?: boolean;
 };
 
 export type Idioma = "es" | "en";
@@ -41,6 +46,16 @@ export function leerCorreo(correo: string): { rol: Rol; promocion: number | null
 // Los azules de antes del avatar pasan a los del IAE (24-nov).
 const COLORES_VIEJOS: Record<string, string> = { "#3478a8": "#004d9c", "#255a80": "#0082ec" };
 
+// Solo se aceptan valores conocidos para los ajustes (lo guardado puede venir de otra versión).
+function ajustesValidos(x: Partial<Cuenta>): Pick<Cuenta, "genero" | "nacimiento" | "tema" | "notif"> {
+  return {
+    genero: x.genero === "mujer" || x.genero === "hombre" ? x.genero : undefined,
+    nacimiento: typeof x.nacimiento === "string" && /^\d{4}-\d{2}-\d{2}$/.test(x.nacimiento) ? x.nacimiento : undefined,
+    tema: x.tema === "dia" || x.tema === "noche" ? x.tema : undefined,
+    notif: typeof x.notif === "boolean" ? x.notif : undefined,
+  };
+}
+
 function leer(texto: string | null): Cuenta | null {
   if (!texto) return null;
   try {
@@ -52,7 +67,7 @@ function leer(texto: string | null): Cuenta | null {
     const guardado = typeof c.color === "string" ? c.color : undefined;
     const color = guardado && Object.hasOwn(COLORES_VIEJOS, guardado) ? COLORES_VIEJOS[guardado] : guardado;
     const idioma = c.idioma === "en" || c.idioma === "es" ? c.idioma : undefined;
-    return { ...c, ...info, color, idioma };
+    return { ...c, ...info, color, idioma, ...ajustesValidos(c) };
   } catch {
     return null;
   }
@@ -98,13 +113,21 @@ function suscribir(aviso: () => void) {
 // Devuelve true si quedó guardado en el navegador; false si solo quedó en memoria (se pierde al cerrar).
 // El color y el correo de los padres se guardan aparte por cuenta, para que no se pierdan al salir.
 const clavePrefs = (correo: string) => `iae-life:prefs:${correo}`;
-type Prefs = Pick<Cuenta, "correoPadres" | "color" | "idioma">;
+type Prefs = Pick<Cuenta, "correoPadres" | "color" | "idioma" | "genero" | "nacimiento" | "tema" | "notif">;
 
 function conPrefs(cuenta: Cuenta): Cuenta {
   // Al entrar (sin color elegido aún), se recupera lo que esa cuenta había guardado.
   if (cuenta.color !== undefined) {
     try {
-      const prefs: Prefs = { correoPadres: cuenta.correoPadres, color: cuenta.color, idioma: cuenta.idioma };
+      const prefs: Prefs = {
+        correoPadres: cuenta.correoPadres,
+        color: cuenta.color,
+        idioma: cuenta.idioma,
+        genero: cuenta.genero,
+        nacimiento: cuenta.nacimiento,
+        tema: cuenta.tema,
+        notif: cuenta.notif,
+      };
       localStorage.setItem(clavePrefs(cuenta.correo), JSON.stringify(prefs));
     } catch {
       // sin espacio o modo privado: se queda solo en la cuenta
@@ -119,6 +142,7 @@ function conPrefs(cuenta: Cuenta): Cuenta {
         color: typeof prefs.color === "string" ? prefs.color : undefined,
         correoPadres: typeof prefs.correoPadres === "string" ? prefs.correoPadres : undefined,
         idioma: prefs.idioma === "en" || prefs.idioma === "es" ? prefs.idioma : undefined,
+        ...ajustesValidos(prefs),
       };
     }
   } catch {
