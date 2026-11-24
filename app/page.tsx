@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { CSSProperties } from "react";
-import { ArrowRight, Lightbulb, MessageCircle, Sparkles } from "lucide-react";
+import { ArrowDown, ArrowRight, Lightbulb, MessageCircle, Sparkles } from "lucide-react";
 import "./_hub/hub.css";
 import { funciones } from "./_life/funciones";
 import { Emblema } from "./_life/Marca";
@@ -121,39 +121,76 @@ export default function Inicio() {
                 </Link>
               ))}
           </nav>
-          {/* Datos del app (lo que antes estaba abajo del todo) */}
-          <div
-            className="life-entrar grid gap-3 sm:grid-cols-2 lg:col-start-1 lg:row-start-2"
-            style={{ animationDelay: "0.4s" }}
-          >
-            <div className="rounded-2xl border border-white/20 bg-white/10 p-4">
-              <p className="text-xs font-semibold uppercase tracking-wide text-lime-300">Qué resuelve</p>
-              <ul className="mt-2 space-y-1.5 text-sm text-azul-50">
-                {MOMENTOS.map((m) => (
-                  <li key={m.titulo} className="flex items-center gap-2">
-                    <m.icono className="size-4 shrink-0 text-oro" aria-hidden />
-                    {m.titulo}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="rounded-2xl border border-white/20 bg-white/10 p-4">
-              <p className="text-xs font-semibold uppercase tracking-wide text-lime-300">Hacia la versión final</p>
-              <ol className="mt-2 space-y-1.5 text-sm text-azul-50">
-                {RUTA.map((p, i) => (
-                  <li key={p.titulo} className="flex items-baseline gap-2">
-                    <span className={`font-bold ${i === 1 ? "text-oro" : "text-azul-200"}`}>{p.titulo}</span>
-                    <span className="text-xs text-azul-200">{p.cuando}</span>
-                  </li>
-                ))}
-              </ol>
-            </div>
-            <p className="text-xs text-azul-200 sm:col-span-2">
+          <div className="life-entrar lg:col-start-1 lg:row-start-2" style={{ animationDelay: "0.4s" }}>
+            <p className="text-xs text-azul-200">
               Vista previa: los datos son de ejemplo y lo que guardes se queda en este navegador.
             </p>
+            <a
+              href="#mas"
+              className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-white/90 hover:text-white"
+            >
+              Qué resuelve y hacia dónde va <ArrowDown className="size-4 animate-bounce" aria-hidden />
+            </a>
           </div>
         </div>
       </section>
+      {/* Qué resuelve (se ve al bajar) */}
+      <section id="mas" className="scroll-mt-4">
+        <div className="mx-auto max-w-7xl px-4 py-20 md:py-28">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-lime-700">El día a día</p>
+          <h2 className="mt-3 text-4xl font-bold tracking-tight text-azul-950 md:text-5xl">Qué resuelve</h2>
+          <div className="mt-12 grid gap-4 md:grid-cols-3">
+            {MOMENTOS.map((m) => (
+              <div key={m.titulo} className="rounded-3xl border border-azul-100 bg-white p-6">
+                <span className="grid size-11 place-items-center rounded-xl bg-azul-100 text-azul-800">
+                  <m.icono className="size-5" aria-hidden />
+                </span>
+                <h3 className="mt-5 text-xl font-bold text-azul-950">{m.titulo}</h3>
+                <p className="mt-2 leading-relaxed text-azul-900/65">{m.texto}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Hoja de ruta */}
+      <section>
+        <div className="mx-auto max-w-7xl px-4 py-20 md:py-28">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-lime-700">Hoja de ruta</p>
+          <h2 className="mt-3 text-4xl font-bold tracking-tight text-azul-950 md:text-5xl">Hacia la versión final</h2>
+          <ol className="relative mt-12 grid gap-8 md:grid-cols-4 md:gap-6">
+            <span
+              className="absolute left-0 right-0 top-6 hidden h-0.5 bg-linear-to-r from-azul-200 via-azul-500 to-azul-200 md:block"
+              aria-hidden
+            />
+            {RUTA.map((p, i) => (
+              <li key={p.titulo} className="relative">
+                <span
+                  className={`grid size-12 place-items-center rounded-2xl font-mono text-lg font-bold ${
+                    i === 0 ? "bg-azul-800 text-white" : "border-2 border-azul-200 bg-white text-azul-700"
+                  }`}
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <p className="mt-5 text-xs font-semibold uppercase tracking-[0.15em] text-azul-500">{p.cuando}</p>
+                <h3 className="mt-1 text-xl font-bold text-azul-950">{p.titulo}</h3>
+                <p className="mt-2 leading-relaxed text-azul-900/65">{p.texto}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <footer className="bg-azul-950 text-azul-200">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-8 text-sm">
+          <p>IAE LIFE · AI Lab · Instituto Alberto Einstein · 2026</p>
+          <nav className="flex gap-5">
+            <Link href="/creditos" className="hover:text-white">
+              Créditos
+            </Link>
+          </nav>
+        </div>
+      </footer>
     </main>
   );
 }
