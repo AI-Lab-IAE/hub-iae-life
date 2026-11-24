@@ -100,10 +100,10 @@ export default function Inicio() {
                 Abrir la app <ArrowDown className="size-4" aria-hidden />
               </a>
               <Link
-                href="/horario"
+                href="/hoy"
                 className="inline-flex items-center gap-2 rounded-full border border-white/30 px-6 py-3 font-semibold text-white transition-colors hover:bg-white/10"
               >
-                <CalendarDays className="size-4" aria-hidden /> Mi horario
+                <CalendarDays className="size-4" aria-hidden /> Mi día
               </Link>
             </div>
           </div>

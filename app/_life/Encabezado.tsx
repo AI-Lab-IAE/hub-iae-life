@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ArrowRight, CalendarDays, Menu, Users, X } from "lucide-react";
+import { ArrowRight, CalendarDays, Home, Menu, Users, X } from "lucide-react";
 import { funciones, type Funcion } from "./funciones";
 import { Marca } from "./Marca";
 import BotonCuenta from "./BotonCuenta";
@@ -77,10 +77,20 @@ export default function Encabezado() {
             <ul className="grid gap-2 sm:grid-cols-2">
               {funciones.map((f) => (
                 <li key={f.slug}>
-                  <ElementoMenu f={f} activa={activa(f)} />
+                  <ElementoMenu f={f} activa={activa(f)} alCerrar={() => setAbierto(false)} />
                 </li>
               ))}
             </ul>
+            <Link
+              href="/hoy"
+              onClick={() => setAbierto(false)}
+              className="mt-3 flex items-center justify-between rounded-2xl bg-azul-800 px-4 py-3 text-sm font-medium text-white"
+            >
+              <span className="flex items-center gap-2">
+                <Home className="size-4" aria-hidden /> Hoy
+              </span>
+              <ArrowRight className="size-4" aria-hidden />
+            </Link>
             <Link
               href="/horario"
               onClick={() => setAbierto(false)}
@@ -108,7 +118,7 @@ export default function Encabezado() {
   );
 }
 
-function ElementoMenu({ f, activa }: { f: Funcion; activa: boolean }) {
+function ElementoMenu({ f, activa, alCerrar }: { f: Funcion; activa: boolean; alCerrar: () => void }) {
   const contenido = (
     <>
       <span
@@ -138,6 +148,7 @@ function ElementoMenu({ f, activa }: { f: Funcion; activa: boolean }) {
   return (
     <Link
       href={f.href}
+      onClick={alCerrar}
       aria-current={activa ? "page" : undefined}
       className={`flex items-center gap-3 rounded-2xl p-3 transition-colors ${
         activa ? "bg-azul-50 ring-1 ring-azul-200" : "hover:bg-azul-50"

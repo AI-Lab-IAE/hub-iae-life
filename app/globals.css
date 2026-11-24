@@ -4,19 +4,20 @@
    así todos los módulos se ven iguales aunque el celular esté en modo oscuro. */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Azul de IAE LIFE (#3478A8, elegido por Camille el 24-nov). "azul-800" es el color principal de la marca. */
+/* Azul de IAE LIFE: Ocean Blue #173B57 (principal, "azul-800"), con #3478A8 ("azul-700") y #A9D6E5 ("azul-300")
+   de acento. Lo eligió Camille el 24-nov. */
 @theme {
-  --color-azul-50: #f3f8fb;
-  --color-azul-100: #e4eff7;
-  --color-azul-200: #cbe0ee;
-  --color-azul-300: #a3c7e0;
-  --color-azul-400: #74a9cf;
-  --color-azul-500: #5394c0;
-  --color-azul-600: #3f86b6;
-  --color-azul-700: #3a7fae;
-  --color-azul-800: #3478a8;
-  --color-azul-900: #255a80;
-  --color-azul-950: #163a55;
+  --color-azul-50: #f2f8fb;
+  --color-azul-100: #e2f0f6;
+  --color-azul-200: #c9e5ef;
+  --color-azul-300: #a9d6e5;
+  --color-azul-400: #6fb0cf;
+  --color-azul-500: #4b95bf;
+  --color-azul-600: #3a80ae;
+  --color-azul-700: #3478a8;
+  --color-azul-800: #173b57;
+  --color-azul-900: #122f46;
+  --color-azul-950: #0b1f30;
 
   /* Los módulos que usan las paletas "indigo" o "blue" de Tailwind toman el azul IAE, sin tocar su código. */
   --color-blue-50: var(--color-azul-50);

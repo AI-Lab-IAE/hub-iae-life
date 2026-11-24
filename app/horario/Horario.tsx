@@ -19,6 +19,7 @@ import {
   horarioGuardado,
   materia,
   momentoEnPanama,
+  resumenDelDia,
   useHorario,
   type Horario as TipoHorario,
 } from "../_life/horario";
@@ -44,18 +45,6 @@ function esAhora(bloque: number, dia: number, hoy: number | null, ahora: number 
   if (hoy !== dia || ahora == null) return false;
   const b = BLOQUES[bloque];
   return ahora >= aMinutos(b.desde) && ahora < aMinutos(b.hasta);
-}
-
-// La clase de ahora y la que sigue hoy (solo materias, sin huecos).
-function resumenDelDia(horario: TipoHorario, dia: number, ahora: number) {
-  let actual: number | null = null;
-  let siguiente: number | null = null;
-  BLOQUES.forEach((b, i) => {
-    if (!hayBloque(i, dia) || !horario[i][dia]) return;
-    if (ahora >= aMinutos(b.desde) && ahora < aMinutos(b.hasta)) actual = i;
-    else if (aMinutos(b.desde) > ahora && siguiente === null) siguiente = i;
-  });
-  return { actual, siguiente };
 }
 
 export default function Horario() {
