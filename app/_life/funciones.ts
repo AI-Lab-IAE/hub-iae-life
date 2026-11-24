@@ -6,10 +6,16 @@ import { modulos } from "../modulos";
 
 export type Estado = "lista" | "proximamente";
 
-type Extra = { icono: LucideIcon; resumen: string; estado: Estado };
+// logo: imagen que hizo cada estudiante (en public/img/logos). Si no hay, se usa el ícono.
+type Extra = { icono: LucideIcon; resumen: string; estado: Estado; logo?: string };
 
 const EXTRAS: Record<string, Extra> = {
-  camille: { icono: Compass, resumen: "Mapa, horario, contactos y avisos", estado: "lista" },
+  camille: {
+    icono: Compass,
+    resumen: "Mapa, horario, contactos y avisos",
+    estado: "lista",
+    logo: "/img/logos/camille.png",
+  },
   marco: { icono: Brain, resumen: "Encuentra lo que no sabes antes del examen", estado: "lista" },
   daniela: { icono: CalendarCheck, resumen: "Organiza tus tareas en tu horario", estado: "lista" },
   abraham: { icono: Megaphone, resumen: "Avisos que sí llegan a cada estudiante", estado: "lista" },
