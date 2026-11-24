@@ -4,6 +4,7 @@
 // recordatorios). Funciona bien; pasarlos a estado derivado queda en DESPUES.md.
 /* eslint-disable react-hooks/set-state-in-effect */
 
+import { useCuenta } from "../../_life/cuenta";
 import React, { useState, useEffect, useRef, useMemo, useCallback, createContext, useContext } from "react";
 import {
   Home, CalendarDays, PlusCircle, CheckCircle2, TrendingUp, Settings as SettingsIcon,
@@ -754,6 +755,9 @@ function ConfirmModal({ title, message, confirmLabel, cancelLabel, onConfirm, on
 ============================================================ */
 function Onboarding() {
   const { setData, th, lang, tx } = useApp();
+  // Si ya entraste a IAE LIFE con tu cuenta, TASKUP! ya sabe quién eres: no se piden tus datos otra vez.
+  const cuenta = useCuenta();
+  const conCuenta = Boolean(cuenta);
   const [step, setStep] = useState(0);
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
@@ -763,7 +767,7 @@ function Onboarding() {
   const [nacimiento, setNacimiento] = useState("");
   const [err, setErr] = useState("");
 
-  const steps = ["datos", "intro1", "intro2"];
+  const steps = conCuenta ? ["intro1", "intro2"] : ["datos", "intro1", "intro2"];
   const key = steps[step];
 
   function next() {
@@ -778,7 +782,16 @@ function Onboarding() {
     if (step === steps.length - 1) {
       setData((d) => ({
         ...d,
-        user: { nombre: nombre.trim(), apellido: apellido.trim(), rol, rolOtro: rol === "otro" ? rolOtro.trim() : "", genero, nacimiento },
+        user: conCuenta
+          ? {
+              nombre: cuenta.nombre.trim().split(/\s+/)[0],
+              apellido: cuenta.nombre.trim().split(/\s+/).slice(1).join(" "),
+              rol: cuenta.rol === "profesor" ? "profesor" : "estudiante",
+              rolOtro: "",
+              genero: "",
+              nacimiento: "",
+            }
+          : { nombre: nombre.trim(), apellido: apellido.trim(), rol, rolOtro: rol === "otro" ? rolOtro.trim() : "", genero, nacimiento },
         onboarded: true,
         introDone: true,
       }));
