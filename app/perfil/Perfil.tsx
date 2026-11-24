@@ -5,6 +5,21 @@ import { useState } from "react";
 import { ArrowRight, CalendarDays, GraduationCap, LogIn, LogOut, Mail, Save, UserRound } from "lucide-react";
 import { guardarCuenta, iniciales, salir, useCuenta, type Cuenta, type Idioma } from "../_life/cuenta";
 
+const MESES = [
+  "enero",
+  "febrero",
+  "marzo",
+  "abril",
+  "mayo",
+  "junio",
+  "julio",
+  "agosto",
+  "septiembre",
+  "octubre",
+  "noviembre",
+  "diciembre",
+];
+
 const COLORES = ["#004d9c", "#0082ec", "#0e7490", "#047857", "#b45309", "#be123c", "#7c3aed"];
 
 export default function Perfil() {
@@ -116,7 +131,10 @@ function PerfilDe({ cuenta }: { cuenta: Cuenta }) {
           className="mt-6 scroll-mt-20 rounded-3xl border border-azul-100 bg-white p-6 shadow-sm"
         >
           <h2 className="font-bold text-azul-950">Ajustes de IAE LIFE</h2>
-          <p className="mt-1 text-sm text-azul-900/65">Las apps de IAE LIFE los usan para no volver a pedírtelos (por ahora TASKUP!; el tema y el idioma irán llegando a las demás).</p>
+          <p className="mt-1 text-sm text-azul-900/65">
+            Las apps de IAE LIFE los usan para no volver a pedírtelos (por ahora TASKUP!; el tema y el idioma irán
+            llegando a las demás).
+          </p>
           {faltanDatos && (
             <p className="mt-3 rounded-2xl bg-oro/15 px-4 py-3 text-sm font-medium text-azul-950">
               Bienvenido/a 👋 Completa tus datos para empezar.
@@ -150,18 +168,46 @@ function PerfilDe({ cuenta }: { cuenta: Cuenta }) {
             </div>
           </fieldset>
 
-          <label className="mt-5 block text-sm font-medium text-azul-900">
-            Fecha de nacimiento
-            <input
-              type="date"
-              value={nacimiento}
-              onChange={(e) => {
-                setNacimiento(e.target.value);
-                setGuardado("");
-              }}
-              className="mt-1 block w-full rounded-xl border border-azul-100 px-3 py-2 text-azul-950"
-            />
-          </label>
+          {/* Solo día y mes (sin año): basta para el saludo de cumpleaños y es menos dato personal. */}
+          <fieldset className="mt-5">
+            <legend className="text-sm font-medium text-azul-900">Cumpleaños (solo día y mes)</legend>
+            <div className="mt-1 flex gap-2">
+              <select
+                aria-label="Día"
+                value={nacimiento ? Number(nacimiento.slice(8, 10)) : ""}
+                onChange={(e) => {
+                  const mes = nacimiento ? nacimiento.slice(5, 7) : "01";
+                  setNacimiento(e.target.value ? `2000-${mes}-${e.target.value.padStart(2, "0")}` : "");
+                  setGuardado("");
+                }}
+                className="rounded-xl border border-azul-100 px-3 py-2 text-azul-950"
+              >
+                <option value="">Día</option>
+                {Array.from({ length: 31 }, (_, i) => (
+                  <option key={i + 1} value={i + 1}>
+                    {i + 1}
+                  </option>
+                ))}
+              </select>
+              <select
+                aria-label="Mes"
+                value={nacimiento ? Number(nacimiento.slice(5, 7)) : ""}
+                onChange={(e) => {
+                  const dia = nacimiento ? nacimiento.slice(8, 10) : "01";
+                  setNacimiento(e.target.value ? `2000-${e.target.value.padStart(2, "0")}-${dia}` : "");
+                  setGuardado("");
+                }}
+                className="flex-1 rounded-xl border border-azul-100 px-3 py-2 text-azul-950"
+              >
+                <option value="">Mes</option>
+                {MESES.map((m, i) => (
+                  <option key={m} value={i + 1}>
+                    {m}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </fieldset>
 
           <fieldset className="mt-5">
             <legend className="text-sm font-medium text-azul-900">Tema</legend>

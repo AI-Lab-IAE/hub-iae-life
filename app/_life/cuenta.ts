@@ -169,7 +169,16 @@ export function guardarCuenta(cuenta: Cuenta | null): boolean {
   return guardado;
 }
 
+// Al salir se borran también los ajustes de esa cuenta en este navegador (por si es una compu compartida).
 export function salir() {
+  const actual = obtener();
+  if (actual) {
+    try {
+      localStorage.removeItem(clavePrefs(actual.correo));
+    } catch {
+      // modo privado: no había nada guardado
+    }
+  }
   guardarCuenta(null);
 }
 

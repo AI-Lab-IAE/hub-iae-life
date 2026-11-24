@@ -2853,8 +2853,8 @@ function App() {
             apellido: partes.slice(1).join(" "),
             rol: cuenta.rol === "profesor" ? "profesor" : "estudiante",
             rolOtro: "",
-            genero: cuenta.genero ?? "",
-            nacimiento: cuenta.nacimiento ?? "",
+            genero: cuenta.genero ?? loaded.user?.genero ?? "",
+            nacimiento: cuenta.nacimiento ?? loaded.user?.nacimiento ?? "",
           };
         }
         loaded.settings = {
@@ -2877,6 +2877,8 @@ function App() {
   const idiomaCuenta = cuenta?.idioma;
   const temaCuenta = cuenta?.tema;
   const notifCuenta = cuenta?.notif;
+  const generoCuenta = cuenta?.genero;
+  const nacimientoCuenta = cuenta?.nacimiento;
   useEffect(() => {
     if (loading) return;
     setDataRaw((d) =>
@@ -2889,10 +2891,17 @@ function App() {
               ...(temaCuenta ? { theme: temaCuenta } : {}),
               ...(typeof notifCuenta === "boolean" ? { notif: notifCuenta } : {}),
             },
+            user: d.user
+              ? {
+                  ...d.user,
+                  ...(generoCuenta ? { genero: generoCuenta } : {}),
+                  ...(nacimientoCuenta ? { nacimiento: nacimientoCuenta } : {}),
+                }
+              : d.user,
           }
         : d,
     );
-  }, [idiomaCuenta, temaCuenta, notifCuenta, loading]);
+  }, [idiomaCuenta, temaCuenta, notifCuenta, generoCuenta, nacimientoCuenta, loading]);
 
   // Se guarda en cuanto cambia algo (localStorage es rápido): así no se pierde nada al cerrar o cambiar de cuenta.
   useEffect(() => {
