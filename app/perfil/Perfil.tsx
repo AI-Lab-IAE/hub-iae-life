@@ -5,8 +5,6 @@ import { useState } from "react";
 import { ArrowRight, CalendarDays, GraduationCap, LogIn, LogOut, Mail, Save, UserRound } from "lucide-react";
 import { guardarCuenta, iniciales, salir, useCuenta, type Cuenta } from "../_life/cuenta";
 
-// Los azules de antes (#3478a8, #255a80) pasan a los nuevos del IAE.
-const VIEJOS: Record<string, string> = { "#3478a8": "#004d9c", "#255a80": "#0082ec" };
 const COLORES = ["#004d9c", "#0082ec", "#0e7490", "#047857", "#b45309", "#be123c", "#7c3aed"];
 
 export default function Perfil() {
@@ -39,7 +37,7 @@ export default function Perfil() {
 
 function PerfilDe({ cuenta }: { cuenta: Cuenta }) {
   const [correoPadres, setCorreoPadres] = useState(cuenta.correoPadres ?? "");
-  const [color, setColor] = useState((cuenta.color && VIEJOS[cuenta.color]) ?? cuenta.color ?? COLORES[0]);
+  const [color, setColor] = useState(cuenta.color ?? COLORES[0]);
   const [guardado, setGuardado] = useState<"" | "si" | "memoria">("");
 
   const correoPadresValido = correoPadres.trim() === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correoPadres.trim());

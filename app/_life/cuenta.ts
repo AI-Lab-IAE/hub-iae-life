@@ -35,6 +35,9 @@ export function leerCorreo(correo: string): { rol: Rol; promocion: number | null
   return null;
 }
 
+// Los azules de antes del avatar pasan a los del IAE (24-nov).
+const COLORES_VIEJOS: Record<string, string> = { "#3478a8": "#004d9c", "#255a80": "#0082ec" };
+
 function leer(texto: string | null): Cuenta | null {
   if (!texto) return null;
   try {
@@ -42,7 +45,9 @@ function leer(texto: string | null): Cuenta | null {
     if (!c || typeof c.correo !== "string") return null;
     // El rol y la promoción siempre se recalculan del correo y de la lista, no se confía en lo guardado.
     const info = leerCorreo(c.correo);
-    return info ? { ...c, ...info } : null;
+    if (!info) return null;
+    const color = c.color ? (COLORES_VIEJOS[c.color] ?? c.color) : c.color;
+    return { ...c, ...info, color };
   } catch {
     return null;
   }
