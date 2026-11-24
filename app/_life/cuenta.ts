@@ -102,7 +102,6 @@ function obtener(): Cuenta | null {
   if (texto !== cacheTexto) {
     cacheTexto = texto;
     cacheCuenta = leer(texto);
-    migrarCumple(texto, cacheCuenta);
   }
   return cacheCuenta;
 }
@@ -120,24 +119,23 @@ function suscribir(aviso: () => void) {
   };
 }
 
-// Si lo guardado tenía el año real o una fecha imposible, se reescribe limpio (una sola vez).
-function migrarCumple(texto: string | null, cuenta: Cuenta | null) {
-  if (!texto || !cuenta || usarMemoria) return;
+// Una sola vez al cargar: lo guardado antes con el año real (o una fecha imposible) se reescribe sin año.
+// Cada registro (la cuenta y las preferencias de cada correo) se revisa por separado.
+function migrarCumples() {
   try {
-    const crudo = JSON.parse(texto) as Partial<Cuenta>;
-    if (crudo.nacimiento === cuenta.nacimiento) return;
-    const limpio = JSON.stringify({ ...crudo, nacimiento: cuenta.nacimiento });
-    localStorage.setItem(CLAVE, limpio);
-    cacheTexto = limpio;
-    const clave = clavePrefs(cuenta.correo);
-    const prefs = JSON.parse(localStorage.getItem(clave) ?? "null") as Partial<Cuenta> | null;
-    if (prefs && typeof prefs === "object") {
-      localStorage.setItem(clave, JSON.stringify({ ...prefs, nacimiento: cuenta.nacimiento }));
+    for (let i = 0; i < localStorage.length; i++) {
+      const clave = localStorage.key(i);
+      if (!clave || (clave !== CLAVE && !clave.startsWith("iae-life:prefs:"))) continue;
+      const datos = JSON.parse(localStorage.getItem(clave) ?? "null") as Partial<Cuenta> | null;
+      if (!datos || typeof datos !== "object" || datos.nacimiento === undefined) continue;
+      const limpio = cumpleValido(datos.nacimiento);
+      if (limpio !== datos.nacimiento) localStorage.setItem(clave, JSON.stringify({ ...datos, nacimiento: limpio }));
     }
   } catch {
-    // si no se puede escribir, se queda como estaba
+    // modo privado o datos raros: se queda como estaba
   }
 }
+if (typeof window !== "undefined") migrarCumples();
 
 // Devuelve true si quedó guardado en el navegador; false si solo quedó en memoria (se pierde al cerrar).
 // El color y el correo de los padres se guardan aparte por cuenta, para que no se pierdan al salir.
