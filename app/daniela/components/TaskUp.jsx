@@ -771,6 +771,21 @@ function Onboarding() {
   const [err, setErr] = useState("");
 
   const steps = conCuenta ? ["intro1", "intro2"] : ["datos", "intro1", "intro2"];
+
+  // Tareas guardadas antes de tener cuenta (en este navegador). Solo se pasan a la cuenta si la persona lo elige.
+  const [anteriores] = useState(() => {
+    if (!conCuenta) return null;
+    try {
+      const d = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "null");
+      return d && d.onboarded ? d : null;
+    } catch {
+      return null;
+    }
+  });
+  function usarAnteriores() {
+    const partes = cuenta.nombre.trim().split(/\s+/);
+    setData({ ...anteriores, user: { ...(anteriores.user ?? {}), nombre: partes[0], apellido: partes.slice(1).join(" ") } });
+  }
   const key = steps[Math.min(step, steps.length - 1)];
 
   function next() {
@@ -822,6 +837,13 @@ function Onboarding() {
         <div className="h-1.5 rounded-full mb-8 overflow-hidden" style={{ background: th.surfaceAlt }}>
           <div className="h-full rounded-full transition-all" style={{ width: `${progress}%`, background: th.primary }} />
         </div>
+
+        {anteriores && (
+          <button onClick={usarAnteriores} className="w-full mb-4 py-3 rounded-2xl border text-sm font-semibold"
+            style={{ background: th.primarySoft, borderColor: th.primary, color: th.primary }}>
+            {tx("Usar las tareas que ya tenía en este navegador", "Use the tasks I already had in this browser")}
+          </button>
+        )}
 
         <Card>
           {key === "datos" && (
@@ -2803,7 +2825,7 @@ const VIEW_TITLES = {
   nosotros: { es: "Sobre nosotros", en: "About us" },
 };
 
-export default function App() {
+function App() {
   const [data, setDataRaw] = useState(null);
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState("inicio");
@@ -2823,15 +2845,16 @@ export default function App() {
     let vigente = true;
     const clave = claveDe(correo);
     (async () => {
-      const loaded = (await loadState(clave)) || defaultData();
+      const guardado = await loadState(clave);
+      const loaded = guardado || defaultData();
+      // Sin nada guardado, TASKUP! empieza en el idioma elegido en el perfil de IAE LIFE.
+      if (!guardado && cuenta?.idioma) loaded.settings = { ...loaded.settings, lang: cuenta.idioma };
       if (!vigente) return;
       // El nombre y el rol salen siempre de la cuenta, para que no quede el de otra persona.
       if (cuenta && loaded.user) {
         const partes = cuenta.nombre.trim().split(/\s+/);
         loaded.user = { ...loaded.user, nombre: partes[0], apellido: partes.slice(1).join(" ") };
       }
-      // El idioma elegido en el perfil de IAE LIFE manda.
-      if (cuenta?.idioma) loaded.settings = { ...loaded.settings, lang: cuenta.idioma };
       claveActual.current = clave;
       firstLoad.current = true;
       setDataRaw(loaded);
@@ -2839,7 +2862,7 @@ export default function App() {
     })();
     return () => { vigente = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [correo, cuenta === undefined, cuenta?.idioma]);
+  }, [correo, cuenta === undefined]);
 
   useEffect(() => {
     if (loading || !data || !claveActual.current) return;
@@ -2980,4 +3003,11 @@ export default function App() {
       </div>
     </AppCtx.Provider>
   );
+}
+
+// Al cambiar de cuenta se vuelve a montar TASKUP! desde cero: así no quedan abiertos
+// diálogos, borradores ni la conversación de la cuenta anterior.
+export default function TaskUp() {
+  const cuenta = useCuenta();
+  return <App key={cuenta === undefined ? "cargando" : (cuenta?.correo ?? "sin-cuenta")} />;
 }
