@@ -5,7 +5,7 @@ import { useState } from "react";
 import { ArrowRight, CalendarDays, GraduationCap, LogIn, LogOut, Mail, Save, UserRound } from "lucide-react";
 import { guardarCuenta, iniciales, salir, useCuenta, type Cuenta } from "../_life/cuenta";
 
-const COLORES = ["#1d3a8a", "#2c55c4", "#0e7490", "#047857", "#b45309", "#be123c", "#7c3aed"];
+const COLORES = ["#3478a8", "#255a80", "#0e7490", "#047857", "#b45309", "#be123c", "#7c3aed"];
 
 export default function Perfil() {
   const cuenta = useCuenta();
@@ -51,39 +51,51 @@ function PerfilDe({ cuenta }: { cuenta: Cuenta }) {
 
   return (
     <main className="flex-1 bg-azul-50/60">
-      <div className="mx-auto max-w-lg px-4 py-10">
-        <section className="life-entrar rounded-3xl border border-azul-100 bg-white p-6 text-center shadow-xl shadow-azul-900/5">
-          <span
-            className="mx-auto grid size-20 place-items-center rounded-full text-2xl font-bold text-white"
-            style={{ backgroundColor: color }}
-            aria-hidden
-          >
-            {iniciales(cuenta.nombre)}
-          </span>
-          <h1 className="mt-4 text-2xl font-bold tracking-tight text-azul-950">{cuenta.nombre}</h1>
-          <p className="mt-1 flex items-center justify-center gap-1.5 text-sm text-azul-900/60">
-            <Mail className="size-4" aria-hidden /> {cuenta.correo}
-          </p>
-          <p className="mt-4 inline-flex items-center gap-2 rounded-full bg-azul-50 px-4 py-1.5 text-sm font-semibold text-azul-800">
-            <GraduationCap className="size-4" aria-hidden />
-            {cuenta.rol === "estudiante" ? `Estudiante · Promoción ${cuenta.promocion}` : "Profesor"}
-          </p>
-          {cuenta.prueba && <p className="mt-3 text-xs text-azul-900/50">Usuario de ejemplo: los datos son inventados.</p>}
+      <div className="h-36 bg-gradient-to-br from-azul-800 via-azul-900 to-azul-950" aria-hidden />
+      <div className="mx-auto -mt-24 max-w-lg px-4 pb-10">
+        <section className="life-entrar overflow-hidden rounded-3xl border border-azul-100 bg-white text-center shadow-xl shadow-azul-900/10">
+          <div className="h-20" style={{ background: `linear-gradient(135deg, ${color}, ${color}99)` }} aria-hidden />
+          <div className="px-6 pb-6">
+            <span
+              className="mx-auto -mt-10 grid size-20 place-items-center rounded-full text-2xl font-bold text-white ring-4 ring-white"
+              style={{ backgroundColor: color }}
+              aria-hidden
+            >
+              {iniciales(cuenta.nombre)}
+            </span>
+            <h1 className="mt-4 text-2xl font-bold tracking-tight text-azul-950">{cuenta.nombre}</h1>
+            <p className="mt-1 flex items-center justify-center gap-1.5 text-sm text-azul-900/60">
+              <Mail className="size-4" aria-hidden /> {cuenta.correo}
+            </p>
+            <p className="mt-4 inline-flex items-center gap-2 rounded-full bg-azul-50 px-4 py-1.5 text-sm font-semibold text-azul-800">
+              <GraduationCap className="size-4" aria-hidden />
+              {cuenta.rol === "estudiante" ? `Estudiante · Promoción ${cuenta.promocion}` : "Profesor"}
+            </p>
+            {cuenta.prueba && (
+              <p className="mt-3 text-xs text-azul-900/50">Usuario de ejemplo: los datos son inventados.</p>
+            )}
+          </div>
         </section>
 
         {cuenta.rol === "estudiante" && (
           <Link
             href="/horario"
-            className="mt-6 flex items-center justify-between rounded-3xl border border-azul-100 bg-white p-5 font-semibold text-azul-900 transition-colors hover:bg-azul-50"
+            className="group mt-6 flex items-center justify-between rounded-3xl border border-azul-100 bg-white p-5 font-semibold text-azul-900 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-azul-900/10"
           >
             <span className="flex items-center gap-3">
-              <CalendarDays className="size-5 text-azul-700" aria-hidden /> Mi horario
+              <span className="grid size-10 place-items-center rounded-xl bg-azul-100 text-azul-800">
+                <CalendarDays className="size-5" aria-hidden />
+              </span>
+              <span>
+                Mi horario
+                <span className="block text-xs font-normal text-azul-900/55">Tu clase de ahora y la semana</span>
+              </span>
             </span>
             <ArrowRight className="size-4" aria-hidden />
           </Link>
         )}
 
-        <form onSubmit={guardar} className="mt-6 rounded-3xl border border-azul-100 bg-white p-6">
+        <form onSubmit={guardar} className="mt-6 rounded-3xl border border-azul-100 bg-white p-6 shadow-sm">
           <h2 className="font-bold text-azul-950">Opcional</h2>
 
           {cuenta.rol === "estudiante" && (
@@ -100,8 +112,13 @@ function PerfilDe({ cuenta }: { cuenta: Cuenta }) {
                 aria-invalid={!correoPadresValido}
                 className="mt-1.5 block w-full rounded-xl border border-azul-200 px-3 py-2.5 text-base text-azul-950 outline-none focus:border-azul-500 focus:ring-2 focus:ring-azul-200"
               />
-              <span className="mt-1 block text-xs text-azul-900/50">Más adelante, AusencIA lo usará para mandarles copia cuando avises una ausencia. Se queda solo en este navegador.</span>
-              {!correoPadresValido && <span className="mt-1 block text-xs text-red-600">Ese correo no se ve bien.</span>}
+              <span className="mt-1 block text-xs text-azul-900/50">
+                Más adelante, AusencIA lo usará para mandarles copia cuando avises una ausencia. Se queda solo en este
+                navegador.
+              </span>
+              {!correoPadresValido && (
+                <span className="mt-1 block text-xs text-red-600">Ese correo no se ve bien.</span>
+              )}
             </label>
           )}
 

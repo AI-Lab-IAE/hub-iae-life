@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useState, useSyncExternalStore } from "react";
-import { CalendarDays, Check, Coffee, Pencil, RotateCcw } from "lucide-react";
+import { CalendarDays, Check, Clock, Coffee, Pencil, RotateCcw } from "lucide-react";
+import { estiloDe } from "../_life/colores";
 import { useCuenta } from "../_life/cuenta";
 import {
   BLOQUES,
@@ -45,6 +46,18 @@ function esAhora(bloque: number, dia: number, hoy: number | null, ahora: number 
   return ahora >= aMinutos(b.desde) && ahora < aMinutos(b.hasta);
 }
 
+// La clase de ahora y la que sigue hoy (solo materias, sin huecos).
+function resumenDelDia(horario: TipoHorario, dia: number, ahora: number) {
+  let actual: number | null = null;
+  let siguiente: number | null = null;
+  BLOQUES.forEach((b, i) => {
+    if (!hayBloque(i, dia) || !horario[i][dia]) return;
+    if (ahora >= aMinutos(b.desde) && ahora < aMinutos(b.hasta)) actual = i;
+    else if (aMinutos(b.desde) > ahora && siguiente === null) siguiente = i;
+  });
+  return { actual, siguiente };
+}
+
 export default function Horario() {
   const cuenta = useCuenta();
   const correo = cuenta?.rol === "estudiante" ? cuenta.correo : null;
@@ -74,6 +87,7 @@ export default function Horario() {
   }
 
   const dia = elegido ?? hoy ?? 0;
+  const resumen = hoy !== null && ahora !== null ? resumenDelDia(horario, hoy, ahora) : null;
   const conEdicion = editando && correo !== null;
 
   const NO_GUARDA = "Este navegador no deja guardar: los cambios se pierden al cerrar.";
@@ -92,58 +106,81 @@ export default function Horario() {
 
   return (
     <main className="flex-1 bg-azul-50/60">
-      <div className="mx-auto max-w-6xl px-4 py-8 md:py-10">
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-azul-600">Mi horario</p>
-            <h1 className="mt-1 text-3xl font-bold tracking-tight text-azul-950">
-              {cuenta ? `Hola, ${cuenta.nombre.split(" ")[0]}` : "Horario de ejemplo"}
-            </h1>
-            <p className="mt-1 text-sm text-azul-900/60">
-              {NOTA_DIA} Los profesores y correos son inventados.
-              {!cuenta && (
-                <>
-                  {" "}
-                  <Link href="/entrar" className="font-semibold text-azul-700 underline-offset-2 hover:underline">
-                    Entra
-                  </Link>{" "}
-                  para ver el tuyo.
-                </>
-              )}
-            </p>
-          </div>
-          {correo && (
-            <div className="flex flex-wrap gap-2">
-              {!esEjemplo(horario) && (
+      <section className="bg-gradient-to-br from-azul-800 via-azul-900 to-azul-950 text-white">
+        <div className="mx-auto max-w-6xl px-4 pb-8 pt-8 md:pb-10 md:pt-10">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="flex items-center gap-2 text-sm font-semibold text-azul-200">
+                <CalendarDays className="size-4" aria-hidden /> Mi horario
+              </p>
+              <h1 className="mt-1 text-3xl font-bold tracking-tight md:text-4xl">
+                {cuenta ? `Hola, ${cuenta.nombre.split(" ")[0]}` : "Horario de ejemplo"}
+              </h1>
+              <p className="mt-2 max-w-xl text-sm text-azul-100/80">
+                {NOTA_DIA} Los profesores y correos son inventados.
+                {!cuenta && (
+                  <>
+                    {" "}
+                    <Link href="/entrar" className="font-semibold text-white underline underline-offset-2">
+                      Entra
+                    </Link>{" "}
+                    para ver el tuyo.
+                  </>
+                )}
+              </p>
+            </div>
+            {correo && (
+              <div className="flex flex-wrap gap-2">
+                {!esEjemplo(horario) && (
+                  <button
+                    type="button"
+                    onClick={restaurar}
+                    className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white ring-1 ring-white/25 hover:bg-white/20"
+                  >
+                    <RotateCcw className="size-4" aria-hidden /> Volver al original
+                  </button>
+                )}
                 <button
                   type="button"
-                  onClick={restaurar}
-                  className="inline-flex items-center gap-2 rounded-full border border-azul-200 bg-white px-4 py-2 text-sm font-semibold text-azul-800 hover:bg-azul-50"
+                  onClick={() => setEditando((e) => !e)}
+                  aria-pressed={conEdicion}
+                  className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-azul-900 hover:bg-azul-50"
                 >
-                  <RotateCcw className="size-4" aria-hidden /> Volver al original
+                  {conEdicion ? <Check className="size-4" aria-hidden /> : <Pencil className="size-4" aria-hidden />}
+                  {conEdicion ? "Listo" : "Ajustar"}
                 </button>
-              )}
-              <button
-                type="button"
-                onClick={() => setEditando((e) => !e)}
-                aria-pressed={conEdicion}
-                className="inline-flex items-center gap-2 rounded-full bg-azul-800 px-4 py-2 text-sm font-semibold text-white hover:bg-azul-900"
-              >
-                {conEdicion ? <Check className="size-4" aria-hidden /> : <Pencil className="size-4" aria-hidden />}
-                {conEdicion ? "Listo" : "Ajustar"}
-              </button>
-            </div>
-          )}
-        </div>
+              </div>
+            )}
+          </div>
 
+          <div className="mt-6 grid gap-3 sm:grid-cols-2">
+            <Resumen
+              titulo="Ahora"
+              bloque={resumen?.actual ?? null}
+              dia={hoy}
+              horario={horario}
+              vacio={hoy === null ? "Cargando…" : "No tienes clase en este momento"}
+            />
+            <Resumen
+              titulo="Después"
+              bloque={resumen?.siguiente ?? null}
+              dia={hoy}
+              horario={horario}
+              vacio="No te quedan clases hoy"
+            />
+          </div>
+        </div>
+      </section>
+
+      <div className="mx-auto max-w-6xl px-4 py-8">
         {aviso && (
-          <p role="status" className="mt-4 rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          <p role="status" className="mb-4 rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-800">
             {aviso}
           </p>
         )}
 
         {/* Celular: un día a la vez */}
-        <div className="mt-6 md:hidden">
+        <div className="md:hidden">
           <div
             role="group"
             aria-label="Día"
@@ -185,7 +222,7 @@ export default function Horario() {
         </div>
 
         {/* Computadora: la semana completa */}
-        <div className="mt-8 hidden overflow-hidden rounded-3xl border border-azul-100 bg-white md:block">
+        <div className="hidden overflow-hidden rounded-3xl border border-azul-100 bg-white shadow-xl shadow-azul-900/5 md:block">
           <table className="w-full table-fixed text-sm">
             <caption className="sr-only">Horario semanal</caption>
             <thead>
@@ -251,21 +288,69 @@ function Selector({ bloque, dia, horario, onCambiar }: Omit<PropsCelda, "editand
   );
 }
 
+function Resumen({
+  titulo,
+  bloque,
+  dia,
+  horario,
+  vacio,
+}: {
+  titulo: string;
+  bloque: number | null;
+  dia: number | null;
+  horario: TipoHorario;
+  vacio: string;
+}) {
+  const m = bloque !== null && dia !== null ? materia(horario[bloque][dia]) : null;
+  const e = m ? estiloDe(m.nombre) : null;
+  return (
+    <div className="flex items-center gap-4 rounded-2xl bg-white/10 p-4 ring-1 ring-white/15 backdrop-blur">
+      <span
+        className={`grid size-12 shrink-0 place-items-center rounded-xl ${e ? e.chip : "bg-white/10 text-azul-100"}`}
+      >
+        {e ? <e.Icono className="size-6" aria-hidden /> : <Clock className="size-6" aria-hidden />}
+      </span>
+      <div className="min-w-0">
+        <p className="text-xs font-semibold uppercase tracking-wide text-azul-200">{titulo}</p>
+        {m && bloque !== null ? (
+          <>
+            <p className="truncate text-lg font-bold">{m.nombre}</p>
+            <p className="truncate text-sm text-azul-100/80">
+              {BLOQUES[bloque].desde}–{BLOQUES[bloque].hasta} · {m.profesor}
+            </p>
+          </>
+        ) : (
+          <p className="text-sm text-azul-100/80">{vacio}</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function Clase({ bloque, dia, horario, ahora, editando, onCambiar }: PropsCelda & { ahora: boolean }) {
   const b = BLOQUES[bloque];
   const m = materia(horario[bloque][dia]);
+  const e = m ? estiloDe(m.nombre) : null;
   return (
     <div
       aria-current={ahora ? "time" : undefined}
-      className={`flex items-center gap-3 rounded-2xl border p-3 ${
-        ahora ? "border-azul-800 bg-azul-800 text-white" : "border-azul-100 bg-white"
+      className={`relative flex items-center gap-3 overflow-hidden rounded-2xl border p-3 pl-4 ${
+        ahora ? "border-azul-800 bg-azul-800 text-white shadow-lg shadow-azul-900/20" : "border-azul-100 bg-white"
       }`}
     >
-      <span className={`w-14 shrink-0 text-xs tabular-nums ${ahora ? "text-azul-100" : "text-azul-900/50"}`}>
+      {e && !ahora && <span className={`absolute inset-y-0 left-0 w-1.5 ${e.barra}`} aria-hidden />}
+      <span className={`w-12 shrink-0 text-xs tabular-nums ${ahora ? "text-azul-100" : "text-azul-900/50"}`}>
         {b.desde}
         <br />
         {b.hasta}
       </span>
+      {e && !editando && (
+        <span
+          className={`grid size-10 shrink-0 place-items-center rounded-xl ${ahora ? "bg-white/15 text-white" : e.chip}`}
+        >
+          <e.Icono className="size-5" aria-hidden />
+        </span>
+      )}
       <div className="min-w-0 flex-1">
         {editando ? (
           <Selector bloque={bloque} dia={dia} horario={horario} onCambiar={onCambiar} />
@@ -313,6 +398,7 @@ function FilaSemana({
           if (!hayBloque(bloque, dia)) return <td key={d} className="bg-azul-50/50" />;
           const m = materia(horario[bloque][dia]);
           const activo = m !== null && esAhora(bloque, dia, hoy, ahora);
+          const e = m ? estiloDe(m.nombre) : null;
           return (
             <td key={d} className="p-1.5">
               {editando ? (
@@ -322,15 +408,24 @@ function FilaSemana({
                   aria-current={activo ? "time" : undefined}
                   title={m ? `${m.profesor} · ${m.correo}` : undefined}
                   className={`rounded-xl px-2.5 py-2 ${
-                    activo ? "bg-azul-800 text-white" : m ? "bg-azul-50 text-azul-950" : "text-azul-900/35"
+                    activo
+                      ? "bg-azul-800 text-white shadow-md shadow-azul-900/20"
+                      : e
+                        ? `${e.suave} text-azul-950`
+                        : "text-azul-900/35"
                   }`}
                 >
-                  <p className="truncate font-semibold">{m?.nombre ?? "Sin clase"}</p>
+                  <p className="flex items-center gap-1.5 truncate font-semibold">
+                    {e && <e.Icono className={`size-3.5 shrink-0 ${activo ? "" : "opacity-70"}`} aria-hidden />}
+                    {m?.nombre ?? "Sin clase"}
+                  </p>
                   {m && (
                     <p className={`truncate text-xs ${activo ? "text-azul-100" : "text-azul-900/50"}`}>{m.profesor}</p>
                   )}
                   {m && (
-                    <p className={`break-all text-[11px] ${activo ? "text-azul-100" : "text-azul-900/40"}`}>{m.correo}</p>
+                    <p className={`break-all text-[11px] ${activo ? "text-azul-100" : "text-azul-900/40"}`}>
+                      {m.correo}
+                    </p>
                   )}
                 </div>
               )}
