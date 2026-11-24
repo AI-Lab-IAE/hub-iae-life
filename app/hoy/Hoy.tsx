@@ -138,7 +138,7 @@ export default function Hoy() {
               <a.icono className="size-6 text-azul-900/70" aria-hidden />
               <span>
                 <span className="block font-bold text-azul-950">{a.titulo}</span>
-                <span className="block text-sm text-azul-900/65">{a.texto}</span>
+                <span className="block text-sm text-azul-900">{a.texto}</span>
               </span>
             </Link>
           ))}
