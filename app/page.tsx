@@ -1,12 +1,19 @@
 import Link from "next/link";
-import type { CSSProperties } from "react";
-import { ArrowRight, Lightbulb, MessageCircle, ShieldCheck, Smartphone, Sparkles } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowRight,
+  CalendarDays,
+  Lightbulb,
+  MessageCircle,
+  ShieldCheck,
+  Smartphone,
+  Sparkles,
+} from "lucide-react";
 import "./_hub/hub.css";
-import Escena3D from "./_hub/Escena3D";
 import { funciones } from "./_life/funciones";
+import { Emblema } from "./_life/Marca";
 
 const TITULO = "IAE LIFE";
-const AZULES = ["#9fbaf3", "#c9d8f9", "#6b93ea", "#e3ebfc", "#416fdc"];
 
 const MOMENTOS = [
   {
@@ -30,7 +37,11 @@ const MOMENTOS = [
 ];
 
 const RUTA = [
-  { cuando: "13 nov 2026", titulo: "MVP", texto: "Las funciones publicadas, con datos de ejemplo y probadas en celular." },
+  {
+    cuando: "13 nov 2026",
+    titulo: "MVP",
+    texto: "Las funciones publicadas, con datos de ejemplo y probadas en celular.",
+  },
   { cuando: "16–27 nov", titulo: "Piloto", texto: "Un grupo de estudiantes y profesores la usa y da su opinión." },
   { cuando: "Diciembre", titulo: "Ajustes", texto: "Cambios según el piloto y decisión de qué funciones siguen." },
   { cuando: "2027", titulo: "Versión final", texto: "Cuenta @iae.edu, base de datos y datos reales del colegio." },
@@ -44,71 +55,91 @@ const PILARES = [
 
 export default function Inicio() {
   const nombre = (slug: string) => funciones.find((f) => f.slug === slug)!.proyecto;
-  const listas = funciones.filter((f) => f.estado === "lista").length;
 
   return (
     <main className="flex-1">
-      {/* Portada azul IAE */}
-      <section className="relative isolate overflow-hidden bg-linear-to-br from-azul-950 via-azul-900 to-azul-700 text-white">
-        <Escena3D colores={AZULES} />
+      {/* Portada: escudo del IAE, nombre y las funciones a un toque */}
+      <section className="relative isolate overflow-hidden bg-linear-to-br from-azul-950 via-azul-900 to-azul-800 text-white">
         <div
-          className="pointer-events-none absolute inset-0 -z-0 bg-linear-to-t from-azul-950/90 via-azul-950/40 to-transparent md:bg-linear-to-r md:from-azul-950/95 md:via-azul-950/60"
+          className="pointer-events-none absolute -right-24 -top-24 -z-10 size-96 rounded-full bg-azul-500/20 blur-3xl"
           aria-hidden
         />
-        <div className="relative mx-auto flex min-h-[calc(100svh-var(--alto-encabezado))] max-w-7xl flex-col justify-end px-4 pb-14 pt-16 md:justify-center md:pb-20">
-          <p className="life-entrar inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.2em] text-azul-100 backdrop-blur">
-            <span className="size-2 rounded-full bg-azul-300" aria-hidden />
-            Instituto Alberto Einstein · Panamá
-          </p>
-
-          <h1
-            aria-label={TITULO}
-            className="mt-6 text-[clamp(4rem,15vw,11rem)] font-black leading-[0.85] tracking-tighter [perspective:800px]"
-          >
-            {TITULO.split("").map((letra, i) => (
-              <span
-                key={i}
-                aria-hidden
-                className="life-letra life-brillo bg-linear-to-r from-white via-azul-200 to-white bg-clip-text text-transparent"
-                style={{ animationDelay: `${0.15 + i * 0.07}s, 0s` } as CSSProperties}
-              >
-                {letra === " " ? " " : letra}
+        <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 md:py-20 lg:grid-cols-[1fr_1.1fr] lg:items-center">
+          <div>
+            <p className="life-entrar flex items-center gap-3">
+              <span className="grid size-14 place-items-center rounded-2xl bg-white p-1.5 shadow-lg shadow-azul-950/30">
+                <Emblema className="size-11" />
               </span>
-            ))}
-          </h1>
+              <span className="text-sm leading-tight text-azul-100">
+                Instituto Alberto Einstein
+                <span className="block text-xs text-azul-200/80">Panamá · Fundado en 1955</span>
+              </span>
+            </p>
 
-          <p className="life-entrar mt-6 max-w-xl text-lg leading-relaxed text-azul-100 md:text-xl" style={{ animationDelay: "0.8s" }}>
-            La app para la vida escolar del IAE. <strong className="font-semibold text-white">Creada por estudiantes del AI Lab</strong>{" "}
-            con inteligencia artificial.
-          </p>
+            <h1
+              className="life-entrar mt-8 text-5xl font-extrabold tracking-tight md:text-6xl"
+              style={{ animationDelay: "0.1s" }}
+            >
+              {TITULO}
+              <span className="mt-3 block h-1.5 w-20 rounded-full bg-[#f2b705]" aria-hidden />
+            </h1>
 
-          <div className="life-entrar mt-8 flex flex-wrap gap-3" style={{ animationDelay: "0.95s" }}>
-            <a
-              href="#funciones"
-              className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 font-semibold text-azul-900 shadow-lg shadow-azul-950/30 transition-transform hover:-translate-y-0.5"
+            <p
+              className="life-entrar mt-6 max-w-xl text-lg leading-relaxed text-azul-100"
+              style={{ animationDelay: "0.2s" }}
             >
-              Abrir la app <ArrowRight className="size-4" aria-hidden />
-            </a>
-            <Link
-              href="/creditos"
-              className="inline-flex items-center gap-2 rounded-full border border-white/30 px-6 py-3 font-semibold text-white transition-colors hover:bg-white/10"
-            >
-              Quién la hizo
-            </Link>
+              Todo lo del colegio en una sola app: horario, avisos, tareas y estudio.{" "}
+              <strong className="font-semibold text-white">Creada por estudiantes del AI Lab.</strong>
+            </p>
+
+            <div className="life-entrar mt-8 flex flex-wrap gap-3" style={{ animationDelay: "0.3s" }}>
+              <a
+                href="#funciones"
+                className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 font-semibold text-azul-900 shadow-lg shadow-azul-950/30 transition-transform hover:-translate-y-0.5"
+              >
+                Abrir la app <ArrowDown className="size-4" aria-hidden />
+              </a>
+              <Link
+                href="/horario"
+                className="inline-flex items-center gap-2 rounded-full border border-white/30 px-6 py-3 font-semibold text-white transition-colors hover:bg-white/10"
+              >
+                <CalendarDays className="size-4" aria-hidden /> Mi horario
+              </Link>
+            </div>
           </div>
 
-          <dl className="life-entrar mt-10 grid max-w-md grid-cols-3 gap-3" style={{ animationDelay: "1.1s" }}>
-            {[
-              { valor: funciones.length, etiqueta: "Funciones" },
-              { valor: listas, etiqueta: "Para probar" },
-              { valor: 5, etiqueta: "Estudiantes" },
-            ].map((d) => (
-              <div key={d.etiqueta} className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur">
-                <dt className="text-xs text-azul-200">{d.etiqueta}</dt>
-                <dd className="mt-1 text-3xl font-bold tabular-nums">{d.valor}</dd>
-              </div>
-            ))}
-          </dl>
+          <nav
+            aria-label="Abrir una función"
+            className="life-entrar grid grid-cols-2 gap-3 sm:grid-cols-3"
+            style={{ animationDelay: "0.35s" }}
+          >
+            {funciones
+              .filter((f) => f.estado === "lista")
+              .map((f) => (
+                <Link
+                  key={f.slug}
+                  href={f.href}
+                  className="group flex flex-col gap-3 rounded-2xl bg-white/10 p-4 ring-1 ring-white/15 backdrop-blur transition hover:-translate-y-1 hover:bg-white/15"
+                >
+                  <span className="grid size-11 place-items-center rounded-xl bg-white text-azul-800 shadow-md shadow-azul-950/20 transition-transform group-hover:scale-110">
+                    <f.icono className="size-5" aria-hidden />
+                  </span>
+                  <span>
+                    <span className="block font-bold">{f.proyecto}</span>
+                    <span className="mt-0.5 block text-xs leading-snug text-azul-100/80">{f.resumen}</span>
+                  </span>
+                </Link>
+              ))}
+            <Link
+              href="/creditos"
+              className="flex flex-col justify-end gap-1 rounded-2xl bg-[#f2b705] p-4 text-azul-950 transition hover:-translate-y-1"
+            >
+              <span className="text-xs font-semibold uppercase tracking-wide">Hecha en el IAE</span>
+              <span className="flex items-center gap-1 font-bold">
+                Quién la hizo <ArrowRight className="size-4" aria-hidden />
+              </span>
+            </Link>
+          </nav>
         </div>
       </section>
 
@@ -120,8 +151,8 @@ export default function Inicio() {
             Todo lo del colegio, <span className="text-azul-600">en una sola app</span>.
           </h2>
           <p className="mt-4 max-w-xl text-azul-900/60">
-            Toca una función para abrirla. Es una vista previa: los datos son de ejemplo y ficticios, y lo que guardes se
-            queda solo en este navegador.
+            Toca una función para abrirla. Es una vista previa: los datos son de ejemplo y ficticios, y lo que guardes
+            se queda solo en este navegador.
           </p>
 
           <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

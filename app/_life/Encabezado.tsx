@@ -8,8 +8,8 @@ import { funciones, type Funcion } from "./funciones";
 import { Marca } from "./Marca";
 import BotonCuenta from "./BotonCuenta";
 
-// Barra de IAE LIFE: fija arriba en todas las funciones. En computadora muestra las funciones;
-// en celular, un botón abre el menú. En el HUB (/hub y /coordinador) no se muestra.
+// Barra de IAE LIFE: fija arriba en todas las funciones. Las funciones se abren desde el inicio
+// o con el botón "Funciones" (sin repetirlas en la barra, para que no confunda). En el HUB (/hub y /coordinador) no se muestra.
 export default function Encabezado() {
   const ruta = usePathname();
   const [abierto, setAbierto] = useState(false);
@@ -44,33 +44,7 @@ export default function Encabezado() {
             <Marca />
           </Link>
 
-          <nav aria-label="Funciones" className="ml-auto hidden items-center gap-1 lg:flex">
-            {funciones.map((f) =>
-              f.estado === "lista" ? (
-                <Link
-                  key={f.slug}
-                  href={f.href}
-                  aria-current={activa(f) ? "page" : undefined}
-                  className={`flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
-                    activa(f) ? "bg-azul-800 text-white" : "text-azul-900/70 hover:bg-azul-50 hover:text-azul-800"
-                  }`}
-                >
-                  <f.icono className="size-4" aria-hidden />
-                  {f.proyecto}
-                </Link>
-              ) : (
-                <span key={f.slug} className="flex items-center gap-2 px-3 py-1.5 text-sm text-azul-900/35">
-                  <f.icono className="size-4" aria-hidden />
-                  {f.proyecto}
-                  <span className="rounded-full bg-azul-50 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-azul-600">
-                    Pronto
-                  </span>
-                </span>
-              ),
-            )}
-          </nav>
-
-          <div className="ml-auto lg:ml-2">
+          <div className="ml-auto">
             <BotonCuenta />
           </div>
 
@@ -79,7 +53,7 @@ export default function Encabezado() {
             onClick={() => setAbierto((a) => !a)}
             aria-expanded={abierto}
             aria-controls="menu-funciones"
-            className="flex items-center gap-2 rounded-full border border-azul-100 px-3 py-1.5 text-sm font-medium text-azul-800 transition-colors hover:bg-azul-50 lg:hidden"
+            className="flex items-center gap-2 rounded-full border border-azul-100 px-3 py-1.5 text-sm font-medium text-azul-800 transition-colors hover:bg-azul-50"
           >
             {abierto ? <X className="size-4" aria-hidden /> : <Menu className="size-4" aria-hidden />}
             Funciones
@@ -88,7 +62,7 @@ export default function Encabezado() {
       </header>
 
       {abierto && (
-        <div className="fixed inset-0 top-(--alto-encabezado) z-40 lg:hidden">
+        <div className="fixed inset-0 top-(--alto-encabezado) z-40">
           <button
             type="button"
             aria-label="Cerrar el menú"
@@ -98,7 +72,7 @@ export default function Encabezado() {
           <nav
             id="menu-funciones"
             aria-label="Funciones"
-            className="life-entrar relative max-h-full overflow-y-auto rounded-b-3xl bg-white p-4 shadow-2xl shadow-azul-950/20"
+            className="life-entrar relative mx-auto max-h-full max-w-3xl overflow-y-auto rounded-b-3xl bg-white p-4 shadow-2xl shadow-azul-950/20"
           >
             <ul className="grid gap-2 sm:grid-cols-2">
               {funciones.map((f) => (
