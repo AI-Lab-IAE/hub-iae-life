@@ -5,11 +5,54 @@
 // y los avisos de AvisoYa. No guarda nada nuevo.
 import Link from "next/link";
 import { useSyncExternalStore } from "react";
-import { CalendarDays, Check, CheckCircle2, ChevronRight, Clock, Megaphone } from "lucide-react";
+import {
+  BookOpen,
+  CalendarDays,
+  Check,
+  CheckCircle2,
+  ChevronRight,
+  ClipboardCheck,
+  Clock,
+  Compass,
+  Mail,
+  Megaphone,
+} from "lucide-react";
 import { useCuenta } from "../_life/cuenta";
 import { BLOQUES, materia, momentoEnPanama, resumenDelDia, useHorario } from "../_life/horario";
 import { cambiarHecho, usePendientes } from "../camille/components/pendientes";
 import { useAvisos } from "../abraham/almacen";
+
+// "¿Qué quieres hacer hoy?": tarjetas suaves de colores (idea de Dribbble que mandó Camille).
+const ATAJOS = [
+  {
+    href: "/marco",
+    titulo: "Estudiar",
+    texto: "Repasa antes del examen",
+    icono: BookOpen,
+    fondo: "from-sky-100 to-cyan-50",
+  },
+  {
+    href: "/daniela",
+    titulo: "Tareas",
+    texto: "Organiza tu semana",
+    icono: ClipboardCheck,
+    fondo: "from-amber-100 to-lime-50",
+  },
+  {
+    href: "/camille",
+    titulo: "El colegio",
+    texto: "Mapa, clubes y contactos",
+    icono: Compass,
+    fondo: "from-violet-100 to-sky-50",
+  },
+  {
+    href: "/jonathan",
+    titulo: "Faltar",
+    texto: "Avisa tu ausencia",
+    icono: Mail,
+    fondo: "from-emerald-100 to-teal-50",
+  },
+];
 
 function suscribirReloj(aviso: () => void) {
   const id = setInterval(aviso, 30_000);
@@ -82,6 +125,24 @@ export default function Hoy() {
           </span>
           <ChevronRight className="size-6 shrink-0" aria-hidden />
         </Link>
+
+        {/* ¿Qué quieres hacer hoy? */}
+        <h2 className="mt-7 text-lg font-bold text-azul-950">¿Qué quieres hacer hoy?</h2>
+        <div className="mt-3 grid grid-cols-2 gap-3">
+          {ATAJOS.map((a) => (
+            <Link
+              key={a.href}
+              href={a.href}
+              className={`flex min-h-32 flex-col justify-between rounded-3xl bg-linear-to-br ${a.fondo} p-4 ring-1 ring-black/5 transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-azul-900/10`}
+            >
+              <a.icono className="size-6 text-azul-900/70" aria-hidden />
+              <span>
+                <span className="block font-bold text-azul-950">{a.titulo}</span>
+                <span className="block text-sm text-azul-900/65">{a.texto}</span>
+              </span>
+            </Link>
+          ))}
+        </div>
 
         {/* Mis pendientes */}
         <section className="mt-5 rounded-3xl bg-white p-5 shadow-sm ring-1 ring-azul-100">
