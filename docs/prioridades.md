@@ -21,4 +21,9 @@
 3. Mis pendientes: una lista personal, guardada en el dispositivo.
 
 ## AvisoYa (Abraham)
-Pendiente.
+Las 3 cosas que no pueden fallar (Abraham, 24-nov):
+1. **Horario correcto en tiempo real:** qué clase toca ahora, cuál sigue y cuánto falta, según la hora real y el grupo del estudiante (10A, etc.).
+2. **Avisar a tiempo:** antes de cada clase y, sobre todo, cuando hay un cambio: profe ausente, aula distinta o clase cancelada.
+3. **Datos fáciles de actualizar:** cambiar el horario o publicar un aviso tiene que ser rápido, o la app se queda vieja y nadie confía en ella.
+
+Nota: el punto 1 ya lo cubren *Mi horario* y la pantalla *Hoy* (PR #28). Falta el grupo del estudiante (10A) y avisos de tipo "cambio de clase".
