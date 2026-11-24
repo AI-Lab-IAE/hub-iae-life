@@ -95,7 +95,7 @@ export default function Horario() {
 
   return (
     <main className="flex-1 bg-azul-50/60">
-      <section className="bg-gradient-to-br from-azul-800 via-azul-900 to-azul-950 text-white">
+      <section className="bg-gradient-to-br from-azul-800 via-azul-800 to-azul-900 text-white">
         <div className="mx-auto max-w-6xl px-4 pb-8 pt-8 md:pb-10 md:pt-10">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>

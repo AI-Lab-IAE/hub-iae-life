@@ -59,7 +59,7 @@ export default function Inicio() {
   return (
     <main className="flex-1">
       {/* Portada: escudo del IAE, nombre y las funciones a un toque */}
-      <section className="relative isolate overflow-hidden bg-linear-to-br from-azul-950 via-azul-900 to-azul-800 text-white">
+      <section className="relative isolate overflow-hidden bg-linear-to-br from-azul-900 via-azul-800 to-azul-700 text-white">
         <div
           className="pointer-events-none absolute -right-24 -top-24 -z-10 size-96 rounded-full bg-azul-500/20 blur-3xl"
           aria-hidden
