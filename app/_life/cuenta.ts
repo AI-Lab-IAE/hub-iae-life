@@ -46,7 +46,8 @@ function leer(texto: string | null): Cuenta | null {
     // El rol y la promoción siempre se recalculan del correo y de la lista, no se confía en lo guardado.
     const info = leerCorreo(c.correo);
     if (!info) return null;
-    const color = c.color ? (COLORES_VIEJOS[c.color] ?? c.color) : c.color;
+    const guardado = typeof c.color === "string" ? c.color : undefined;
+    const color = guardado && Object.hasOwn(COLORES_VIEJOS, guardado) ? COLORES_VIEJOS[guardado] : guardado;
     return { ...c, ...info, color };
   } catch {
     return null;
