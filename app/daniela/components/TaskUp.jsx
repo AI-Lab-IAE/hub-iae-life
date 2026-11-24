@@ -786,7 +786,9 @@ function Onboarding() {
     const partes = cuenta.nombre.trim().split(/\s+/);
     setData({
       ...anteriores,
-      settings: { ...anteriores.settings, idiomaPerfil: cuenta.idioma },
+      settings: cuenta.idioma
+        ? { ...anteriores.settings, lang: cuenta.idioma, idiomaPerfil: cuenta.idioma }
+        : anteriores.settings,
       user: {
         nombre: partes[0],
         apellido: partes.slice(1).join(" "),
