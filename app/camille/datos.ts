@@ -215,7 +215,7 @@ export const bloquesSecundaria = [
   { nombre: "Período 5", hora: "10:40 – 11:20 a. m.", tipo: "clase", desde: "10:40", hasta: "11:20" },
   { nombre: "Período 6", hora: "11:25 a. m. – 12:05 p. m.", tipo: "clase", desde: "11:25", hasta: "12:05" },
   { nombre: "Período 7", hora: "12:10 – 12:50 p. m.", tipo: "clase", desde: "12:10", hasta: "12:50" },
-  { nombre: "Almuerzo", hora: "12:50 – 1:25 p. m.", tipo: "descanso", desde: "12:50", hasta: "13:25" },
+  { nombre: "Almuerzo", hora: "12:50 – 1:30 p. m.", tipo: "descanso", desde: "12:50", hasta: "13:30" },
   { nombre: "Período 9", hora: "1:30 – 2:05 p. m.", tipo: "clase", desde: "13:30", hasta: "14:05" },
   { nombre: "Período 10", hora: "2:10 – 2:50 p. m.", tipo: "clase", desde: "14:10", hasta: "14:50" },
   { nombre: "Período 11", hora: "2:55 – 3:30 p. m.", tipo: "clase", desde: "14:55", hasta: "15:30" },
