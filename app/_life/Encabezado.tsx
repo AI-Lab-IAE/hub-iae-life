@@ -62,7 +62,7 @@ export default function Encabezado() {
       </header>
 
       {abierto && (
-        <div className="fixed inset-0 top-(--alto-encabezado) z-40">
+        <div className="fixed inset-0 top-(--alto-encabezado) z-50">
           <button
             type="button"
             aria-label="Cerrar el menú"

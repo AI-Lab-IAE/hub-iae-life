@@ -1,6 +1,6 @@
 "use client";
 
-// Pantalla Hoy (boceto de Camille, 24-nov): la próxima clase arriba, luego mis pendientes y los avisos del día.
+// Pantalla Hoy (boceto de Camille, 24-nov): la próxima clase arriba, luego mis pendientes y los avisos recientes.
 // Lee lo que ya guardan otras funciones en este navegador: el horario, los pendientes de School Guide
 // y los avisos de AvisoYa. No guarda nada nuevo.
 import Link from "next/link";
@@ -10,6 +10,7 @@ import { useCuenta } from "../_life/cuenta";
 import { BLOQUES, materia, momentoEnPanama, resumenDelDia, useHorario } from "../_life/horario";
 import { cambiarHecho, usePendientes } from "../camille/components/pendientes";
 import { useAvisos } from "../abraham/almacen";
+import { estudiantes } from "../abraham/datos";
 
 function suscribirReloj(aviso: () => void) {
   const id = setInterval(aviso, 30_000);
@@ -41,7 +42,8 @@ export default function Hoy() {
   const esAhora = resumen?.actual !== null && resumen?.actual === bloque;
 
   const porHacer = pendientes.filter((p) => !p.hecho).slice(0, 3);
-  const ultimos = avisos.slice(0, 3);
+  // Solo avisos para todo el colegio: los de un salón o un estudiante se ven en AvisoYa, según quién seas.
+  const ultimos = avisos.filter((a) => a.destinatarios.length >= estudiantes.length).slice(0, 3);
   const nombre = cuenta?.nombre.split(" ")[0];
 
   return (
@@ -116,7 +118,7 @@ export default function Hoy() {
 
         {/* Avisos del día */}
         <section className="mt-5 rounded-3xl bg-white p-5 shadow-sm ring-1 ring-azul-100">
-          <Titulo icono={Megaphone} texto="Avisos del día" href="/abraham" ver="Ver todos" />
+          <Titulo icono={Megaphone} texto="Avisos recientes" href="/abraham" ver="Ver todos" />
           {ultimos.length === 0 ? (
             <p className="mt-3 text-sm text-azul-900/60">No hay avisos.</p>
           ) : (
