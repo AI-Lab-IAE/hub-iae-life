@@ -562,16 +562,19 @@ function useTx(lang) {
 ============================================================ */
 const STORAGE_KEY = "taskup_state_v2";
 
-async function loadState() {
+// Con cuenta de IAE LIFE, cada cuenta guarda sus tareas aparte (no se mezclan en el mismo navegador).
+const claveDe = (correo) => (correo ? `${STORAGE_KEY}:${correo}` : STORAGE_KEY);
+
+async function loadState(clave) {
   try {
-    const crudo = localStorage.getItem(STORAGE_KEY);
+    const crudo = localStorage.getItem(clave);
     if (crudo) return JSON.parse(crudo);
   } catch (e) { console.error("No se pudo leer lo guardado", e); }
   return null;
 }
-async function saveState(data) {
+async function saveState(clave, data) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    localStorage.setItem(clave, JSON.stringify(data));
   } catch (e) { console.error("No se pudo guardar", e); }
 }
 
@@ -768,7 +771,7 @@ function Onboarding() {
   const [err, setErr] = useState("");
 
   const steps = conCuenta ? ["intro1", "intro2"] : ["datos", "intro1", "intro2"];
-  const key = steps[step];
+  const key = steps[Math.min(step, steps.length - 1)];
 
   function next() {
     setErr("");
@@ -779,7 +782,7 @@ function Onboarding() {
       if (!genero) return setErr(tx("Selecciona una opción de género.", "Select a gender option."));
       if (!nacimiento) return setErr(tx("Selecciona tu fecha de nacimiento.", "Select your date of birth."));
     }
-    if (step === steps.length - 1) {
+    if (step >= steps.length - 1) {
       setData((d) => ({
         ...d,
         user: conCuenta
@@ -2811,20 +2814,37 @@ export default function App() {
   const [showAI, setShowAI] = useState(false);
   const saveTimer = useRef(null);
   const firstLoad = useRef(true);
+  const claveActual = useRef(null);
+  const cuenta = useCuenta(); // undefined = todavía cargando
+  const correo = cuenta?.correo ?? null;
 
   useEffect(() => {
+    if (cuenta === undefined) return;
+    let vigente = true;
+    const clave = claveDe(correo);
     (async () => {
-      const loaded = await loadState();
-      setDataRaw(loaded || defaultData());
+      const loaded = (await loadState(clave)) || defaultData();
+      if (!vigente) return;
+      // El nombre y el rol salen siempre de la cuenta, para que no quede el de otra persona.
+      if (cuenta && loaded.user) {
+        const partes = cuenta.nombre.trim().split(/\s+/);
+        loaded.user = { ...loaded.user, nombre: partes[0], apellido: partes.slice(1).join(" ") };
+      }
+      claveActual.current = clave;
+      firstLoad.current = true;
+      setDataRaw(loaded);
       setLoading(false);
     })();
-  }, []);
+    return () => { vigente = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [correo, cuenta === undefined]);
 
   useEffect(() => {
-    if (loading || !data) return;
+    if (loading || !data || !claveActual.current) return;
     if (firstLoad.current) { firstLoad.current = false; return; }
+    const clave = claveActual.current;
     if (saveTimer.current) clearTimeout(saveTimer.current);
-    saveTimer.current = setTimeout(() => { saveState(data); }, 350);
+    saveTimer.current = setTimeout(() => { saveState(clave, data); }, 350);
     return () => clearTimeout(saveTimer.current);
   }, [data, loading]);
 
