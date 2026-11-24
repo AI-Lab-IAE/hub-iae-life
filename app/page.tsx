@@ -50,7 +50,7 @@ export default function Inicio() {
         <div className="mx-auto grid w-full max-w-7xl gap-8 px-4 py-10 lg:grid-cols-[1fr_1.1fr] lg:items-center">
           <div>
             <div className="life-entrar flex items-center gap-4">
-              <span className="grid size-20 shrink-0 place-items-center rounded-2xl bg-white p-1.5 shadow-lg shadow-azul-950/30 md:size-24">
+              <span className="grid size-20 shrink-0 place-items-center rounded-full bg-white p-1 shadow-lg shadow-azul-950/30 md:size-24">
                 <Emblema className="size-full" />
               </span>
               <div>
