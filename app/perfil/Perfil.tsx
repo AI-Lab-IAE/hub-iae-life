@@ -55,7 +55,12 @@ function PerfilDe({ cuenta }: { cuenta: Cuenta }) {
   const [color, setColor] = useState(cuenta.color ?? COLORES[0]);
   const [idioma, setIdioma] = useState<Idioma>(cuenta.idioma ?? "es");
   const [genero, setGenero] = useState(cuenta.genero ?? "");
-  const [nacimiento, setNacimiento] = useState(cuenta.nacimiento ?? "");
+  const [dia, setDia] = useState(cuenta.nacimiento ? String(Number(cuenta.nacimiento.slice(8, 10))) : "");
+  const [mes, setMes] = useState(cuenta.nacimiento ? String(Number(cuenta.nacimiento.slice(5, 7))) : "");
+  // Solo se guarda si el día existe en ese mes (2000 es bisiesto, así vale el 29 de febrero).
+  const fechaValida =
+    dia !== "" && mes !== "" && new Date(2000, Number(mes) - 1, Number(dia)).getMonth() === Number(mes) - 1;
+  const nacimiento = fechaValida ? `2000-${mes.padStart(2, "0")}-${dia.padStart(2, "0")}` : "";
   const [tema, setTema] = useState<"dia" | "noche">(cuenta.tema ?? "dia");
   const [notif, setNotif] = useState(cuenta.notif ?? true);
   const faltanDatos = !cuenta.genero || !cuenta.nacimiento;
@@ -65,7 +70,7 @@ function PerfilDe({ cuenta }: { cuenta: Cuenta }) {
 
   const guardar = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!correoPadresValido) return;
+    if (!correoPadresValido || ((dia !== "" || mes !== "") && !fechaValida)) return;
     const ok = guardarCuenta({
       ...cuenta,
       correoPadres: correoPadres.trim() || undefined,
@@ -174,10 +179,9 @@ function PerfilDe({ cuenta }: { cuenta: Cuenta }) {
             <div className="mt-1 flex gap-2">
               <select
                 aria-label="Día"
-                value={nacimiento ? Number(nacimiento.slice(8, 10)) : ""}
+                value={dia}
                 onChange={(e) => {
-                  const mes = nacimiento ? nacimiento.slice(5, 7) : "01";
-                  setNacimiento(e.target.value ? `2000-${mes}-${e.target.value.padStart(2, "0")}` : "");
+                  setDia(e.target.value);
                   setGuardado("");
                 }}
                 className="rounded-xl border border-azul-100 px-3 py-2 text-azul-950"
@@ -191,10 +195,9 @@ function PerfilDe({ cuenta }: { cuenta: Cuenta }) {
               </select>
               <select
                 aria-label="Mes"
-                value={nacimiento ? Number(nacimiento.slice(5, 7)) : ""}
+                value={mes}
                 onChange={(e) => {
-                  const dia = nacimiento ? nacimiento.slice(8, 10) : "01";
-                  setNacimiento(e.target.value ? `2000-${e.target.value.padStart(2, "0")}-${dia}` : "");
+                  setMes(e.target.value);
                   setGuardado("");
                 }}
                 className="flex-1 rounded-xl border border-azul-100 px-3 py-2 text-azul-950"
@@ -207,6 +210,9 @@ function PerfilDe({ cuenta }: { cuenta: Cuenta }) {
                 ))}
               </select>
             </div>
+            {(dia !== "" || mes !== "") && !fechaValida && (
+              <span className="mt-1 block text-xs text-red-600">Elige un día y un mes que existan.</span>
+            )}
           </fieldset>
 
           <fieldset className="mt-5">

@@ -50,7 +50,11 @@ const COLORES_VIEJOS: Record<string, string> = { "#3478a8": "#004d9c", "#255a80"
 function ajustesValidos(x: Partial<Cuenta>): Pick<Cuenta, "genero" | "nacimiento" | "tema" | "notif"> {
   return {
     genero: x.genero === "mujer" || x.genero === "hombre" ? x.genero : undefined,
-    nacimiento: typeof x.nacimiento === "string" && /^\d{4}-\d{2}-\d{2}$/.test(x.nacimiento) ? x.nacimiento : undefined,
+    // Solo día y mes: el año se cambia siempre a 2000 para no guardar la edad.
+    nacimiento:
+      typeof x.nacimiento === "string" && /^\d{4}-\d{2}-\d{2}$/.test(x.nacimiento)
+        ? `2000-${x.nacimiento.slice(5)}`
+        : undefined,
     tema: x.tema === "dia" || x.tema === "noche" ? x.tema : undefined,
     notif: typeof x.notif === "boolean" ? x.notif : undefined,
   };

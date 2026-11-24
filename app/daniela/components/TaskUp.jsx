@@ -2853,8 +2853,9 @@ function App() {
             apellido: partes.slice(1).join(" "),
             rol: cuenta.rol === "profesor" ? "profesor" : "estudiante",
             rolOtro: "",
-            genero: cuenta.genero ?? loaded.user?.genero ?? "",
-            nacimiento: cuenta.nacimiento ?? loaded.user?.nacimiento ?? "",
+            // Los Ajustes de IAE LIFE mandan (si se borran ahí, se borran aquí).
+            genero: cuenta.genero ?? "",
+            nacimiento: cuenta.nacimiento ?? "",
           };
         }
         loaded.settings = {
@@ -2877,6 +2878,7 @@ function App() {
   const idiomaCuenta = cuenta?.idioma;
   const temaCuenta = cuenta?.tema;
   const notifCuenta = cuenta?.notif;
+  const cuentaCargada = Boolean(cuenta);
   const generoCuenta = cuenta?.genero;
   const nacimientoCuenta = cuenta?.nacimiento;
   useEffect(() => {
@@ -2891,17 +2893,13 @@ function App() {
               ...(temaCuenta ? { theme: temaCuenta } : {}),
               ...(typeof notifCuenta === "boolean" ? { notif: notifCuenta } : {}),
             },
-            user: d.user
-              ? {
-                  ...d.user,
-                  ...(generoCuenta ? { genero: generoCuenta } : {}),
-                  ...(nacimientoCuenta ? { nacimiento: nacimientoCuenta } : {}),
-                }
+            user: d.user && cuentaCargada
+              ? { ...d.user, genero: generoCuenta ?? "", nacimiento: nacimientoCuenta ?? "" }
               : d.user,
           }
         : d,
     );
-  }, [idiomaCuenta, temaCuenta, notifCuenta, generoCuenta, nacimientoCuenta, loading]);
+  }, [idiomaCuenta, temaCuenta, notifCuenta, generoCuenta, nacimientoCuenta, cuentaCargada, loading]);
 
   // Se guarda en cuanto cambia algo (localStorage es rápido): así no se pierde nada al cerrar o cambiar de cuenta.
   useEffect(() => {
