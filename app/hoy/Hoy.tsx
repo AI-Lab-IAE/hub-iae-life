@@ -29,28 +29,28 @@ const ATAJOS = [
     titulo: "Estudiar",
     texto: "Repasa antes del examen",
     icono: BookOpen,
-    fondo: "from-sky-100 to-cyan-50",
+    fondo: "from-azul-300/70 to-azul-100",
   },
   {
     href: "/daniela",
     titulo: "Tareas",
     texto: "Organiza tu semana",
     icono: ClipboardCheck,
-    fondo: "from-amber-100 to-lime-50",
+    fondo: "from-sky-200/80 to-azul-50",
   },
   {
     href: "/camille",
     titulo: "El colegio",
     texto: "Mapa, clubes y contactos",
     icono: Compass,
-    fondo: "from-violet-100 to-sky-50",
+    fondo: "from-azul-200 to-white",
   },
   {
     href: "/jonathan",
     titulo: "Faltar",
     texto: "Avisa tu ausencia",
     icono: Mail,
-    fondo: "from-emerald-100 to-teal-50",
+    fondo: "from-cyan-100 to-azul-100",
   },
 ];
 
@@ -89,32 +89,35 @@ export default function Hoy() {
   const nombre = cuenta?.nombre.split(" ")[0];
 
   return (
-    <main className="relative flex-1 overflow-hidden bg-azul-50/70">
+    <main className="relative flex-1 overflow-hidden">
       <div
-        className="pointer-events-none absolute -right-32 -top-32 size-96 rounded-full bg-azul-200/50 blur-2xl"
+        className="pointer-events-none absolute -right-32 -top-32 size-96 rounded-full bg-azul-300/50 blur-3xl"
         aria-hidden
       />
       <div className="relative mx-auto max-w-2xl px-4 pb-10 pt-8">
         <h1 className="text-4xl font-extrabold tracking-tight text-azul-950">
           Hola{nombre ? `, ${nombre}` : ""} <span aria-hidden>👋</span>
         </h1>
-        <p className="mt-1 text-lg text-azul-900/70 first-letter:uppercase">{fecha ? FECHA.format(fecha) : " "}</p>
+        <p className="mt-1 text-lg text-azul-900/75">¿Todo listo para tu día?</p>
+        <p className="mt-0.5 text-sm text-azul-900/60 first-letter:uppercase">{fecha ? FECHA.format(fecha) : " "}</p>
 
         {/* Próxima clase */}
         <Link
           href="/horario"
-          className="mt-6 flex items-center gap-4 rounded-3xl bg-linear-to-br from-azul-900 to-azul-800 p-5 text-white shadow-xl shadow-azul-900/20 transition hover:-translate-y-0.5"
+          className="mt-6 flex items-center gap-4 rounded-3xl bg-linear-to-br from-azul-300 via-azul-200 to-white p-5 text-azul-950 shadow-lg shadow-azul-900/10 ring-1 ring-azul-900/5 transition hover:-translate-y-0.5"
         >
-          <span className="grid size-14 shrink-0 place-items-center border-r border-white/30 pr-4">
-            <CalendarDays className="size-9" aria-hidden />
+          <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-azul-950 text-white">
+            <CalendarDays className="size-7" aria-hidden />
           </span>
           <span className="min-w-0 flex-1">
-            <span className="block text-sm font-medium text-white">{esAhora ? "Clase de ahora" : "Próxima clase"}</span>
+            <span className="block text-sm font-medium text-azul-900">
+              {esAhora ? "Clase de ahora" : "Próxima clase"}
+            </span>
             <span className="block truncate text-2xl font-bold">
               {clase ? clase.nombre : dia === null && fecha ? "Hoy no hay clases" : "No te quedan clases hoy"}
             </span>
             {clase && bloque !== null && (
-              <span className="mt-1 flex flex-wrap items-center gap-x-3 text-sm text-white">
+              <span className="mt-1 flex flex-wrap items-center gap-x-3 text-sm text-azul-900">
                 <span className="flex items-center gap-1.5">
                   <Clock className="size-4" aria-hidden />
                   {BLOQUES[bloque].desde}–{BLOQUES[bloque].hasta}
@@ -145,7 +148,7 @@ export default function Hoy() {
         </div>
 
         {/* Mis pendientes */}
-        <section className="mt-5 rounded-3xl bg-white p-5 shadow-sm ring-1 ring-azul-100">
+        <section className="mt-5 rounded-3xl bg-white p-5 shadow-sm ring-1 ring-azul-900/5">
           <Titulo icono={CheckCircle2} texto="Mis pendientes" href="/camille/pendientes" ver="Ver todas" />
           {!listo ? null : porHacer.length === 0 ? (
             <p className="mt-3 text-sm text-azul-900/60">
@@ -177,7 +180,7 @@ export default function Hoy() {
         </section>
 
         {/* Avisos del día */}
-        <section className="mt-5 rounded-3xl bg-white p-5 shadow-sm ring-1 ring-azul-100">
+        <section className="mt-5 rounded-3xl bg-white p-5 shadow-sm ring-1 ring-azul-900/5">
           <Titulo icono={Megaphone} texto="Avisos recientes" href="/abraham" ver="Ver todos" />
           {ultimos.length === 0 ? (
             <p className="mt-3 text-sm text-azul-900/60">No hay avisos.</p>

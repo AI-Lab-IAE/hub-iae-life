@@ -95,22 +95,22 @@ export default function Horario() {
 
   return (
     <main className="flex-1 bg-azul-50/60">
-      <section className="bg-gradient-to-br from-azul-800 via-azul-800 to-azul-900 text-white">
+      <section className="bg-linear-to-b from-azul-200/70 to-azul-50 text-azul-950">
         <div className="mx-auto max-w-6xl px-4 pb-8 pt-8 md:pb-10 md:pt-10">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="flex items-center gap-2 text-sm font-semibold text-azul-200">
+              <p className="flex items-center gap-2 text-sm font-semibold text-azul-800">
                 <CalendarDays className="size-4" aria-hidden /> Mi horario
               </p>
               <h1 className="mt-1 text-3xl font-bold tracking-tight md:text-4xl">
                 {cuenta ? `Hola, ${cuenta.nombre.split(" ")[0]}` : "Horario de ejemplo"}
               </h1>
-              <p className="mt-2 max-w-xl text-sm text-azul-100/80">
+              <p className="mt-2 max-w-xl text-sm text-azul-900/80">
                 {NOTA_DIA} Los profesores y correos son inventados.
                 {!cuenta && (
                   <>
                     {" "}
-                    <Link href="/entrar" className="font-semibold text-white underline underline-offset-2">
+                    <Link href="/entrar" className="font-semibold text-azul-800 underline underline-offset-2">
                       Entra
                     </Link>{" "}
                     para ver el tuyo.
@@ -124,7 +124,7 @@ export default function Horario() {
                   <button
                     type="button"
                     onClick={restaurar}
-                    className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white ring-1 ring-white/25 hover:bg-white/20"
+                    className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-azul-950 ring-1 ring-azul-200 hover:bg-azul-50"
                   >
                     <RotateCcw className="size-4" aria-hidden /> Volver al original
                   </button>
@@ -133,7 +133,7 @@ export default function Horario() {
                   type="button"
                   onClick={() => setEditando((e) => !e)}
                   aria-pressed={conEdicion}
-                  className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-azul-900 hover:bg-azul-50"
+                  className="inline-flex items-center gap-2 rounded-full bg-azul-950 px-4 py-2 text-sm font-semibold text-white hover:bg-azul-900"
                 >
                   {conEdicion ? <Check className="size-4" aria-hidden /> : <Pencil className="size-4" aria-hidden />}
                   {conEdicion ? "Listo" : "Ajustar"}
@@ -295,23 +295,23 @@ function Resumen({
   const m = bloque !== null && dia !== null ? materia(horario[bloque][dia]) : null;
   const e = m ? estiloDe(m.nombre) : null;
   return (
-    <div className="flex items-center gap-4 rounded-2xl bg-white/10 p-4 ring-1 ring-white/15 backdrop-blur">
+    <div className="flex items-center gap-4 rounded-3xl bg-white p-4 shadow-sm ring-1 ring-azul-900/5">
       <span
-        className={`grid size-12 shrink-0 place-items-center rounded-xl ${e ? e.chip : "bg-white/10 text-azul-100"}`}
+        className={`grid size-12 shrink-0 place-items-center rounded-xl ${e ? e.chip : "bg-azul-100 text-azul-800"}`}
       >
         {e ? <e.Icono className="size-6" aria-hidden /> : <Clock className="size-6" aria-hidden />}
       </span>
       <div className="min-w-0">
-        <p className="text-xs font-semibold uppercase tracking-wide text-azul-200">{titulo}</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-azul-800">{titulo}</p>
         {m && bloque !== null ? (
           <>
             <p className="truncate text-lg font-bold">{m.nombre}</p>
-            <p className="truncate text-sm text-azul-100/80">
+            <p className="truncate text-sm text-azul-900/75">
               {BLOQUES[bloque].desde}–{BLOQUES[bloque].hasta} · {m.profesor}
             </p>
           </>
         ) : (
-          <p className="text-sm text-azul-100/80">{vacio}</p>
+          <p className="text-sm text-azul-900/75">{vacio}</p>
         )}
       </div>
     </div>
