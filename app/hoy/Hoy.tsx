@@ -10,7 +10,6 @@ import { useCuenta } from "../_life/cuenta";
 import { BLOQUES, materia, momentoEnPanama, resumenDelDia, useHorario } from "../_life/horario";
 import { cambiarHecho, usePendientes } from "../camille/components/pendientes";
 import { useAvisos } from "../abraham/almacen";
-import { estudiantes } from "../abraham/datos";
 
 function suscribirReloj(aviso: () => void) {
   const id = setInterval(aviso, 30_000);
@@ -43,7 +42,7 @@ export default function Hoy() {
 
   const porHacer = pendientes.filter((p) => !p.hecho).slice(0, 3);
   // Solo avisos para todo el colegio: los de un salón o un estudiante se ven en AvisoYa, según quién seas.
-  const ultimos = avisos.filter((a) => a.destinatarios.length >= estudiantes.length).slice(0, 3);
+  const ultimos = avisos.filter((a) => a.audiencia === "Toda la escuela").slice(0, 3);
   const nombre = cuenta?.nombre.split(" ")[0];
 
   return (
@@ -61,18 +60,18 @@ export default function Hoy() {
         {/* Próxima clase */}
         <Link
           href="/horario"
-          className="mt-6 flex items-center gap-4 rounded-3xl bg-linear-to-br from-azul-800 to-azul-700 p-5 text-white shadow-xl shadow-azul-900/20 transition hover:-translate-y-0.5"
+          className="mt-6 flex items-center gap-4 rounded-3xl bg-linear-to-br from-azul-900 to-azul-800 p-5 text-white shadow-xl shadow-azul-900/20 transition hover:-translate-y-0.5"
         >
           <span className="grid size-14 shrink-0 place-items-center border-r border-white/30 pr-4">
             <CalendarDays className="size-9" aria-hidden />
           </span>
           <span className="min-w-0 flex-1">
-            <span className="block text-sm text-azul-200">{esAhora ? "Clase de ahora" : "Próxima clase"}</span>
+            <span className="block text-sm font-medium text-white">{esAhora ? "Clase de ahora" : "Próxima clase"}</span>
             <span className="block truncate text-2xl font-bold">
               {clase ? clase.nombre : dia === null && fecha ? "Hoy no hay clases" : "No te quedan clases hoy"}
             </span>
             {clase && bloque !== null && (
-              <span className="mt-1 flex flex-wrap items-center gap-x-3 text-sm text-azul-100">
+              <span className="mt-1 flex flex-wrap items-center gap-x-3 text-sm text-white">
                 <span className="flex items-center gap-1.5">
                   <Clock className="size-4" aria-hidden />
                   {BLOQUES[bloque].desde}–{BLOQUES[bloque].hasta}
