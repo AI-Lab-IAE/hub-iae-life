@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import { ArrowRight, Lightbulb, MessageCircle, Sparkles } from "lucide-react";
 import "./_hub/hub.css";
 import { funciones } from "./_life/funciones";
@@ -46,7 +47,7 @@ export default function Inicio() {
   return (
     <main className="flex-1">
       {/* Portada: escudo del IAE, nombre y las funciones a un toque */}
-      <section className="relative isolate flex min-h-svh items-center overflow-hidden bg-linear-to-br from-azul-900 via-azul-800 to-azul-700 text-white">
+      <section className="relative isolate flex min-h-svh items-center overflow-hidden bg-linear-to-br from-azul-950 via-azul-900 to-azul-700 text-white">
         <div className="mx-auto grid w-full max-w-7xl gap-8 px-4 py-10 lg:grid-cols-[1fr_1.1fr] lg:items-center">
           <div>
             <div className="life-entrar flex items-center gap-4">
@@ -54,8 +55,25 @@ export default function Inicio() {
                 <Emblema className="size-full" />
               </span>
               <div>
-                <h1 className="text-5xl font-black tracking-tight md:text-6xl">IAE LIFE</h1>
-                <p className="mt-1 text-sm text-azul-200">Instituto Alberto Einstein · AI Lab</p>
+                <h1
+                  aria-label="IAE LIFE"
+                  className="text-5xl font-black tracking-tight [perspective:800px] md:text-7xl"
+                >
+                  {"IAE LIFE".split("").map((letra, i) => (
+                    <span
+                      key={i}
+                      aria-hidden
+                      className="life-letra life-brillo bg-linear-to-r from-white via-azul-200 to-white bg-clip-text text-transparent"
+                      style={{ animationDelay: `${0.15 + i * 0.07}s, 0s` } as CSSProperties}
+                    >
+                      {letra === " " ? "\u00a0" : letra}
+                    </span>
+                  ))}
+                </h1>
+                <p className="mt-2 inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium uppercase tracking-[0.15em] text-azul-100 backdrop-blur">
+                  <span className="size-2 rounded-full bg-oro" aria-hidden />
+                  Instituto Alberto Einstein · AI Lab
+                </p>
               </div>
             </div>
             <p
@@ -131,10 +149,7 @@ export default function Inicio() {
               </ol>
             </div>
             <p className="text-xs text-azul-200 sm:col-span-2">
-              Vista previa: los datos son de ejemplo y lo que guardes se queda en este navegador ·{" "}
-              <Link href="/hub" className="font-semibold text-white underline underline-offset-2">
-                HUB del AI Lab
-              </Link>
+              Vista previa: los datos son de ejemplo y lo que guardes se queda en este navegador.
             </p>
           </div>
         </div>
