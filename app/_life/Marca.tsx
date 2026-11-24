@@ -1,10 +1,10 @@
 // Marca de IAE LIFE: el escudo del Instituto Alberto Einstein y el nombre.
-// El archivo public/img/logo-iae-ib.png trae el escudo y el logo IB; aquí se muestra solo el escudo.
+// Escudo del IAE recortado y centrado (public/img/escudo-iae.png, sacado de logo-iae-ib.png).
 export function Emblema({ className = "size-9" }: { className?: string }) {
   return (
-    <span className={`block shrink-0 overflow-hidden ${className}`} aria-hidden>
+    <span className={`block shrink-0 ${className}`} aria-hidden>
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/img/logo-iae-ib.png" alt="" className="h-full w-auto max-w-none" />
+      <img src="/img/escudo-iae.png" alt="" className="size-full object-contain" />
     </span>
   );
 }

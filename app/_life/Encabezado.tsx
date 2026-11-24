@@ -32,7 +32,8 @@ export default function Encabezado() {
     };
   }, [abierto]);
 
-  if (ruta.startsWith("/hub") || ruta.startsWith("/coordinador")) return null;
+  // En el inicio no hay barras: las funciones se abren con sus botones (pedido de Daniela, 24-nov).
+  if (ruta === "/" || ruta.startsWith("/hub") || ruta.startsWith("/coordinador")) return null;
 
   const activa = (f: Funcion) => ruta === f.href || ruta.startsWith(`${f.href}/`);
 

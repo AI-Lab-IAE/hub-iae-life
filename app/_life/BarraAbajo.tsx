@@ -17,7 +17,8 @@ const PESTANAS = [
 
 export default function BarraAbajo() {
   const ruta = usePathname();
-  if (ruta.startsWith("/hub") || ruta.startsWith("/coordinador")) return null;
+  // En el inicio no hay barras: las funciones se abren con sus botones (pedido de Daniela, 24-nov).
+  if (ruta === "/" || ruta.startsWith("/hub") || ruta.startsWith("/coordinador")) return null;
 
   return (
     <>
