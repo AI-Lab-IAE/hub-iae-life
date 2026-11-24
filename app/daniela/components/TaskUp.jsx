@@ -786,6 +786,7 @@ function Onboarding() {
     const partes = cuenta.nombre.trim().split(/\s+/);
     setData({
       ...anteriores,
+      settings: { ...anteriores.settings, idiomaPerfil: cuenta.idioma },
       user: {
         nombre: partes[0],
         apellido: partes.slice(1).join(" "),
@@ -2844,10 +2845,8 @@ function App() {
   const [editingTask, setEditingTask] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [showAI, setShowAI] = useState(false);
-  const saveTimer = useRef(null);
   const firstLoad = useRef(true);
   const claveActual = useRef(null);
-  const pendiente = useRef(null);
   const cuenta = useCuenta(); // undefined = todavía cargando
   const correo = cuenta?.correo ?? null;
 
@@ -2878,20 +2877,12 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [correo, cuenta === undefined]);
 
+  // Se guarda en cuanto cambia algo (localStorage es rápido): así no se pierde nada al cerrar o cambiar de cuenta.
   useEffect(() => {
     if (loading || !data || !claveActual.current) return;
     if (firstLoad.current) { firstLoad.current = false; return; }
-    const clave = claveActual.current;
-    if (saveTimer.current) clearTimeout(saveTimer.current);
-    pendiente.current = { clave, data };
-    saveTimer.current = setTimeout(() => { saveState(clave, data); pendiente.current = null; }, 350);
-    return () => clearTimeout(saveTimer.current);
+    saveState(claveActual.current, data);
   }, [data, loading]);
-
-  // Si TASKUP! se cierra (o cambia la cuenta) antes de guardar, se guarda lo pendiente.
-  useEffect(() => () => {
-    if (pendiente.current) saveState(pendiente.current.clave, pendiente.current.data);
-  }, []);
 
   const setData = useCallback((updater) => {
     setDataRaw((prev) => (typeof updater === "function" ? updater(prev) : updater));
