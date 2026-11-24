@@ -95,22 +95,22 @@ export default function Horario() {
 
   return (
     <main className="flex-1 bg-azul-50/60">
-      <section className="bg-linear-to-b from-azul-200/70 to-azul-50 text-azul-950">
+      <section className="bg-linear-to-br from-azul-900 via-azul-800 to-azul-700 text-white">
         <div className="mx-auto max-w-6xl px-4 pb-8 pt-8 md:pb-10 md:pt-10">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="flex items-center gap-2 text-sm font-semibold text-azul-900">
+              <p className="flex items-center gap-2 text-sm font-semibold text-lime-300">
                 <CalendarDays className="size-4" aria-hidden /> Mi horario
               </p>
               <h1 className="mt-1 text-3xl font-bold tracking-tight md:text-4xl">
                 {cuenta ? `Hola, ${cuenta.nombre.split(" ")[0]}` : "Horario de ejemplo"}
               </h1>
-              <p className="mt-2 max-w-xl text-sm text-azul-900/80">
+              <p className="mt-2 max-w-xl text-sm text-azul-100">
                 {NOTA_DIA} Los profesores y correos son inventados.
                 {!cuenta && (
                   <>
                     {" "}
-                    <Link href="/entrar" className="font-semibold text-azul-950 underline underline-offset-2">
+                    <Link href="/entrar" className="font-semibold text-white underline underline-offset-2">
                       Entra
                     </Link>{" "}
                     para ver el tuyo.
@@ -124,7 +124,7 @@ export default function Horario() {
                   <button
                     type="button"
                     onClick={restaurar}
-                    className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-azul-950 ring-1 ring-azul-200 hover:bg-azul-50"
+                    className="inline-flex items-center gap-2 rounded-full border border-white/40 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10"
                   >
                     <RotateCcw className="size-4" aria-hidden /> Volver al original
                   </button>
@@ -133,7 +133,7 @@ export default function Horario() {
                   type="button"
                   onClick={() => setEditando((e) => !e)}
                   aria-pressed={conEdicion}
-                  className="inline-flex items-center gap-2 rounded-full bg-azul-950 px-4 py-2 text-sm font-semibold text-white hover:bg-azul-900"
+                  className="inline-flex items-center gap-2 rounded-full bg-oro px-4 py-2 text-sm font-bold text-azul-950 hover:brightness-95"
                 >
                   {conEdicion ? <Check className="size-4" aria-hidden /> : <Pencil className="size-4" aria-hidden />}
                   {conEdicion ? "Listo" : "Ajustar"}
@@ -302,7 +302,7 @@ function Resumen({
         {e ? <e.Icono className="size-6" aria-hidden /> : <Clock className="size-6" aria-hidden />}
       </span>
       <div className="min-w-0">
-        <p className="text-xs font-semibold uppercase tracking-wide text-azul-800">{titulo}</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-lime-700">{titulo}</p>
         {m && bloque !== null ? (
           <>
             <p className="truncate text-lg font-bold">{m.nombre}</p>

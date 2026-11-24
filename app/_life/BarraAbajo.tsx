@@ -35,9 +35,9 @@ export default function BarraAbajo() {
                   <Link
                     href={p.href}
                     aria-current={activa ? "page" : undefined}
-                    className="-mt-6 flex flex-col items-center gap-1 text-xs font-semibold text-azul-950"
+                    className="-mt-6 flex flex-col items-center gap-1 text-xs font-semibold text-azul-800"
                   >
-                    <span className="grid size-14 place-items-center rounded-full bg-azul-950 text-white shadow-lg shadow-azul-950/30 ring-4 ring-white">
+                    <span className="grid size-14 place-items-center rounded-full bg-azul-800 text-white shadow-lg shadow-azul-900/30 ring-4 ring-white">
                       <p.icono className="size-6" aria-hidden />
                     </span>
                     {p.texto}
@@ -51,7 +51,7 @@ export default function BarraAbajo() {
                   href={p.href}
                   aria-current={activa ? "page" : undefined}
                   className={`flex flex-col items-center gap-1 pb-2 pt-2.5 text-xs font-medium ${
-                    activa ? "text-azul-950" : "text-azul-900/60"
+                    activa ? "text-azul-800" : "text-azul-950/60"
                   }`}
                 >
                   <p.icono className="size-6" strokeWidth={activa ? 2.4 : 1.8} aria-hidden />

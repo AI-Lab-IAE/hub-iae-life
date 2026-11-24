@@ -4,20 +4,22 @@
    así todos los módulos se ven iguales aunque el celular esté en modo oscuro. */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Azul de IAE LIFE (guía de Camille, 24-nov): principal #3478A8 ("azul-800"), oscuro #173B57 ("azul-950"),
-   acento celeste #A9D6E5 ("azul-300") y fondo #F1F6F8 ("azul-50"). Estilo pastel: tarjetas blancas y degradados suaves. */
+/* Colores del IAE (sacados de iae.edu, 24-nov): azul IAE #004D9C ("azul-800"), azul brillante #0082EC ("azul-500"),
+   fondo gris muy claro #F8FAFC. De acento: verde lima #97BD00 y dorado #F2B705 (en "lima" y "oro"). */
 @theme {
-  --color-azul-50: #f1f6f8;
-  --color-azul-100: #e3eff5;
-  --color-azul-200: #cbe3ee;
-  --color-azul-300: #a9d6e5;
-  --color-azul-400: #7cb6d4;
-  --color-azul-500: #5598c3;
-  --color-azul-600: #4087b6;
-  --color-azul-700: #3a7fae;
-  --color-azul-800: #3478a8;
-  --color-azul-900: #24577c;
-  --color-azul-950: #173b57;
+  --color-azul-50: #f1f5f9;
+  --color-azul-100: #e3edf8;
+  --color-azul-200: #c5d9f0;
+  --color-azul-300: #93b9e3;
+  --color-azul-400: #4f9ae6;
+  --color-azul-500: #0082ec;
+  --color-azul-600: #006fd0;
+  --color-azul-700: #005cb4;
+  --color-azul-800: #004d9c;
+  --color-azul-900: #003c7a;
+  --color-azul-950: #00285a;
+  --color-lima: #97bd00;
+  --color-oro: #f2b705;
 
   /* Los módulos que usan las paletas "indigo" o "blue" de Tailwind toman el azul IAE, sin tocar su código. */
   --color-blue-50: var(--color-azul-50);
@@ -46,7 +48,7 @@
 }
 
 :root {
-  --background: #f1f6f8;
+  --background: #f8fafc;
   --foreground: #10193a;
   --alto-encabezado: 3.5rem;
 }
@@ -54,7 +56,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-roboto), var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 

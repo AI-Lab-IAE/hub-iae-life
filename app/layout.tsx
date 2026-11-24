@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Roboto } from "next/font/google";
 import "./globals.css";
 import BarraAbajo from "./_life/BarraAbajo";
 import Encabezado from "./_life/Encabezado";
@@ -7,6 +7,13 @@ import Encabezado from "./_life/Encabezado";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+});
+
+// Roboto es la letra de la web del IAE (iae.edu).
+const roboto = Roboto({
+  variable: "--font-roboto",
+  subsets: ["latin"],
+  weight: ["400", "500", "700", "900"],
 });
 
 const geistMono = Geist_Mono({
@@ -33,7 +40,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="es" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+    <html lang="es" className={`${geistSans.variable} ${geistMono.variable} ${roboto.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         <Encabezado />
         {children}

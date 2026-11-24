@@ -29,28 +29,28 @@ const ATAJOS = [
     titulo: "Estudiar",
     texto: "Repasa antes del examen",
     icono: BookOpen,
-    fondo: "from-azul-300/70 to-azul-100",
+    fondo: "bg-azul-100 text-azul-800",
   },
   {
     href: "/daniela",
     titulo: "Tareas",
     texto: "Organiza tu semana",
     icono: ClipboardCheck,
-    fondo: "from-sky-200/80 to-azul-50",
+    fondo: "bg-lime-100 text-lime-800",
   },
   {
     href: "/camille",
     titulo: "El colegio",
     texto: "Mapa, clubes y contactos",
     icono: Compass,
-    fondo: "from-azul-200 to-white",
+    fondo: "bg-orange-50 text-orange-700",
   },
   {
     href: "/jonathan",
     titulo: "Faltar",
     texto: "Avisa tu ausencia",
     icono: Mail,
-    fondo: "from-cyan-100 to-azul-100",
+    fondo: "bg-red-50 text-red-700",
   },
 ];
 
@@ -91,29 +91,31 @@ export default function Hoy() {
   return (
     <main className="relative flex-1 overflow-hidden">
       <div
-        className="pointer-events-none absolute -right-32 -top-32 size-96 rounded-full bg-azul-300/50 blur-3xl"
+        className="pointer-events-none absolute inset-x-0 top-0 h-56 bg-linear-to-b from-azul-800 to-azul-700"
         aria-hidden
       />
       <div className="relative mx-auto max-w-2xl px-4 pb-10 pt-8">
-        <h1 className="text-4xl font-extrabold tracking-tight text-azul-950">
+        <h1 className="text-4xl font-black tracking-tight text-white">
           Hola{nombre ? `, ${nombre}` : ""} <span aria-hidden>👋</span>
         </h1>
-        <p className="mt-1 text-lg text-azul-900/75">¿Todo listo para tu día?</p>
-        <p className="mt-0.5 text-sm text-azul-950 first-letter:uppercase">{fecha ? FECHA.format(fecha) : " "}</p>
+        <p className="mt-1 text-lg text-azul-100">¿Todo listo para tu día?</p>
+        <p className="mt-0.5 text-sm font-medium text-lime-300 first-letter:uppercase">
+          {fecha ? FECHA.format(fecha) : " "}
+        </p>
 
         {/* Próxima clase */}
         <Link
           href="/horario"
-          className="mt-6 flex items-center gap-4 rounded-3xl bg-linear-to-br from-azul-300 via-azul-200 to-white p-5 text-azul-950 shadow-lg shadow-azul-900/10 ring-1 ring-azul-900/5 transition hover:-translate-y-0.5"
+          className="mt-6 flex items-center gap-4 rounded-3xl bg-white p-5 text-azul-950 shadow-xl shadow-azul-900/15 ring-1 ring-azul-900/5 transition hover:-translate-y-0.5"
         >
-          <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-azul-950 text-white">
+          <span className="grid size-14 shrink-0 place-items-center rounded-full bg-azul-800 text-white">
             <CalendarDays className="size-7" aria-hidden />
           </span>
           <span className="min-w-0 flex-1">
             <span className="block text-sm font-medium text-azul-900">
               {esAhora ? "Clase de ahora" : "Próxima clase"}
             </span>
-            <span className="block truncate text-2xl font-bold">
+            <span className="block truncate text-2xl font-bold text-azul-800">
               {clase ? clase.nombre : dia === null && fecha ? "Hoy no hay clases" : "No te quedan clases hoy"}
             </span>
             {clase && bloque !== null && (
@@ -136,11 +138,13 @@ export default function Hoy() {
             <Link
               key={a.href}
               href={a.href}
-              className={`flex min-h-32 flex-col justify-between rounded-3xl bg-linear-to-br ${a.fondo} p-4 ring-1 ring-black/5 transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-azul-900/10`}
+              className="flex min-h-32 flex-col justify-between rounded-2xl bg-white p-4 shadow-sm ring-1 ring-azul-900/5 transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-azul-900/10"
             >
-              <a.icono className="size-6 text-azul-900/70" aria-hidden />
+              <span className={`grid size-11 place-items-center rounded-full ${a.fondo}`}>
+                <a.icono className="size-5" aria-hidden />
+              </span>
               <span>
-                <span className="block font-bold text-azul-950">{a.titulo}</span>
+                <span className="block font-bold text-azul-800">{a.titulo}</span>
                 <span className="block text-sm text-azul-900">{a.texto}</span>
               </span>
             </Link>

@@ -5,7 +5,7 @@ import { useState } from "react";
 import { ArrowRight, CalendarDays, GraduationCap, LogIn, LogOut, Mail, Save, UserRound } from "lucide-react";
 import { guardarCuenta, iniciales, salir, useCuenta, type Cuenta } from "../_life/cuenta";
 
-const COLORES = ["#3478a8", "#255a80", "#0e7490", "#047857", "#b45309", "#be123c", "#7c3aed"];
+const COLORES = ["#004d9c", "#0082ec", "#0e7490", "#047857", "#b45309", "#be123c", "#7c3aed"];
 
 export default function Perfil() {
   const cuenta = useCuenta();
@@ -51,7 +51,7 @@ function PerfilDe({ cuenta }: { cuenta: Cuenta }) {
 
   return (
     <main className="flex-1 bg-azul-50/60">
-      <div className="h-36 bg-linear-to-b from-azul-200/70 to-azul-50" aria-hidden />
+      <div className="h-36 bg-linear-to-br from-azul-900 via-azul-800 to-azul-700" aria-hidden />
       <div className="mx-auto -mt-24 max-w-lg px-4 pb-10">
         <section className="life-entrar overflow-hidden rounded-3xl border border-azul-100 bg-white text-center shadow-xl shadow-azul-900/10">
           <div className="h-20" style={{ background: `linear-gradient(135deg, ${color}, ${color}99)` }} aria-hidden />
