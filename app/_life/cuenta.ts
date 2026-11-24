@@ -122,17 +122,21 @@ function suscribir(aviso: () => void) {
 // Una sola vez al cargar: lo guardado antes con el año real (o una fecha imposible) se reescribe sin año.
 // Cada registro (la cuenta y las preferencias de cada correo) se revisa por separado.
 function migrarCumples() {
+  let claves: string[] = [];
   try {
-    for (let i = 0; i < localStorage.length; i++) {
-      const clave = localStorage.key(i);
-      if (!clave || (clave !== CLAVE && !clave.startsWith("iae-life:prefs:"))) continue;
+    claves = Object.keys(localStorage).filter((c) => c === CLAVE || c.startsWith("iae-life:prefs:"));
+  } catch {
+    return; // modo privado
+  }
+  for (const clave of claves) {
+    try {
       const datos = JSON.parse(localStorage.getItem(clave) ?? "null") as Partial<Cuenta> | null;
       if (!datos || typeof datos !== "object" || datos.nacimiento === undefined) continue;
       const limpio = cumpleValido(datos.nacimiento);
       if (limpio !== datos.nacimiento) localStorage.setItem(clave, JSON.stringify({ ...datos, nacimiento: limpio }));
+    } catch {
+      // un registro dañado no frena a los demás
     }
-  } catch {
-    // modo privado o datos raros: se queda como estaba
   }
 }
 if (typeof window !== "undefined") migrarCumples();
