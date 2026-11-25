@@ -16,7 +16,12 @@ const EXTRAS: Record<string, Extra> = {
     estado: "lista",
     logo: "/img/logos/camille.png",
   },
-  marco: { icono: Brain, resumen: "Encuentra lo que no sabes antes del examen", estado: "lista" },
+  marco: {
+    icono: Brain,
+    resumen: "Encuentra lo que no sabes antes del examen",
+    estado: "lista",
+    logo: "/img/logos/marco.png",
+  },
   daniela: { icono: CalendarCheck, resumen: "Organiza tus tareas en tu horario", estado: "lista" },
   abraham: { icono: Megaphone, resumen: "Avisos que sí llegan a cada estudiante", estado: "lista" },
   jonathan: { icono: Mail, resumen: "Avisa tu ausencia a cada profesor", estado: "lista" },
