@@ -2,6 +2,8 @@
 
 // Historial de ausencias avisadas (idea de Jonathan), guardado solo en este navegador y por cuenta
 // con la clave "avisia:historial:<correo>". Sin cuenta no se guarda nada.
+// Solo datos mínimos: fecha, profesores y materias, categoría del motivo y cuántos correos.
+// Nunca el texto de los correos ni lo escrito a mano.
 import { useSyncExternalStore } from "react";
 import type { Registro } from "./tipos";
 
@@ -11,10 +13,22 @@ const MAXIMO = 30;
 const VACIO: Registro[] = [];
 const cache = new Map<string, { texto: string | null; lista: Registro[] }>();
 
-function esRegistro(r: unknown): r is Registro {
-  if (!r || typeof r !== "object") return false;
+// Se queda solo con los campos mínimos (lo guardado por una versión vieja puede traer más).
+function limpiar(r: unknown): Registro | null {
+  if (!r || typeof r !== "object") return null;
   const x = r as Partial<Registro>;
-  return typeof x.id === "string" && typeof x.fecha === "string" && Array.isArray(x.correos);
+  if (typeof x.id !== "string" || typeof x.fecha !== "string" || !Array.isArray(x.profesores)) return null;
+  const profesores = x.profesores
+    .filter((p) => p && typeof p.profesor === "string" && typeof p.materias === "string")
+    .map((p) => ({ profesor: p.profesor, materias: p.materias }));
+  return {
+    id: x.id,
+    fecha: x.fecha,
+    motivo: typeof x.motivo === "string" ? x.motivo : "Sin motivo",
+    profesores,
+    total: typeof x.total === "number" ? x.total : profesores.length,
+    creado: typeof x.creado === "number" ? x.creado : 0,
+  };
 }
 
 function leer(correo: string): Registro[] {
@@ -29,7 +43,7 @@ function leer(correo: string): Registro[] {
   let lista: Registro[] = VACIO;
   try {
     const datos: unknown = texto ? JSON.parse(texto) : null;
-    if (Array.isArray(datos)) lista = datos.filter(esRegistro);
+    if (Array.isArray(datos)) lista = datos.map(limpiar).filter((r): r is Registro => r !== null);
   } catch {
     lista = VACIO;
   }
@@ -50,22 +64,26 @@ function suscribir(aviso: () => void) {
   };
 }
 
-function escribir(correo: string, lista: Registro[]) {
+// Devuelve true solo si quedó guardado en el navegador.
+function escribir(correo: string, lista: Registro[]): boolean {
+  let ok = false;
   try {
     if (lista.length) localStorage.setItem(clave(correo), JSON.stringify(lista));
     else localStorage.removeItem(clave(correo));
+    ok = true;
   } catch {
     // sin espacio o modo privado: el historial no se guarda
   }
   window.dispatchEvent(new Event(EVENTO));
+  return ok;
 }
 
-export function agregarAlHistorial(correo: string, registro: Registro) {
-  escribir(correo, [registro, ...leer(correo)].slice(0, MAXIMO));
+export function agregarAlHistorial(correo: string, registro: Registro): boolean {
+  return escribir(correo, [registro, ...leer(correo)].slice(0, MAXIMO));
 }
 
-export function borrarDelHistorial(correo: string, id: string) {
-  escribir(
+export function borrarDelHistorial(correo: string, id: string): boolean {
+  return escribir(
     correo,
     leer(correo).filter((r) => r.id !== id),
   );

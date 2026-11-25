@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, Check, MailCheck, PartyPopper, Users } from "lucide-react";
-import { useCuenta } from "../../_life/cuenta";
+import { useCuenta, type Cuenta } from "../../_life/cuenta";
 import FormularioAusencia from "./FormularioAusencia";
 import TarjetaCorreo from "./TarjetaCorreo";
 import Historial from "./Historial";
@@ -41,9 +41,16 @@ function Pasos({ actual }: { actual: Paso }) {
   );
 }
 
-// Une el formulario, los correos y la confirmación.
+// Si cambia la cuenta (por ejemplo, alguien sale y entra otro en otra pestaña), todo el borrador
+// se descarta: el flujo se vuelve a montar desde cero con la nueva cuenta.
 export default function AvisIA() {
   const cuenta = useCuenta();
+  if (cuenta === undefined) return <div className="h-96" aria-busy />;
+  return <Flujo key={cuenta?.correo ?? "sin-cuenta"} cuenta={cuenta} />;
+}
+
+// Une el formulario, los correos y la confirmación.
+function Flujo({ cuenta }: { cuenta: Cuenta | null }) {
   const correoCuenta = cuenta?.correo ?? null;
   const cc = correoValido(cuenta?.correoPadres) ? cuenta.correoPadres.trim() : "";
 
@@ -51,14 +58,14 @@ export default function AvisIA() {
   const [ausencia, setAusencia] = useState<Ausencia | null>(null);
   const [correos, setCorreos] = useState<Correo[]>([]);
   const [abiertos, setAbiertos] = useState<string[]>([]);
+  // null = sin cuenta (no se guarda); true/false = si el historial quedó guardado.
+  const [guardado, setGuardado] = useState<boolean | null>(null);
   const arriba = useRef<HTMLDivElement>(null);
 
   // Al cambiar de paso, vuelve arriba para que se vea el inicio.
   useEffect(() => {
     arriba.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [paso]);
-
-  if (cuenta === undefined) return <div className="h-96" aria-busy />;
 
   function generar(a: Ausencia) {
     setAusencia(a);
@@ -74,19 +81,18 @@ export default function AvisIA() {
   function terminar() {
     if (ausencia && correoCuenta) {
       const motivo = MOTIVOS.find((m) => m.id === ausencia.motivo)?.etiqueta ?? "Sin motivo";
-      agregarAlHistorial(correoCuenta, {
+      // Solo lo mínimo: ni el texto de los correos ni lo escrito a mano.
+      const ok = agregarAlHistorial(correoCuenta, {
         id: `${Date.now()}`,
         fecha: ausencia.fecha,
         motivo,
-        cc,
-        correos: correos.map((c) => ({
-          profesor: c.profesor.nombre,
-          materias: materiasDe(c.clases),
-          asunto: c.asunto,
-          cuerpo: c.cuerpo,
-        })),
+        profesores: correos.map((c) => ({ profesor: c.profesor.nombre, materias: materiasDe(c.clases) })),
+        total: correos.length,
         creado: Date.now(),
       });
+      setGuardado(ok);
+    } else {
+      setGuardado(null);
     }
     setPaso("listo");
   }
@@ -216,9 +222,12 @@ export default function AvisIA() {
                 </li>
               ))}
             </ul>
-            {correoCuenta ? (
-              <p className="mt-5 text-xs text-azul-900/50">Quedó guardado en tu historial, solo en este navegador.</p>
-            ) : null}
+            {guardado === true && (
+              <p className="mt-5 text-xs text-azul-900/50">Quedó en tu historial, solo en este navegador.</p>
+            )}
+            {guardado === false && (
+              <p className="mt-5 text-xs text-amber-700">No se pudo guardar en el historial de este navegador.</p>
+            )}
             <button
               type="button"
               onClick={otra}

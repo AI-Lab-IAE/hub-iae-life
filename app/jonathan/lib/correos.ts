@@ -232,8 +232,9 @@ export function generarCorreos(ausencia: Ausencia, tono: Tono = "estandar", larg
   });
 }
 
-// Un solo correo, sin espacios, comas ni caracteres que rompan el enlace (?, &, #, %, <, >...).
-const CORREO = /^[A-Za-z0-9._+-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}$/;
+// La misma regla que usa Perfil para el correo de los padres. Los caracteres raros (?, &, #, %...)
+// no rompen el enlace porque cada parte se codifica con encodeURIComponent.
+const CORREO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function correoValido(v: string | undefined): v is string {
   return !!v && CORREO.test(v.trim());

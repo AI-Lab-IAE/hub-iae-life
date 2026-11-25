@@ -34,7 +34,7 @@ export default function Historial({ correo }: { correo: string }) {
                     {fechaEnPalabras(r.fecha)}
                   </span>
                   <span className="block truncate text-xs text-azul-900/60">
-                    {r.motivo} · {r.correos.length} {r.correos.length === 1 ? "profesor" : "profesores"}
+                    {r.motivo} · {r.total} {r.total === 1 ? "correo" : "correos"}
                   </span>
                 </span>
                 <ChevronDown
@@ -44,16 +44,14 @@ export default function Historial({ correo }: { correo: string }) {
               </button>
               {ver && (
                 <div className="mt-2 space-y-2">
-                  {r.correos.map((c, i) => (
-                    <details key={i} className="rounded-xl bg-azul-50/70 px-3 py-2 text-sm">
-                      <summary className="cursor-pointer font-medium text-azul-900">
-                        {c.profesor} · {c.materias}
-                      </summary>
-                      <p className="mt-2 text-xs font-semibold text-azul-900/70">{c.asunto}</p>
-                      {r.cc && <p className="text-xs text-azul-900/50">CC: {r.cc}</p>}
-                      <p className="mt-2 whitespace-pre-line text-azul-950">{c.cuerpo}</p>
-                    </details>
-                  ))}
+                  <ul className="space-y-1 rounded-xl bg-azul-50/70 px-3 py-2 text-sm">
+                    {r.profesores.map((p, i) => (
+                      <li key={i} className="text-azul-900">
+                        <span className="font-medium">{p.profesor}</span>
+                        <span className="text-azul-900/60"> · {p.materias}</span>
+                      </li>
+                    ))}
+                  </ul>
                   <button
                     type="button"
                     onClick={() => borrarDelHistorial(correo, r.id)}

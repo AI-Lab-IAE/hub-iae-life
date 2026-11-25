@@ -34,12 +34,13 @@ export type Correo = Opciones & {
   cuerpo: string;
 };
 
-// Lo que queda en el historial al terminar.
+// Lo que queda en el historial al terminar. A propósito es poco: ni el texto de los correos
+// ni lo que se escribió a mano (puede tener detalles de salud), solo la categoría del motivo.
 export type Registro = {
   id: string;
   fecha: string; // "AAAA-MM-DD" de la ausencia
-  motivo: string;
-  cc: string;
-  correos: { profesor: string; materias: string; asunto: string; cuerpo: string }[];
+  motivo: string; // etiqueta de la lista ("Cita médica", "Sin motivo"...)
+  profesores: { profesor: string; materias: string }[];
+  total: number; // cuántos correos se escribieron
   creado: number; // Date.now()
 };
