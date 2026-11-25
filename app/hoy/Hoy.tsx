@@ -66,6 +66,11 @@ const FECHA = new Intl.DateTimeFormat("es-PA", {
   timeZone: "America/Panama",
 });
 const DIA_CORTO = new Intl.DateTimeFormat("es-PA", { day: "numeric", month: "short", timeZone: "America/Panama" });
+// Lo guardado puede traer una fecha rota: entonces no se muestra (format() con una fecha inválida rompe la página).
+function diaCorto(fecha: string | Date): string {
+  const f = typeof fecha === "string" ? new Date(fecha) : fecha;
+  return Number.isNaN(f.getTime()) ? "" : DIA_CORTO.format(f);
+}
 
 export default function Hoy() {
   const cuenta = useCuenta();
@@ -171,7 +176,7 @@ export default function Hoy() {
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-azul-950">{t.nombre}</span>
                       <span className="block text-xs text-azul-900/55">
-                        {[t.materia, t.entrega && `Entrega ${DIA_CORTO.format(new Date(`${t.entrega}T12:00:00-05:00`))}`]
+                        {[t.materia, t.entrega && `Entrega ${diaCorto(`${t.entrega}T12:00:00-05:00`)}`]
                           .filter(Boolean)
                           .join(" · ")}
                       </span>
@@ -201,7 +206,7 @@ export default function Hoy() {
                     <span className="min-w-0 flex-1">
                       <span className="block text-azul-950">{a.texto}</span>
                       <span className="block text-xs text-azul-700">
-                        {DIA_CORTO.format(new Date(a.creado))} · {a.audiencia}
+                        {[diaCorto(a.creado), a.audiencia].filter(Boolean).join(" · ")}
                         {a.urgente && " · Urgente"}
                       </span>
                     </span>

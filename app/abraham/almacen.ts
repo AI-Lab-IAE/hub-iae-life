@@ -11,11 +11,21 @@ const CLAVE = "avisoya_avisos";
 const oyentes = new Set<() => void>();
 let cache: Aviso[] | null = null;
 
+// Si ya había avisos guardados de antes, se agregan los de ejemplo que falten (por id),
+// por ejemplo los anuncios que pasaron de Colegio a Avisos. Los que el usuario ya tenía no se tocan.
+function conEjemplosQueFaltan(guardados: Aviso[]): Aviso[] {
+  const ids = new Set(guardados.map((a) => a.id));
+  const faltan = avisosIniciales.filter((a) => !ids.has(a.id));
+  if (!faltan.length) return guardados;
+  return [...guardados, ...faltan].sort((a, b) => b.creado.localeCompare(a.creado));
+}
+
 function leer(): Aviso[] {
   if (cache) return cache;
   try {
     const raw = localStorage.getItem(CLAVE);
-    cache = raw ? (JSON.parse(raw) as Aviso[]) : avisosIniciales;
+    const datos: unknown = raw ? JSON.parse(raw) : null;
+    cache = Array.isArray(datos) ? conEjemplosQueFaltan(datos as Aviso[]) : avisosIniciales;
   } catch {
     cache = avisosIniciales;
   }

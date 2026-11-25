@@ -2,17 +2,26 @@
 
 // Lee (sin cambiar nada) las tareas que guarda la función Tareas en este navegador,
 // para que Hoy muestre la misma lista de pendientes. La única lista de pendientes es la de Tareas.
-// Misma clave que usa components/TaskUp.jsx: "taskup_state_v2" (+ ":<correo>" con cuenta).
+// Misma clave que usa components/TaskUp.jsx: "taskup_state_v2:<correo>". Sin cuenta no hay tareas.
 import { useSyncExternalStore } from "react";
 
-export type TareaPendiente = { id: string; nombre: string; materia: string; entrega: string };
+export type TareaPendiente = { id: string; nombre: string; materia: string; entrega: string }; // entrega: "AAAA-MM-DD" o ""
 
 const BASE = "taskup_state_v2";
-const claveDe = (correo: string | null) => (correo ? `${BASE}:${correo}` : BASE);
+const claveDe = (correo: string) => `${BASE}:${correo}`;
 const VACIO: TareaPendiente[] = [];
+// Solo fechas "AAAA-MM-DD" que existen; cualquier otra cosa queda sin fecha (así Hoy no se rompe al mostrarla).
+function fechaValida(v: unknown): string {
+  if (typeof v !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(v)) return "";
+  const [a, m, d] = v.split("-").map(Number);
+  const f = new Date(Date.UTC(a, m - 1, d));
+  return f.getUTCFullYear() === a && f.getUTCMonth() === m - 1 && f.getUTCDate() === d ? v : "";
+}
+
 const cache = new Map<string, { texto: string | null; lista: TareaPendiente[] }>();
 
 function leer(correo: string | null): TareaPendiente[] {
+  if (!correo) return VACIO;
   const clave = claveDe(correo);
   let texto: string | null;
   try {
@@ -32,7 +41,12 @@ function leer(correo: string | null): TareaPendiente[] {
             !!t && typeof t === "object" && typeof (t as { name?: unknown }).name === "string",
         )
         .filter((t) => !t.completed && !t.delivered)
-        .map((t) => ({ id: String(t.id), nombre: t.name, materia: t.subject ?? "", entrega: t.dueDate ?? "" }))
+        .map((t) => ({
+          id: String(t.id),
+          nombre: t.name,
+          materia: typeof t.subject === "string" ? t.subject : "",
+          entrega: fechaValida(t.dueDate),
+        }))
         .sort((a, b) => (a.entrega || "9999").localeCompare(b.entrega || "9999"));
     }
   } catch {

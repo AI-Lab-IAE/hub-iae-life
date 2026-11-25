@@ -2,6 +2,7 @@
 
 - **Proyecto:** TASKUP!
 - **Para quién es:** estudiantes que tienen dificultad para organizar su tiempo entre tareas, exámenes, proyectos y actividades.
+- **En IAE LIFE se llama «Tareas»** (`/daniela`). El nombre TASKUP! y la autora solo salen en Créditos.
 - **Funcionalidad central:** TASKUP! organiza automáticamente las tareas del estudiante dentro de su horario real. Usa la fecha de entrega, el tiempo que necesita cada trabajo y los espacios libres que de verdad existen. No toca clases, actividades, eventos, sueño ni tiempo personal.
 
 ## Qué hace hoy
@@ -22,16 +23,24 @@
 
 **Inteligencia artificial**
 - Asistente tipo chat que usa los datos del usuario cuando la pregunta es sobre su horario o tareas.
-- "Ayúdame a estudiar": con texto o una imagen genera flashcards y un quiz.
+- "Ayúdame a estudiar" abre la función Estudiar de IAE LIFE (una sola versión de cada cosa).
 
 **Otras funciones**
 - Historial con opciones de recuperar y deshacer cambios del horario.
-- Pantalla de progreso con estadísticas reales, español/inglés, modo día/noche.
+- Pantalla de progreso con estadísticas reales, español/inglés.
+
+**Una sola app (25-nov)**
+- Usa el marco de IAE LIFE: franja, pestañas, colores y letra comunes (sin menú lateral, logo ni letra propios).
+- Solo con la cuenta de IAE LIFE: no pide nombre, rol ni fecha de nacimiento.
+- Las clases vienen de Horario (`app/_life/horario.ts`) y no se editan aquí; aquí solo se agregan actividades y compromisos.
+- Es la única lista de pendientes: Hoy la lee (`lib/tareas.ts`) y Colegio abre "Agregar trabajo" ya escrito (`/daniela?nueva=...&materia=...`).
+- Los "Mis pendientes" que alguien tenía en la vieja guía de Colegio se pasan solos a Tareas la primera vez.
 
 ## Cómo está armado
 
 - `components/TaskUp.jsx`: toda la app (React). Los datos se guardan solo en el navegador (`localStorage`).
-- `api/asistente/route.ts` y `api/estudiar/route.ts`: llaman a la IA desde el servidor, así la llave de API nunca llega al navegador.
+- `api/asistente/route.ts`: llama a la IA desde el servidor, así la llave de API nunca llega al navegador.
+- `lib/tareas.ts`: lee las tareas pendientes para la pantalla Hoy (sin cambiarlas).
 - `lib/`: conexión con Claude, formato de los pedidos y límite de uso por hora.
 
 ## Pruebas del planificador

@@ -1,42 +1,36 @@
 "use client";
 
 import { useState } from "react";
+import { useCuenta } from "../../_life/cuenta";
+import { Pestanas } from "../../_life/Pantalla";
 import { reiniciar } from "../almacen";
 import { VistaEstudiante } from "./VistaEstudiante";
 import { VistaProfesor } from "./VistaProfesor";
 
 type Vista = "profesor" | "estudiante";
 
-// Las dos caras de AvisoYa en una sola página: quien manda el aviso y quien lo recibe.
+// Las dos caras de Avisos en una sola página: quien manda el aviso y quien lo recibe.
+// Abre en la vista que corresponde a tu cuenta de IAE LIFE (profesor o estudiante).
 export function AvisoYa() {
-  const [vista, setVista] = useState<Vista>("profesor");
+  const cuenta = useCuenta();
+  const [elegida, setVista] = useState<Vista | null>(null);
+  const vista: Vista = elegida ?? (cuenta?.rol === "profesor" ? "profesor" : "estudiante");
 
   return (
-    <div className="mt-6 flex flex-col gap-6">
-      <div role="tablist" aria-label="Vista" className="grid grid-cols-2 gap-1 rounded-xl bg-zinc-100 p-1 dark:bg-zinc-800">
-        {(["profesor", "estudiante"] as const).map((v) => (
-          <button
-            key={v}
-            type="button"
-            role="tab"
-            aria-selected={vista === v}
-            onClick={() => setVista(v)}
-            className={`min-h-11 rounded-lg text-sm font-semibold ${
-              vista === v ? "bg-white shadow-sm dark:bg-zinc-950" : "text-zinc-600 dark:text-zinc-400"
-            }`}
-          >
-            {v === "profesor" ? "Profesor" : "Estudiante"}
-          </button>
-        ))}
-      </div>
+    <div className="flex flex-col gap-6">
+      <Pestanas
+        etiqueta="Vista"
+        opciones={[
+          { id: "estudiante", texto: "Estudiante" },
+          { id: "profesor", texto: "Profesor" },
+        ]}
+        valor={vista}
+        onCambio={setVista}
+      />
 
       {vista === "profesor" ? <VistaProfesor /> : <VistaEstudiante />}
 
-      <button
-        type="button"
-        onClick={reiniciar}
-        className="min-h-11 self-start text-sm text-zinc-500 underline"
-      >
+      <button type="button" onClick={reiniciar} className="min-h-11 self-start text-sm text-azul-900/60 underline">
         Reiniciar la demo
       </button>
     </div>

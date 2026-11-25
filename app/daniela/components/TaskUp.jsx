@@ -4,10 +4,13 @@
 // recordatorios). Funciona bien; pasarlos a estado derivado queda en DESPUES.md.
 /* eslint-disable react-hooks/set-state-in-effect */
 
+import Link from "next/link";
 import { useCuenta } from "../../_life/cuenta";
+import { BLOQUES, DIAS, hayBloque, useHorario } from "../../_life/horario";
+import { Pantalla, Pestanas, botonPrimario } from "../../_life/Pantalla";
 import React, { useState, useEffect, useRef, useMemo, useCallback, createContext, useContext } from "react";
 import {
-  Home, CalendarDays, PlusCircle, CheckCircle2, TrendingUp, Settings as SettingsIcon,
+  Home, CalendarDays, ClipboardCheck, PlusCircle, CheckCircle2, TrendingUp, Settings as SettingsIcon,
   Info, Plus, X, Check, Undo2, Trash2, PencilLine, Moon, SunMedium, Bell, BellOff,
   ChevronLeft, ChevronRight, Clock, AlertTriangle, RotateCcw, Sparkles, BookOpen,
   ClipboardList, History as HistoryIcon, User, GraduationCap, ShieldCheck, Wrench,
@@ -73,24 +76,16 @@ const COLORS = {
 
 const EVENT_COLORS = ["#2F80ED", "#EB5757", "#9B51E0", "#219653", "#F2994A", "#2D9CDB", "#BB6BD9"];
 
+// Colores de IAE LIFE (los mismos tokens de app/globals.css). Tareas usa siempre el tema claro,
+// como el resto de la app; el modo noche para toda la app queda en DESPUES.md.
 const THEMES = {
   dia: {
-    bg: "#F2F6FE", bgSoft: "#E3EBFC", surface: "#FFFFFF", surfaceAlt: "#EEF3FD",
-    text: "#10193A", textMuted: "#5A6488", border: "#DCE5F8",
-    primary: "#1D3A8A", primarySoft: "#E3EBFC", primaryText: "#FFFFFF",
-    accent: "#FF6B57", accentSoft: "#FFE6E1", shadow: "0 8px 24px -12px rgba(35,38,90,0.18)",
-    headerGrad: "linear-gradient(135deg, #E3EBFC 0%, #F2F6FE 60%, #FFFFFF 100%)",
-  },
-  noche: {
-    bg: "#0E1020", bgSoft: "#151833", surface: "#1B1E3A", surfaceAlt: "#232748",
-    text: "#EFEFFC", textMuted: "#9B9FC4", border: "#2C3060",
-    primary: "#8285FF", primarySoft: "#2A2C63", primaryText: "#0E1020",
-    accent: "#FF8A73", accentSoft: "#3A2740", shadow: "0 8px 24px -10px rgba(0,0,0,0.5)",
-    headerGrad: "linear-gradient(135deg, #1B1E3A 0%, #221B3A 60%, #2A1F33 100%)",
+    bg: "#f8fafc", bgSoft: "#e3edf8", surface: "#FFFFFF", surfaceAlt: "#f1f5f9",
+    text: "#00285a", textMuted: "rgba(0, 60, 122, 0.65)", border: "#e3edf8",
+    primary: "#004d9c", primarySoft: "#e3edf8", primaryText: "#FFFFFF",
+    accent: "#f2b705", accentSoft: "#fdf3d1", shadow: "0 1px 2px rgba(0, 40, 90, 0.06)",
   },
 };
-
-const FONT_IMPORT = `@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap');`;
 
 /* ============================================================
    ZONA HORARIA: PANAMÁ (UTC-5), fija para todo el app
@@ -579,6 +574,75 @@ async function saveState(clave, data) {
 }
 
 /* ============================================================
+   UN SOLO HORARIO Y UNA SOLA LISTA DE PENDIENTES (IAE LIFE)
+============================================================ */
+const dosDigitos = (h) => h.padStart(5, "0"); // "8:05" → "08:05"
+
+// Las clases de Horario (app/_life/horario.ts) entran como bloques fijos "de IAE LIFE".
+// No se editan aquí: se cambian en Horario y Tareas las vuelve a leer.
+function bloquesDeHorario(horario) {
+  if (!horario) return [];
+  const bloques = [];
+  BLOQUES.forEach((b, i) => {
+    DIAS.forEach((_, d) => {
+      const nombre = horario[i]?.[d];
+      if (!nombre || !hayBloque(i, d)) return;
+      bloques.push({ id: `iae-${i}-${d}`, title: nombre, category: "clase", days: [DAY_KEYS[d]], start: dosDigitos(b.desde), end: dosDigitos(b.hasta), deIAE: true });
+    });
+  });
+  return bloques;
+}
+
+// Pone las clases de Horario en los datos (y reprograma) solo si cambiaron.
+function conClasesDeHorario(d, bloques) {
+  const propios = (d.fixedBlocks || []).filter((b) => !b.deIAE);
+  const actuales = (d.fixedBlocks || []).filter((b) => b.deIAE);
+  if (JSON.stringify(actuales) === JSON.stringify(bloques)) return d;
+  const nd = { ...d, fixedBlocks: [...bloques, ...propios] };
+  return { ...nd, tasks: scheduleAll(nd) };
+}
+
+// "Mis pendientes" de la vieja guía de Colegio se pasan una sola vez a Tareas (la única lista).
+// Sin fecha, se les pone una semana desde hoy (Tareas necesita fecha de entrega). Las notas no se pasan.
+const CLAVE_GUIA = "iae-school-guide:pendientes";
+const TIPO_GUIA = { Tarea: "tarea", Examen: "examen", Proyecto: "proyecto", Otro: "otro" };
+function pendientesDeLaGuia() {
+  try {
+    const lista = JSON.parse(localStorage.getItem(CLAVE_GUIA) ?? "null");
+    if (!Array.isArray(lista)) return [];
+    return lista
+      .filter((p) => p && typeof p.titulo === "string" && p.titulo.trim() && p.hecho !== true)
+      .map((p) => {
+        const type = TIPO_GUIA[p.tipo] ?? "otro";
+        const dueDate = typeof p.fecha === "string" && !Number.isNaN(parseISO(p.fecha).getTime()) && /^\d{4}-\d{2}-\d{2}$/.test(p.fecha) ? p.fecha : toISO(addDays(parseISO(todayISO()), 7));
+        return {
+          id: uid(), name: p.titulo.trim(), subject: typeof p.materia === "string" ? p.materia : "", type, difficulty: "media",
+          dueDate, durationMin: estimateDuration(type, "media"), durationMode: "auto", spreadDays: 1, spreadMode: "auto", spreadManualMinutes: null,
+          priority: "media", priorityAuto: true, sessions: [], completed: false, completedAt: null, delivered: false,
+          unscheduled: 0, needsSuggestion: false, progress: 0, createdAt: new Date().toISOString(),
+        };
+      });
+  } catch {
+    return [];
+  }
+}
+function borrarPendientesDeLaGuia() {
+  try { localStorage.removeItem(CLAVE_GUIA); } catch { /* modo privado */ }
+}
+
+// Colegio puede abrir "Agregar trabajo" ya escrito: /daniela?nueva=...&materia=...
+function leerPrefill() {
+  try {
+    const q = new URLSearchParams(window.location.search);
+    const name = q.get("nueva")?.slice(0, 120).trim();
+    if (!name) return null;
+    return { name, subject: q.get("materia")?.slice(0, 60).trim() || "" };
+  } catch {
+    return null;
+  }
+}
+
+/* ============================================================
    LLAMADAS A LA IA (pasan por el servidor del HUB, que guarda la llave)
 ============================================================ */
 async function pedirIA(ruta, cuerpo) {
@@ -725,7 +789,7 @@ function ModalHeader({ title, onClose, icon: Icon }) {
     <div className="flex items-center justify-between px-6 py-5 sticky top-0 z-10" style={{ background: th.surface, borderBottom: `1px solid ${th.border}` }}>
       <div className="flex items-center gap-2.5">
         {Icon && <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: th.primarySoft, color: th.primary }}><Icon size={17} /></div>}
-        <h2 className="font-bold text-lg" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}>{title}</h2>
+        <h2 className="font-bold text-lg" style={{ color: th.text }}>{title}</h2>
       </div>
       <button onClick={onClose} className="w-8 h-8 rounded-full flex items-center justify-center hover:opacity-70" style={{ background: th.surfaceAlt, color: th.textMuted }}>
         <X size={16} />
@@ -742,7 +806,7 @@ function ConfirmModal({ title, message, confirmLabel, cancelLabel, onConfirm, on
         <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4" style={{ background: danger ? "#FDECEC" : th.primarySoft, color: danger ? "#C53030" : th.primary }}>
           <AlertTriangle size={22} />
         </div>
-        <h3 className="font-bold text-lg mb-2" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}>{title}</h3>
+        <h3 className="font-bold text-lg mb-2" style={{ color: th.text }}>{title}</h3>
         <p className="text-sm mb-6" style={{ color: th.textMuted }}>{message}</p>
         <div className="flex gap-3">
           <Btn variant="ghost" onClick={onCancel} className="flex-1">{cancelLabel}</Btn>
@@ -757,154 +821,65 @@ function ConfirmModal({ title, message, confirmLabel, cancelLabel, onConfirm, on
    ONBOARDING — todos los datos iniciales juntos, luego intro
 ============================================================ */
 function Onboarding() {
-  const { setData, th, lang, tx } = useApp();
-  // Si ya entraste a IAE LIFE con tu cuenta, TASKUP! ya sabe quién eres: no se piden tus datos otra vez.
+  const { setData, tx } = useApp();
+  // La cuenta de IAE LIFE ya dice quién eres: Tareas no pide nombre, rol ni fecha de nacimiento.
   const cuenta = useCuenta();
-  const conCuenta = Boolean(cuenta);
   const [step, setStep] = useState(0);
-  const [nombre, setNombre] = useState("");
-  const [apellido, setApellido] = useState("");
-  const [rol, setRol] = useState("");
-  const [rolOtro, setRolOtro] = useState("");
-  const [genero, setGenero] = useState("");
-  const [nacimiento, setNacimiento] = useState("");
-  const [err, setErr] = useState("");
-
-  const steps = conCuenta ? ["intro1", "intro2"] : ["datos", "intro1", "intro2"];
-
-  const key = steps[Math.min(step, steps.length - 1)];
+  const steps = ["intro1", "intro2"];
+  const key = steps[step];
 
   function next() {
-    setErr("");
-    if (key === "datos") {
-      if (!nombre.trim()) return setErr(tx("Escribe tu nombre.", "Enter your first name."));
-      if (!apellido.trim()) return setErr(tx("Escribe tu apellido.", "Enter your last name."));
-      if (!rol || (rol === "otro" && !rolOtro.trim())) return setErr(tx("Selecciona qué eres.", "Select what you are."));
-      if (!genero) return setErr(tx("Selecciona una opción de género.", "Select a gender option."));
-      if (!nacimiento) return setErr(tx("Selecciona tu fecha de nacimiento.", "Select your date of birth."));
-    }
-    if (step >= steps.length - 1) {
-      setData((d) => ({
-        ...d,
-        user: conCuenta
-          ? {
-              nombre: cuenta.nombre.trim().split(/\s+/)[0],
-              apellido: cuenta.nombre.trim().split(/\s+/).slice(1).join(" "),
-              rol: cuenta.rol === "profesor" ? "profesor" : "estudiante",
-              rolOtro: "",
-              genero: cuenta.genero ?? "",
-              nacimiento: cuenta.nacimiento ?? "",
-            }
-          : { nombre: nombre.trim(), apellido: apellido.trim(), rol, rolOtro: rol === "otro" ? rolOtro.trim() : "", genero, nacimiento },
-        onboarded: true,
-        introDone: true,
-      }));
-      return;
-    }
-    setStep((s) => s + 1);
+    if (step < steps.length - 1) return setStep((s) => s + 1);
+    const partes = cuenta.nombre.trim().split(/\s+/);
+    setData((d) => ({
+      ...d,
+      user: {
+        nombre: partes[0],
+        apellido: partes.slice(1).join(" "),
+        rol: cuenta.rol === "profesor" ? "profesor" : "estudiante",
+        rolOtro: "",
+        genero: cuenta.genero ?? "",
+        nacimiento: cuenta.nacimiento ?? "",
+      },
+      onboarded: true,
+      introDone: true,
+    }));
   }
-  function back() {
-    setErr("");
-    if (step > 0) setStep((s) => s - 1);
-  }
-
-  const progress = ((step + 1) / steps.length) * 100;
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-5" style={{ background: th.headerGrad }}>
-      <div className="w-full max-w-md">
-        <div className="flex items-center gap-2 mb-6 justify-center">
-          <div className="w-10 h-10 rounded-2xl flex items-center justify-center" style={{ background: th.primary }}>
-            <Sparkles size={20} color="#fff" />
-          </div>
-          <span className="font-extrabold text-2xl" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}>TASKUP!</span>
-        </div>
-
-        <div className="h-1.5 rounded-full mb-8 overflow-hidden" style={{ background: th.surfaceAlt }}>
-          <div className="h-full rounded-full transition-all" style={{ width: `${progress}%`, background: th.primary }} />
-        </div>
-
-
-        <Card>
-          {key === "datos" && (
-            <>
-              <h2 className="font-bold text-xl mb-1" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}>{tx("Cuéntanos sobre ti", "Tell us about yourself")}</h2>
-              <p className="text-sm mb-5" style={{ color: th.textMuted }}>{tx("Completa tus datos para comenzar.", "Fill in your info to get started.")}</p>
-              <Field label={tx("Nombre", "First name")}>
-                <TextInput autoFocus value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder={tx("Nombre", "First name")} />
-              </Field>
-              <Field label={tx("Apellido", "Last name")}>
-                <TextInput value={apellido} onChange={(e) => setApellido(e.target.value)} placeholder={tx("Apellido", "Last name")} />
-              </Field>
-              <Field label={tx("Fecha de nacimiento", "Date of birth")}>
-                <TextInput type="date" value={nacimiento} onChange={(e) => setNacimiento(e.target.value)} />
-              </Field>
-              <Field label={tx("¿Qué eres?", "What are you?")}>
-                <div className="grid grid-cols-2 gap-2.5 mb-2">
-                  {ROLE_KEYS.map((r) => {
-                    const Icon = ROLE_ICON[r];
-                    return (
-                      <button key={r} onClick={() => setRol(r)} className="flex flex-col items-center gap-1.5 py-3 rounded-2xl border transition"
-                        style={rol === r ? { background: th.primarySoft, borderColor: th.primary, color: th.primary } : { background: th.surfaceAlt, borderColor: th.border, color: th.textMuted }}>
-                        <Icon size={18} />
-                        <span className="text-xs font-semibold">{ROLE_LABEL[lang][r]}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-                {rol === "otro" && (
-                  <TextInput className="mt-1" placeholder={tx("¿Qué eres?", "What are you?")} value={rolOtro} onChange={(e) => setRolOtro(e.target.value)} />
-                )}
-              </Field>
-              <Field label={tx("Género", "Gender")}>
-                <div className="grid grid-cols-2 gap-2.5">
-                  {["mujer", "hombre"].map((g) => (
-                    <button key={g} onClick={() => setGenero(g)} className="py-3 rounded-2xl border font-semibold text-sm transition"
-                      style={genero === g ? { background: th.primarySoft, borderColor: th.primary, color: th.primary } : { background: th.surfaceAlt, borderColor: th.border, color: th.textMuted }}>
-                      {g === "mujer" ? tx("Mujer", "Woman") : tx("Hombre", "Man")}
-                    </button>
-                  ))}
-                </div>
-              </Field>
-            </>
-          )}
-          {key === "intro1" && (
-            <>
-              <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4" style={{ background: th.primarySoft, color: th.primary }}><Sparkles size={22} /></div>
-              <h2 className="font-bold text-xl mb-3" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}>{tx("¿Qué es TASKUP?", "What is TASKUP?")}</h2>
-              <p className="text-sm leading-relaxed" style={{ color: th.textMuted }}>
-                {tx(
-                  "TASKUP! es tu asistente de organización del tiempo: analiza tu horario, tus responsabilidades y tus trabajos pendientes. En vez de solo hacer una lista, decide cuándo es el mejor momento para hacer cada cosa. Tú siempre tienes el control final de tu horario.",
-                  "TASKUP! is your time-organization assistant: it analyzes your schedule, your responsibilities, and your pending work. Instead of just making a list, it decides the best moment to do each thing. You always keep final control of your schedule."
-                )}
-              </p>
-            </>
-          )}
-          {key === "intro2" && (
-            <>
-              <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4" style={{ background: th.primarySoft, color: th.primary }}><ClipboardList size={22} /></div>
-              <h2 className="font-bold text-xl mb-3" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}>{tx("¿Cómo se usa?", "How does it work?")}</h2>
-              <p className="text-sm leading-relaxed" style={{ color: th.textMuted }}>
-                {tx(
-                  "Agrega tu horario, tus actividades, tus horas de sueño y tu tiempo personal. Luego agrega tus trabajos con su fecha de entrega. TASKUP! usa toda esa información para organizar automáticamente cuándo hacer cada trabajo, respetando siempre tu descanso y tu tiempo personal.",
-                  "Add your schedule, activities, sleep hours and personal time. Then add your assignments with their due dates. TASKUP! uses all of that information to automatically organize when to do each task, always respecting your rest and personal time."
-                )}
-              </p>
-            </>
-          )}
-
-          {err && <p className="text-xs font-semibold mt-3" style={{ color: "#C53030" }}>{err}</p>}
-
-          <div className="flex gap-3 mt-6">
-            {step > 0 && <Btn variant="ghost" onClick={back}>{tx("Atrás", "Back")}</Btn>}
-            <Btn onClick={next} className="flex-1">
-              {step === steps.length - 1 ? tx("Ir a Inicio", "Go to Home") : tx("Continuar", "Continue")}
-              <ArrowRight size={16} />
-            </Btn>
-          </div>
-        </Card>
+    <Card className="mx-auto max-w-md">
+      {key === "intro1" && (
+        <>
+          <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4 bg-azul-100 text-azul-800"><Sparkles size={22} /></div>
+          <h2 className="font-bold text-xl mb-3 text-azul-950">{tx("¿Qué hace Tareas?", "What does Tasks do?")}</h2>
+          <p className="text-sm leading-relaxed text-azul-900/70">
+            {tx(
+              "Tareas es tu asistente de organización del tiempo: analiza tu horario, tus responsabilidades y tus trabajos pendientes. En vez de solo hacer una lista, decide cuándo es el mejor momento para hacer cada cosa. Tú siempre tienes el control final de tu horario.",
+              "Tasks is your time-organization assistant: it analyzes your schedule, your responsibilities, and your pending work. Instead of just making a list, it decides the best moment to do each thing. You always keep final control of your schedule."
+            )}
+          </p>
+        </>
+      )}
+      {key === "intro2" && (
+        <>
+          <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4 bg-azul-100 text-azul-800"><ClipboardList size={22} /></div>
+          <h2 className="font-bold text-xl mb-3 text-azul-950">{tx("¿Cómo se usa?", "How does it work?")}</h2>
+          <p className="text-sm leading-relaxed text-azul-900/70">
+            {tx(
+              "Tus clases ya vienen de Horario. Agrega tus actividades, tus horas de sueño y tu tiempo personal, y luego tus trabajos con su fecha de entrega. Tareas organiza cuándo hacer cada trabajo, respetando siempre tu descanso y tu tiempo personal.",
+              "Your classes already come from Schedule. Add your activities, sleep hours and personal time, then your assignments with their due dates. Tasks organizes when to do each one, always respecting your rest and personal time."
+            )}
+          </p>
+        </>
+      )}
+      <div className="flex gap-3 mt-6">
+        {step > 0 && <Btn variant="ghost" onClick={() => setStep((s) => s - 1)}>{tx("Atrás", "Back")}</Btn>}
+        <Btn onClick={next} className="flex-1">
+          {step === steps.length - 1 ? tx("Empezar", "Start") : tx("Continuar", "Continue")}
+          <ArrowRight size={16} />
+        </Btn>
       </div>
-    </div>
+    </Card>
   );
 }
 
@@ -912,112 +887,19 @@ function Onboarding() {
    NAVEGACIÓN
 ============================================================ */
 const NAV_ITEMS = [
-  { key: "inicio", icon: Home, es: "Inicio", en: "Home" },
-  { key: "horarios", icon: CalendarDays, es: "Horarios", en: "Schedule" },
-  { key: "agregar", icon: PlusCircle, es: "Agregar trabajo", en: "Add work" },
-  { key: "hechos", icon: CheckCircle2, es: "Trabajos hechos", en: "Done" },
+  { key: "inicio", icon: Home, es: "Pendientes", en: "Pending" },
+  { key: "agregar", icon: PlusCircle, es: "Agregar", en: "Add" },
+  { key: "horarios", icon: CalendarDays, es: "Mi semana", en: "My week" },
+  { key: "hechos", icon: CheckCircle2, es: "Hechos", en: "Done" },
   { key: "progreso", icon: TrendingUp, es: "Progreso", en: "Progress" },
   { key: "historial", icon: HistoryIcon, es: "Historial", en: "History" },
-  { key: "config", icon: SettingsIcon, es: "Configuración", en: "Settings" },
-  { key: "nosotros", icon: Info, es: "Sobre nosotros", en: "About us" },
+  { key: "config", icon: SettingsIcon, es: "Ajustes", en: "Settings" },
 ];
-
-function NavList({ view, onNavigate }) {
-  const { th, lang } = useApp();
-  return (
-    <div className="flex flex-col gap-1">
-      {NAV_ITEMS.map((item) => {
-        const Icon = item.icon;
-        const active = view === item.key;
-        return (
-          <button
-            key={item.key}
-            onClick={() => onNavigate(item.key)}
-            className="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-semibold transition text-left"
-            style={active ? { background: th.primary, color: th.primaryText } : { color: th.textMuted }}
-          >
-            <Icon size={18} />
-            {lang === "es" ? item.es : item.en}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
-function UserBadge({ user, lang, th }) {
-  const roleText = user?.rol === "otro" ? (user?.rolOtro || "") : (ROLE_LABEL[lang][user?.rol] || "");
-  return (
-    <div className="min-w-0">
-      <p className="text-sm font-bold truncate" style={{ color: th.text }}>{[user?.nombre, user?.apellido].filter(Boolean).join(" ") || "—"}</p>
-      <p className="text-[11px] truncate" style={{ color: th.textMuted }}>{roleText}</p>
-    </div>
-  );
-}
-
-function Sidebar({ view, setView, user }) {
-  const { th, lang } = useApp();
-  return (
-    <div className="hidden md:flex flex-col w-64 shrink-0 h-[calc(100vh-3.5rem)] sticky top-14 px-4 py-6" style={{ background: th.surface, borderRight: `1px solid ${th.border}` }}>
-      <div className="flex items-center gap-2.5 px-2 mb-8">
-        <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: th.primary }}>
-          <Sparkles size={18} color="#fff" />
-        </div>
-        <span className="font-extrabold text-xl" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}>TASKUP!</span>
-      </div>
-      <NavList view={view} onNavigate={setView} />
-      <div className="mt-auto pt-6 flex items-center gap-2.5 px-2">
-        <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm shrink-0" style={{ background: th.primarySoft, color: th.primary }}>
-          {user?.nombre?.[0]?.toUpperCase() || "?"}
-        </div>
-        <UserBadge user={user} lang={lang} th={th} />
-      </div>
-    </div>
-  );
-}
-
-function MobileTopBar({ setDrawerOpen, title }) {
-  const { th } = useApp();
-  return (
-    <div className="md:hidden flex items-center justify-between px-4 py-4 sticky top-14 z-30" style={{ background: th.surface, borderBottom: `1px solid ${th.border}` }}>
-      <button onClick={() => setDrawerOpen(true)} className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: th.surfaceAlt, color: th.text }}>
-        <Menu size={18} />
-      </button>
-      <span className="font-bold text-base" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}>{title}</span>
-      <div className="w-9 h-9" />
-    </div>
-  );
-}
-
-function MobileDrawer({ open, onClose, view, setView, user }) {
-  const { th, lang } = useApp();
-  if (!open) return null;
-  return (
-    <div className="fixed inset-0 z-50 flex" style={{ background: "rgba(10,11,26,0.55)" }} onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="w-72 h-full px-4 py-6 flex flex-col" style={{ background: th.surface }}>
-        <div className="flex items-center justify-between mb-8 px-2">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: th.primary }}><Sparkles size={18} color="#fff" /></div>
-            <span className="font-extrabold text-xl" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}>TASKUP!</span>
-          </div>
-          <button onClick={onClose} className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: th.surfaceAlt, color: th.textMuted }}><X size={16} /></button>
-        </div>
-        <NavList view={view} onNavigate={(k) => { setView(k); onClose(); }} />
-        <div className="mt-auto pt-6 flex items-center gap-2.5 px-2">
-          <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm shrink-0" style={{ background: th.primarySoft, color: th.primary }}>
-            {user?.nombre?.[0]?.toUpperCase() || "?"}
-          </div>
-          <UserBadge user={user} lang={lang} th={th} />
-        </div>
-      </div>
-    </div>
-  );
-}
 
 /* ============================================================
    TARJETA DE TRABAJO (usada en Inicio)
 ============================================================ */
-function TaskCard({ task, onComplete, onDelete, onDeliver, onResolveSuggestion, onEdit, onProgress, onStudy }) {
+function TaskCard({ task, onComplete, onDelete, onDeliver, onResolveSuggestion, onEdit, onProgress }) {
   const { th, lang, tx } = useApp();
   const tISO = todayISO();
   const overdue = task.dueDate < tISO && !task.completed;
@@ -1030,7 +912,7 @@ function TaskCard({ task, onComplete, onDelete, onDeliver, onResolveSuggestion, 
       <div className="absolute left-0 top-3 bottom-3 w-1 rounded-full" style={{ background: task.completed ? "#27AE60" : th.primary }} />
       <div className="pl-3 flex items-start gap-2.5">
         <div className="min-w-0 flex-1">
-          <h3 className="font-bold text-sm truncate" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}>{task.name}</h3>
+          <h3 className="font-bold text-sm truncate" style={{ color: th.text }}>{task.name}</h3>
           <p className="text-[11px]" style={{ color: th.textMuted }}>{task.subject || TYPE_LABEL[lang][task.type]}</p>
 
           <div className="flex flex-wrap items-center gap-2 text-[11px] mt-1" style={{ color: th.textMuted }}>
@@ -1082,7 +964,7 @@ function TaskCard({ task, onComplete, onDelete, onDeliver, onResolveSuggestion, 
                 <Btn variant="ghost" style={{ padding: "4px 8px", fontSize: 11 }} onClick={() => onEdit(task)}><PencilLine size={11} />{tx("Editar", "Edit")}</Btn>
                 <Btn variant="ghost" style={{ padding: "4px 8px", fontSize: 11, color: "#C53030" }} onClick={() => onDelete(task)}><Trash2 size={11} />{tx("Eliminar", "Delete")}</Btn>
                 {isStudyType && (
-                  <Btn variant="soft" style={{ padding: "4px 8px", fontSize: 11 }} onClick={() => onStudy(task)}><BookOpen size={11} />{tx("Ayúdame a estudiar", "Help me study")}</Btn>
+                  <Link href="/marco/estudiar" className="px-2 py-1 rounded-2xl font-semibold text-[11px] flex items-center gap-1 bg-azul-100 text-azul-800"><BookOpen size={11} />{tx("Ayúdame a estudiar", "Help me study")}</Link>
                 )}
               </div>
             </>
@@ -1204,13 +1086,12 @@ function HomeView({ setEditingTask, requestDelete }) {
       return { ...nd, tasks: reschedule(nd) };
     });
   }
-  const [studyTask, setStudyTask] = useState(null);
 
   return (
-    <div className="max-w-3xl mx-auto px-4 md:px-8 py-6 md:py-10 pb-28">
-      <h1 className="text-2xl md:text-3xl font-extrabold mb-1" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}>
+    <div className="max-w-3xl mx-auto pt-6">
+      <h2 className="text-xl md:text-2xl font-bold mb-1" style={{ color: th.text }}>
         {birthday ? `🎉 ${tx("FELIZ CUMPLEAÑOS", "HAPPY BIRTHDAY")} 🎉` : `${tx("Hola", "Hi")}, ${data.user?.nombre} 👋`}
-      </h1>
+      </h2>
       <p className="text-sm mb-6" style={{ color: th.textMuted }}>
         {birthday ? tx("Que tengas un día increíble.", "Have an amazing day.") : tx("Esto es lo que tienes pendiente.", "Here's what you have pending.")}
       </p>
@@ -1236,19 +1117,18 @@ function HomeView({ setEditingTask, requestDelete }) {
         </div>
       )}
 
-      <h2 className="text-xl md:text-2xl font-extrabold mb-4" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}>{tx("Pendientes", "Pending")}</h2>
+      <h2 className="text-xl md:text-2xl font-extrabold mb-4" style={{ color: th.text }}>{tx("Pendientes", "Pending")}</h2>
 
       {pending.length === 0 ? (
         <EmptyState icon={PartyPopper} text={tx("No tienes trabajos pendientes.", "You have no pending work.")} />
       ) : (
         <div className="flex flex-col gap-4">
           {pending.map((t) => (
-            <TaskCard key={t.id} task={t} onComplete={completeTask} onDelete={requestDelete} onDeliver={deliverTask} onResolveSuggestion={resolveSuggestion} onEdit={setEditingTask} onProgress={updateProgress} onStudy={setStudyTask} />
+            <TaskCard key={t.id} task={t} onComplete={completeTask} onDelete={requestDelete} onDeliver={deliverTask} onResolveSuggestion={resolveSuggestion} onEdit={setEditingTask} onProgress={updateProgress} />
           ))}
         </div>
       )}
 
-      {studyTask && <StudyHelperModal task={studyTask} onClose={() => setStudyTask(null)} />}
 
       <div className="mt-10">
         <h2 className="text-sm font-extrabold tracking-wide mb-4" style={{ color: th.textMuted }}>{tx("COMPLETADOS ESTA ÚLTIMA SEMANA", "COMPLETED THIS LAST WEEK")}</h2>
@@ -1262,7 +1142,7 @@ function HomeView({ setEditingTask, requestDelete }) {
                   <div className="min-w-0 flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ background: "#27AE60", color: "#fff" }}><Check size={14} /></div>
                     <div className="min-w-0">
-                      <p className="font-bold truncate text-sm" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}>{t.name}</p>
+                      <p className="font-bold truncate text-sm" style={{ color: th.text }}>{t.name}</p>
                       <p className="text-xs truncate" style={{ color: th.textMuted }}>{t.subject || TYPE_LABEL[lang][t.type]}</p>
                     </div>
                   </div>
@@ -1280,11 +1160,11 @@ function HomeView({ setEditingTask, requestDelete }) {
 /* ============================================================
    AGREGAR / EDITAR TRABAJO
 ============================================================ */
-function AddTaskModal({ onClose, editingTask }) {
+function AddTaskModal({ onClose, editingTask, prefill }) {
   const { data, setData, th, lang, tx, reschedule } = useApp();
   const isEdit = !!editingTask;
-  const [name, setName] = useState(editingTask?.name || "");
-  const [subject, setSubject] = useState(editingTask?.subject || "");
+  const [name, setName] = useState(editingTask?.name || prefill?.name || "");
+  const [subject, setSubject] = useState(editingTask?.subject || prefill?.subject || "");
   const [type, setType] = useState(editingTask?.type || "tarea");
   const [difficulty, setDifficulty] = useState(editingTask?.difficulty || "media");
   const [priorityMode, setPriorityMode] = useState(editingTask ? (editingTask.priorityAuto ? "auto" : "manual") : "auto");
@@ -1398,7 +1278,7 @@ function AddTaskModal({ onClose, editingTask }) {
         <Field label={tx("Prioridad", "Priority")}>
           <div className="flex flex-wrap gap-2 mb-2">
             <ChipToggle active={priorityMode === "auto"} onClick={() => setPriorityMode("auto")} activeColor={th.primary}>
-              <Wand2 size={13} className="inline mr-1" />{tx("Automática (TASKUP! decide)", "Automatic (TASKUP! decides)")}
+              <Wand2 size={13} className="inline mr-1" />{tx("Automática (la app decide)", "Automatic (the app decides)")}
             </ChipToggle>
           </div>
           <div className="flex gap-2">
@@ -1428,7 +1308,7 @@ function AddTaskModal({ onClose, editingTask }) {
                 ))}
               </div>
               <div className="flex flex-wrap gap-2 mb-3">
-                <ChipToggle active={spreadMode === "auto"} onClick={() => setSpreadMode("auto")}><Wand2 size={13} className="inline mr-1" />{tx("TASKUP! calcula el tiempo por día", "TASKUP! calculates time per day")}</ChipToggle>
+                <ChipToggle active={spreadMode === "auto"} onClick={() => setSpreadMode("auto")}><Wand2 size={13} className="inline mr-1" />{tx("La app calcula el tiempo por día", "The app calculates time per day")}</ChipToggle>
                 <ChipToggle active={spreadMode === "manual"} onClick={() => setSpreadMode("manual")}>{tx("Yo elijo el tiempo por día", "I choose the time per day")}</ChipToggle>
               </div>
               {spreadMode === "manual" ? (
@@ -1445,7 +1325,7 @@ function AddTaskModal({ onClose, editingTask }) {
                 </div>
               ) : (
                 <p className="text-xs" style={{ color: th.textMuted }}>
-                  {tx(`TASKUP! repartirá el trabajo entre ${spreadDays} día(s), lo más parejo posible, evitando dejarlo todo para el último día.`, `TASKUP! will split the work across ${spreadDays} day(s), as evenly as possible, avoiding leaving it all for the last day.`)}
+                  {tx(`La app repartirá el trabajo entre ${spreadDays} día(s), lo más parejo posible, evitando dejarlo todo para el último día.`, `The app will split the work across ${spreadDays} day(s), as evenly as possible, avoiding leaving it all for the last day.`)}
                 </p>
               )}
             </>
@@ -1455,7 +1335,7 @@ function AddTaskModal({ onClose, editingTask }) {
         {spreadMode !== "manual" && (
           <Field label={tx("Duración estimada (por día se calculará según lo elegido arriba)", "Estimated duration (split per day above)")}>
             <div className="flex flex-wrap gap-2 mb-2">
-              <ChipToggle active={durMode === "auto"} onClick={() => setDurMode("auto")}><Wand2 size={13} className="inline mr-1" />{tx("TASKUP! la calcula", "TASKUP! calculates it")}</ChipToggle>
+              <ChipToggle active={durMode === "auto"} onClick={() => setDurMode("auto")}><Wand2 size={13} className="inline mr-1" />{tx("La app la calcula", "The app calculates it")}</ChipToggle>
               <ChipToggle active={durMode === "unsure"} onClick={() => setDurMode("unsure")}>{tx("No estoy seguro/a", "Not sure")}</ChipToggle>
               <ChipToggle active={durMode === "manual"} onClick={() => setDurMode("manual")}>{tx("Personalizado", "Custom")}</ChipToggle>
             </div>
@@ -1474,7 +1354,7 @@ function AddTaskModal({ onClose, editingTask }) {
             {durMode !== "manual" && (
               <p className="text-xs" style={{ color: th.textMuted }}>
                 {durMode === "unsure"
-                  ? tx(`TASKUP! calculará el tiempo por ti. Estimado inicial: ${fmtHours(estimateDuration(type, difficulty))}.`, `TASKUP! will calculate the time for you. Initial estimate: ${fmtHours(estimateDuration(type, difficulty))}.`)
+                  ? tx(`La app calculará el tiempo por ti. Estimado inicial: ${fmtHours(estimateDuration(type, difficulty))}.`, `The app will calculate the time for you. Initial estimate: ${fmtHours(estimateDuration(type, difficulty))}.`)
                   : tx(`Estimado: ${fmtHours(estimateDuration(type, difficulty))}. Podrás ajustarlo luego si hace falta.`, `Estimate: ${fmtHours(estimateDuration(type, difficulty))}. You can adjust it later if needed.`)}
               </p>
             )}
@@ -1579,7 +1459,7 @@ function TaskMiniModal({ task, session, onClose }) {
             <PriorityPill p={task.priority} lang={lang} />
             <button onClick={onClose}><X size={16} style={{ color: th.textMuted }} /></button>
           </div>
-          <h3 className="font-bold text-base mb-1" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}>{task.name}</h3>
+          <h3 className="font-bold text-base mb-1" style={{ color: th.text }}>{task.name}</h3>
           <p className="text-xs mb-3" style={{ color: th.textMuted }}>{task.subject || TYPE_LABEL[lang][task.type]}</p>
           <div className="flex flex-col gap-1.5 text-xs" style={{ color: th.text }}>
             <span className="flex items-center gap-1.5"><CalendarDays size={12} />{tx("Entrega", "Due")}: {fmtDate(task.dueDate, lang)}</span>
@@ -1604,9 +1484,10 @@ function EditWeekdayModal({ dayKey, onClose }) {
   const [sleepT, setSleepT] = useState(data.sleep[dayKey].sleep || "");
   const [wakeT, setWakeT] = useState(data.sleep[dayKey].wake || "");
   const [personalMin, setPersonalMin] = useState(data.personalMinutes[dayKey] || 0);
-  const dayBlocks = data.fixedBlocks.filter((b) => b.days.includes(dayKey));
+  // Las clases de Horario no se editan aquí (se cambian en Horario).
+  const dayBlocks = data.fixedBlocks.filter((b) => !b.deIAE && b.days.includes(dayKey));
   const [newTitle, setNewTitle] = useState("");
-  const [newCat, setNewCat] = useState("clase");
+  const [newCat, setNewCat] = useState("actividad");
   const [newStart, setNewStart] = useState("");
   const [newEnd, setNewEnd] = useState("");
 
@@ -1666,7 +1547,7 @@ function EditWeekdayModal({ dayKey, onClose }) {
             <TextInput type="number" min="0" step="5" value={personalMin} onChange={(e) => setPersonalMin(e.target.value)} style={{ width: 120 }} />
             <Btn variant="soft" style={{ padding: "6px 10px", fontSize: 12 }} onClick={savePersonal}>{tx("Guardar", "Save")}</Btn>
           </div>
-          <p className="text-xs mt-1" style={{ color: th.textMuted }}>{tx("TASKUP! decide automáticamente en qué momento del día colocarlo.", "TASKUP! automatically decides when in the day to place it.")}</p>
+          <p className="text-xs mt-1" style={{ color: th.textMuted }}>{tx("La app decide automáticamente en qué momento del día colocarlo.", "The app automatically decides when in the day to place it.")}</p>
         </div>
         <div>
           <h3 className="font-bold text-sm mb-2" style={{ color: th.text }}>{tx("Bloques fijos de este día", "Fixed blocks for this day")}</h3>
@@ -1728,7 +1609,7 @@ const QUICK_QUESTIONS_EN = ["Do I have time to do this today?", "What should I s
 
 function AIAssistantModal({ onClose }) {
   const { data, th, lang, tx } = useApp();
-  const [messages, setMessages] = useState([{ role: "assistant", content: tx("¡Hola! Soy el asistente de TASKUP!. Puedes preguntarme lo que quieras — sobre tu horario, tus tareas y exámenes, o cualquier otra cosa.", "Hi! I'm the TASKUP! assistant. Ask me anything — about your schedule, tasks and exams, or anything else.") }]);
+  const [messages, setMessages] = useState([{ role: "assistant", content: tx("¡Hola! Soy el asistente de Tareas. Puedes preguntarme lo que quieras — sobre tu horario, tus tareas y exámenes, o cualquier otra cosa.", "Hi! I'm the Tasks assistant. Ask me anything — about your schedule, tasks and exams, or anything else.") }]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const scrollRef = useRef(null);
@@ -1759,7 +1640,7 @@ function AIAssistantModal({ onClose }) {
 
   return (
     <Modal onClose={onClose} wide>
-      <ModalHeader title={tx("Asistente TASKUP!", "TASKUP! Assistant")} onClose={onClose} icon={Sparkles} />
+      <ModalHeader title={tx("Asistente de Tareas", "Tasks assistant")} onClose={onClose} icon={Sparkles} />
       <div className="flex flex-col" style={{ height: "70vh" }}>
         <div ref={scrollRef} className="flex-1 overflow-y-auto px-6 py-4 flex flex-col gap-3">
           {messages.map((m, i) => (
@@ -1776,7 +1657,7 @@ function AIAssistantModal({ onClose }) {
           ))}
         </div>
         <div className="px-6 pb-6 pt-2 flex items-center gap-2" style={{ borderTop: `1px solid ${th.border}` }}>
-          <TextInput value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send()} placeholder={tx("Escríbele a TASKUP!...", "Message TASKUP!...")} />
+          <TextInput value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send()} placeholder={tx("Escribe tu pregunta...", "Type your question...")} />
           <Btn onClick={() => send()} disabled={loading}><ArrowRight size={16} /></Btn>
         </div>
       </div>
@@ -1788,152 +1669,11 @@ function FloatingAI({ onClick }) {
   return (
     <button
       onClick={onClick}
-      className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full flex items-center justify-center shadow-xl active:scale-95 transition"
-      style={{ background: "#5B5FEF", color: "#fff", boxShadow: "0 10px 24px -6px rgba(91,95,239,0.55)" }}
-      title="Asistente AI"
+      className="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] right-4 z-30 w-14 h-14 rounded-full flex items-center justify-center bg-azul-800 text-white shadow-xl shadow-azul-900/30 active:scale-95 transition md:bottom-6 md:right-6"
+      title="Asistente de Tareas"
     >
       <Sparkles size={24} />
     </button>
-  );
-}
-
-/* ============================================================
-   AYÚDAME A ESTUDIAR — flashcards + quiz generados por AI
-============================================================ */
-function StudyHelperModal({ task, onClose }) {
-  const { th, lang, tx } = useApp();
-  const [step, setStep] = useState("input");
-  const [mode, setMode] = useState("texto");
-  const [text, setText] = useState("");
-  const [imageData, setImageData] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [err, setErr] = useState("");
-  const [flashcards, setFlashcards] = useState([]);
-  const [quiz, setQuiz] = useState([]);
-  const [cardIdx, setCardIdx] = useState(0);
-  const [flipped, setFlipped] = useState(false);
-  const [quizIdx, setQuizIdx] = useState(0);
-  const [score, setScore] = useState(0);
-  const [answered, setAnswered] = useState(null);
-
-  function handleImage(e) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => setImageData(reader.result);
-    reader.readAsDataURL(file);
-  }
-
-  async function generate() {
-    if (mode === "texto" && !text.trim()) return setErr(tx("Pega o escribe la información a estudiar.", "Paste or type the material to study."));
-    if (mode === "imagen" && !imageData) return setErr(tx("Sube una imagen.", "Upload an image."));
-    setErr(""); setLoading(true);
-    try {
-      const parsed = await pedirIA("/daniela/api/estudiar", {
-        lang, tarea: task.name,
-        texto: mode === "texto" ? text : undefined,
-        imagen: mode === "imagen" ? imageData : undefined,
-      });
-      setFlashcards(parsed.flashcards || []);
-      setQuiz(parsed.quiz || []);
-      setCardIdx(0); setFlipped(false);
-      setStep("flashcards");
-    } catch (e) {
-      setErr(tx("No se pudo generar el material. Intenta de nuevo.", "Couldn't generate the material. Please try again."));
-    }
-    setLoading(false);
-  }
-
-  function answerQuiz(idx) {
-    if (answered !== null) return;
-    setAnswered(idx);
-    if (idx === quiz[quizIdx].correctIndex) setScore((s) => s + 1);
-  }
-  function nextQuiz() {
-    setAnswered(null);
-    if (quizIdx + 1 < quiz.length) setQuizIdx((i) => i + 1);
-    else setStep("results");
-  }
-
-  return (
-    <Modal onClose={onClose} wide>
-      <ModalHeader title={tx("Ayúdame a estudiar", "Help me study")} onClose={onClose} icon={BookOpen} />
-      <div className="p-6">
-        {step === "input" && (
-          <>
-            <p className="text-sm mb-4" style={{ color: th.textMuted }}>{tx(`Material para "${task.name}"`, `Material for "${task.name}"`)}</p>
-            <div className="flex gap-2 mb-4">
-              <ChipToggle active={mode === "texto"} onClick={() => setMode("texto")}>{tx("Texto", "Text")}</ChipToggle>
-              <ChipToggle active={mode === "imagen"} onClick={() => setMode("imagen")}>{tx("Imagen", "Image")}</ChipToggle>
-            </div>
-            {mode === "texto" ? (
-              <TextArea rows={8} value={text} onChange={(e) => setText(e.target.value)} placeholder={tx("Pega tus apuntes o la información a estudiar...", "Paste your notes or the material to study...")} />
-            ) : (
-              <div>
-                <input type="file" accept="image/*" onChange={handleImage} />
-                {imageData && <img src={imageData} alt="preview" className="mt-3 rounded-xl max-h-48 object-contain" />}
-              </div>
-            )}
-            {err && <p className="text-xs font-semibold mt-3" style={{ color: "#C53030" }}>{err}</p>}
-            <div className="flex gap-3 mt-5">
-              <Btn variant="ghost" onClick={onClose} className="flex-1">{tx("Cancelar", "Cancel")}</Btn>
-              <Btn onClick={generate} disabled={loading} className="flex-1">{loading ? <Loader2 className="animate-spin" size={16} /> : <><Wand2 size={16} />{tx("Crear material", "Create material")}</>}</Btn>
-            </div>
-          </>
-        )}
-
-        {step === "flashcards" && flashcards.length > 0 && (
-          <>
-            <p className="text-xs mb-2" style={{ color: th.textMuted }}>{tx(`Flashcard ${cardIdx + 1} de ${flashcards.length}`, `Flashcard ${cardIdx + 1} of ${flashcards.length}`)}</p>
-            <button onClick={() => setFlipped((f) => !f)} className="w-full rounded-2xl p-8 text-center mb-4" style={{ background: th.primarySoft, minHeight: 160 }}>
-              <p className="text-base font-semibold" style={{ color: th.text }}>{flipped ? flashcards[cardIdx].back : flashcards[cardIdx].front}</p>
-              <p className="text-xs mt-3" style={{ color: th.textMuted }}>{tx("(toca para voltear)", "(tap to flip)")}</p>
-            </button>
-            <div className="flex justify-between gap-2">
-              <Btn variant="ghost" disabled={cardIdx === 0} onClick={() => { setCardIdx((i) => i - 1); setFlipped(false); }}><ChevronLeft size={15} /></Btn>
-              {cardIdx + 1 < flashcards.length ? (
-                <Btn onClick={() => { setCardIdx((i) => i + 1); setFlipped(false); }} className="flex-1">{tx("Siguiente", "Next")}<ChevronRight size={15} /></Btn>
-              ) : (
-                <Btn onClick={() => setStep("quiz")} className="flex-1">{tx("Ir al quiz", "Go to quiz")}<ArrowRight size={15} /></Btn>
-              )}
-            </div>
-          </>
-        )}
-
-        {step === "quiz" && quiz.length > 0 && (
-          <>
-            <p className="text-xs mb-2" style={{ color: th.textMuted }}>{tx(`Pregunta ${quizIdx + 1} de ${quiz.length}`, `Question ${quizIdx + 1} of ${quiz.length}`)}</p>
-            <p className="font-semibold text-sm mb-3" style={{ color: th.text }}>{quiz[quizIdx].question}</p>
-            <div className="flex flex-col gap-2 mb-4">
-              {quiz[quizIdx].options.map((opt, idx) => {
-                const isCorrect = idx === quiz[quizIdx].correctIndex;
-                const isPicked = answered === idx;
-                let optStyle = { background: th.surfaceAlt, color: th.text };
-                if (answered !== null && isCorrect) optStyle = { background: "#E8F8EE", color: "#276749" };
-                else if (isPicked) optStyle = { background: "#FDECEC", color: "#C53030" };
-                return (
-                  <button key={idx} onClick={() => answerQuiz(idx)} className="text-left text-sm rounded-xl px-3.5 py-2.5" style={optStyle}>{opt}</button>
-                );
-              })}
-            </div>
-            <Btn onClick={nextQuiz} disabled={answered === null} className="w-full">{quizIdx + 1 < quiz.length ? tx("Siguiente", "Next") : tx("Ver resultados", "See results")}</Btn>
-          </>
-        )}
-
-        {step === "results" && (
-          <>
-            <div className="text-center py-6">
-              <p className="text-3xl font-extrabold mb-1" style={{ color: th.primary, fontFamily: "'Space Grotesk', sans-serif" }}>{score}/{quiz.length}</p>
-              <p className="text-sm" style={{ color: th.textMuted }}>{tx("respuestas correctas", "correct answers")}</p>
-            </div>
-            <div className="flex gap-3">
-              <Btn variant="ghost" onClick={() => { setStep("flashcards"); setCardIdx(0); setFlipped(false); setQuizIdx(0); setScore(0); setAnswered(null); }} className="flex-1">{tx("Volver a estudiar", "Study again")}</Btn>
-              <Btn onClick={onClose} className="flex-1">{tx("Cerrar", "Close")}</Btn>
-            </div>
-          </>
-        )}
-      </div>
-    </Modal>
   );
 }
 
@@ -2110,7 +1850,7 @@ function DayDetailModal({ dateISO, onClose, onOpenTask }) {
             <TextInput placeholder={tx("Nombre del examen", "Exam name")} value={exTitle} onChange={(e) => setExTitle(e.target.value)} style={{ width: 200 }} />
             <Btn variant="soft" style={{ padding: "8px 12px", fontSize: 12 }} onClick={addExam}><Plus size={13} />{tx("Agregar", "Add")}</Btn>
           </div>
-          <p className="text-xs mt-2" style={{ color: th.textMuted }}>{tx("TASKUP! te avisará un día antes del examen.", "TASKUP! will remind you one day before the exam.")}</p>
+          <p className="text-xs mt-2" style={{ color: th.textMuted }}>{tx("Te avisaremos un día antes del examen.", "We will remind you one day before the exam.")}</p>
         </div>
 
         {err && <p className="text-xs font-semibold" style={{ color: "#C53030" }}>{err}</p>}
@@ -2215,7 +1955,7 @@ function AddBlockForm({ onDone, focusDay, editBlockId, onEditHandled }) {
   const { data, setData, th, lang, tx, reschedule } = useApp();
   const [editingId, setEditingId] = useState(null);
   const [title, setTitle] = useState("");
-  const [category, setCategory] = useState("clase");
+  const [category, setCategory] = useState("actividad");
   const [days, setDays] = useState(focusDay ? [focusDay] : []);
   const [start, setStart] = useState("");
   const [end, setEnd] = useState("");
@@ -2224,7 +1964,7 @@ function AddBlockForm({ onDone, focusDay, editBlockId, onEditHandled }) {
   useEffect(() => {
     if (editBlockId) {
       const b = data.fixedBlocks.find((x) => x.id === editBlockId);
-      if (b) {
+      if (b && !b.deIAE) {
         setEditingId(b.id); setTitle(b.title); setCategory(b.category); setDays(b.days); setStart(b.start); setEnd(b.end);
       }
       onEditHandled && onEditHandled();
@@ -2235,7 +1975,7 @@ function AddBlockForm({ onDone, focusDay, editBlockId, onEditHandled }) {
   function toggleDay(d) { setDays((ds) => ds.includes(d) ? ds.filter((x) => x !== d) : [...ds, d]); }
 
   function resetForm() {
-    setEditingId(null); setTitle(""); setCategory("clase"); setDays([]); setStart(""); setEnd("");
+    setEditingId(null); setTitle(""); setCategory("actividad"); setDays([]); setStart(""); setEnd("");
   }
 
   function startEdit(b) {
@@ -2272,7 +2012,7 @@ function AddBlockForm({ onDone, focusDay, editBlockId, onEditHandled }) {
 
   return (
     <Card>
-      <h3 className="font-bold mb-4" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}>
+      <h3 className="font-bold mb-4" style={{ color: th.text }}>
         {editingId ? tx("Editar bloque de horario", "Edit schedule block") : tx("Agregar manualmente", "Add manually")}
       </h3>
       <Field label={tx("Nombre", "Name")}>
@@ -2298,11 +2038,19 @@ function AddBlockForm({ onDone, focusDay, editBlockId, onEditHandled }) {
         {editingId && <Btn variant="ghost" onClick={resetForm}>{tx("Cancelar", "Cancel")}</Btn>}
       </div>
 
-      {data.fixedBlocks.length > 0 && (
+      {/* Las clases vienen de Horario (un solo horario para toda la app): se cambian allá. */}
+      {data.fixedBlocks.some((b) => b.deIAE) && (
+        <Link href="/horario" className="mt-6 flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold bg-azul-50 text-azul-800 ring-1 ring-azul-100">
+          {tx(`${data.fixedBlocks.filter((b) => b.deIAE).length} clases vienen de tu Horario. Cámbialas allá.`, `${data.fixedBlocks.filter((b) => b.deIAE).length} classes come from your Schedule. Change them there.`)}
+          <ArrowRight size={15} />
+        </Link>
+      )}
+
+      {data.fixedBlocks.some((b) => !b.deIAE) && (
         <div className="mt-6">
           <p className="text-xs font-bold uppercase tracking-wide mb-2" style={{ color: th.textMuted }}>{tx("Ya agregado", "Already added")}</p>
           <div className="flex flex-col gap-2">
-            {data.fixedBlocks.map((b) => (
+            {data.fixedBlocks.filter((b) => !b.deIAE).map((b) => (
               <div key={b.id} className="flex items-center justify-between rounded-xl px-3 py-2" style={{ background: th.surfaceAlt }}>
                 <div className="flex items-center gap-2 min-w-0">
                   <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: COLORS[b.category] }} />
@@ -2361,8 +2109,8 @@ function SleepPersonalConfig() {
   return (
     <div className="flex flex-col gap-5">
       <Card>
-        <h3 className="font-bold mb-1 flex items-center gap-2" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}><Moon size={17} style={{ color: COLORS.sueno }} />{tx("Sueño", "Sleep")}</h3>
-        <p className="text-xs mb-4" style={{ color: th.textMuted }}>{tx("Este bloque queda protegido: TASKUP! nunca coloca trabajos aquí sin tu permiso.", "This block stays protected: TASKUP! never places work here without your permission.")}</p>
+        <h3 className="font-bold mb-1 flex items-center gap-2" style={{ color: th.text }}><Moon size={17} style={{ color: COLORS.sueno }} />{tx("Sueño", "Sleep")}</h3>
+        <p className="text-xs mb-4" style={{ color: th.textMuted }}>{tx("Este bloque queda protegido: la app nunca coloca trabajos aquí sin tu permiso.", "This block stays protected: the app never places work here without your permission.")}</p>
         <div className="flex flex-col gap-2">
           {DAY_KEYS.map((d) => (
             <div key={d} className="flex items-center gap-3 flex-wrap">
@@ -2376,8 +2124,8 @@ function SleepPersonalConfig() {
       </Card>
 
       <Card>
-        <h3 className="font-bold mb-1 flex items-center gap-2" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}><SunMedium size={17} style={{ color: COLORS.personal }} />{tx("Tiempo personal", "Personal time")}</h3>
-        <p className="text-xs mb-4" style={{ color: th.textMuted }}>{tx("Solo dile a TASKUP! cuántos minutos quieres por día. TASKUP! decide automáticamente en qué momento del día colocarlos.", "Just tell TASKUP! how many minutes you want per day. TASKUP! automatically decides when in the day to place them.")}</p>
+        <h3 className="font-bold mb-1 flex items-center gap-2" style={{ color: th.text }}><SunMedium size={17} style={{ color: COLORS.personal }} />{tx("Tiempo personal", "Personal time")}</h3>
+        <p className="text-xs mb-4" style={{ color: th.textMuted }}>{tx("Solo di cuántos minutos quieres por día. La app decide automáticamente en qué momento del día colocarlos.", "Just say how many minutes you want per day. The app automatically decides when in the day to place them.")}</p>
         <div className="flex flex-col gap-2">
           {DAY_KEYS.map((d) => (
             <div key={d} className="flex items-center gap-3">
@@ -2390,8 +2138,8 @@ function SleepPersonalConfig() {
       </Card>
 
       <Card>
-        <h3 className="font-bold mb-1" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}>Shabbat</h3>
-        <p className="text-xs mb-4" style={{ color: th.textMuted }}>{tx("TASKUP! nunca coloca trabajos durante este bloque.", "TASKUP! never places work during this block.")}</p>
+        <h3 className="font-bold mb-1" style={{ color: th.text }}>Shabbat</h3>
+        <p className="text-xs mb-4" style={{ color: th.textMuted }}>{tx("La app nunca coloca trabajos durante este bloque.", "The app never places work during this block.")}</p>
         <div className="flex items-center gap-3 mb-3">
           <button onClick={() => setShabbatField({ enabled: !draftShabbat.enabled })}
             className="px-4 py-2 rounded-xl text-sm font-semibold" style={draftShabbat.enabled ? { background: COLORS.shabbat, color: "#fff" } : { background: th.surfaceAlt, color: th.textMuted }}>
@@ -2437,9 +2185,9 @@ function HorariosView() {
   const [calMode, setCalMode] = useState("semana");
 
   return (
-    <div className="max-w-5xl mx-auto px-4 md:px-8 py-6 md:py-10 pb-28">
+    <div className="max-w-5xl mx-auto pt-6">
       <div className="flex items-center justify-between flex-wrap gap-3 mb-6">
-        <h1 className="text-2xl md:text-3xl font-extrabold" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}>{tx("Horarios", "Schedule")}</h1>
+        <h2 className="text-xl md:text-2xl font-bold" style={{ color: th.text }}>{tx("Mi semana", "My week")}</h2>
       </div>
 
       <div className="flex gap-2 mb-6 flex-wrap">
@@ -2491,8 +2239,8 @@ function TrabajosHechosView() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 md:px-8 py-6 md:py-10 pb-28">
-      <h1 className="text-2xl md:text-3xl font-extrabold mb-6" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}>{tx("Trabajos hechos", "Done")}</h1>
+    <div className="max-w-3xl mx-auto pt-6">
+      <h2 className="text-xl md:text-2xl font-bold mb-6" style={{ color: th.text }}>{tx("Trabajos hechos", "Done")}</h2>
       {done.length === 0 ? (
         <EmptyState icon={CheckCircle2} text={tx("Todavía no has completado ningún trabajo.", "You haven't completed any work yet.")} />
       ) : (
@@ -2501,7 +2249,7 @@ function TrabajosHechosView() {
             <Card key={t.id}>
               <div className="flex items-center justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="font-bold truncate" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}>{t.name}</p>
+                  <p className="font-bold truncate" style={{ color: th.text }}>{t.name}</p>
                   <p className="text-xs" style={{ color: th.textMuted }}>{t.subject ? `${t.subject} · ` : ""}{TYPE_LABEL[lang][t.type]} · {fmtHours(t.durationMin)}</p>
                   <p className="text-xs mt-0.5" style={{ color: th.textMuted }}>{tx("Completado", "Completed")}: {fmtDateTimePanama(t.completedAt, lang)}</p>
                 </div>
@@ -2539,8 +2287,8 @@ function ProgresoView() {
 
   if (total === 0) {
     return (
-      <div className="max-w-3xl mx-auto px-4 md:px-8 py-6 md:py-10 pb-28">
-        <h1 className="text-2xl md:text-3xl font-extrabold mb-6" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}>{tx("Progreso", "Progress")}</h1>
+      <div className="max-w-3xl mx-auto pt-6">
+        <h2 className="text-xl md:text-2xl font-bold mb-6" style={{ color: th.text }}>{tx("Progreso", "Progress")}</h2>
         <EmptyState icon={TrendingUp} text={tx("No mostramos estadísticas falsas: agrega trabajos para ver tu progreso real aquí.", "We don't show fake statistics: add work to see your real progress here.")} />
       </div>
     );
@@ -2554,18 +2302,18 @@ function ProgresoView() {
   ];
 
   return (
-    <div className="max-w-3xl mx-auto px-4 md:px-8 py-6 md:py-10 pb-28">
-      <h1 className="text-2xl md:text-3xl font-extrabold mb-6" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}>{tx("Progreso", "Progress")}</h1>
+    <div className="max-w-3xl mx-auto pt-6">
+      <h2 className="text-xl md:text-2xl font-bold mb-6" style={{ color: th.text }}>{tx("Progreso", "Progress")}</h2>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
         {stats.map((s, i) => (
           <Card key={i} style={{ padding: 16 }}>
-            <p className="text-2xl font-extrabold" style={{ color: s.color, fontFamily: "'Space Grotesk', sans-serif" }}>{s.value}</p>
+            <p className="text-2xl font-extrabold" style={{ color: s.color }}>{s.value}</p>
             <p className="text-xs mt-1" style={{ color: th.textMuted }}>{s.label}</p>
           </Card>
         ))}
       </div>
       <Card>
-        <h3 className="font-bold mb-4" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}>{tx("Progreso semanal", "Weekly progress")}</h3>
+        <h3 className="font-bold mb-4" style={{ color: th.text }}>{tx("Progreso semanal", "Weekly progress")}</h3>
         <div className="flex items-end gap-3 h-32">
           {weekData.map((w, i) => (
             <div key={i} className="flex-1 flex flex-col items-center gap-2">
@@ -2627,8 +2375,8 @@ function HistorialView() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 md:px-8 py-6 md:py-10 pb-28">
-      <h1 className="text-2xl md:text-3xl font-extrabold mb-6" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}>{tx("Historial", "History")}</h1>
+    <div className="max-w-3xl mx-auto pt-6">
+      <h2 className="text-xl md:text-2xl font-bold mb-6" style={{ color: th.text }}>{tx("Historial", "History")}</h2>
       {items.length === 0 ? (
         <EmptyState icon={HistoryIcon} text={tx("No tienes elementos en el historial.", "You have no items in your history.")} />
       ) : (
@@ -2668,23 +2416,9 @@ function HistorialView() {
    CONFIGURACIÓN
 ============================================================ */
 function ConfiguracionView() {
-  const { data, setData, th, lang, tx } = useApp();
+  const { data, setData, th, tx } = useApp();
   const cuenta = useCuenta();
-  const u = data.user || {};
-  const [nombre, setNombre] = useState(u.nombre || "");
-  const [apellido, setApellido] = useState(u.apellido || "");
-  const [rol, setRol] = useState(u.rol || "");
-  const [rolOtro, setRolOtro] = useState(u.rolOtro || "");
-  const [genero, setGenero] = useState(u.genero || "");
-  const [nacimiento, setNacimiento] = useState(u.nacimiento || "");
-  const [saved, setSaved] = useState(false);
   const [permState, setPermState] = useState(typeof Notification !== "undefined" ? Notification.permission : "unsupported");
-
-  function saveProfile() {
-    setData((d) => ({ ...d, user: { ...d.user, nombre: nombre.trim(), apellido: apellido.trim(), rol, rolOtro: rol === "otro" ? rolOtro.trim() : "", genero, nacimiento } }));
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
-  }
 
   function requestPerm() {
     if (typeof Notification === "undefined") return;
@@ -2692,68 +2426,23 @@ function ConfiguracionView() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-4 md:px-8 py-6 md:py-10 pb-28">
-      <h1 className="text-2xl md:text-3xl font-extrabold mb-6" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}>{tx("Configuración", "Settings")}</h1>
+    <div className="max-w-2xl mx-auto pt-6">
+      <h2 className="text-xl md:text-2xl font-bold mb-6" style={{ color: th.text }}>{tx("Ajustes", "Settings")}</h2>
 
       {cuenta ? (
         <Card className="mb-5">
-          <h3 className="font-bold mb-2 flex items-center gap-2" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}><User size={17} />{tx("Ajustes de IAE LIFE", "IAE LIFE settings")}</h3>
+          <h3 className="font-bold mb-2 flex items-center gap-2" style={{ color: th.text }}><User size={17} />{tx("Ajustes de IAE LIFE", "IAE LIFE settings")}</h3>
           <p className="text-sm mb-4" style={{ color: th.textMuted }}>
-            {tx("Tus datos, el idioma, el tema y los recordatorios se cambian en los Ajustes de IAE LIFE y sirven para todas las apps.", "Your info, language, theme and reminders are changed in IAE LIFE settings and apply to every app.")}
+            {tx("Tus datos, el idioma y los recordatorios se cambian en los Ajustes de IAE LIFE y sirven para todas las funciones.", "Your info, language and reminders are changed in IAE LIFE settings and apply to every function.")}
           </p>
-          <a href="/perfil#ajustes" className="inline-flex px-4 py-2 rounded-xl text-sm font-semibold" style={{ background: th.primary, color: th.primaryText }}>
+          <Link href="/perfil#ajustes" className={botonPrimario}>
             {tx("Abrir Ajustes de IAE LIFE", "Open IAE LIFE settings")}
-          </a>
+          </Link>
         </Card>
-      ) : (
-        <>
-      <Card className="mb-5">
-        <h3 className="font-bold mb-4 flex items-center gap-2" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}><User size={17} />{tx("Perfil", "Profile")}</h3>
-        <div className="grid grid-cols-2 gap-4">
-          <Field label={tx("Nombre", "First name")}><TextInput value={nombre} onChange={(e) => setNombre(e.target.value)} /></Field>
-          <Field label="Apellido"><TextInput value={apellido} onChange={(e) => setApellido(e.target.value)} placeholder={tx("Tu apellido", "Your last name")} /></Field>
-        </div>
-        <Field label={tx("Fecha de nacimiento", "Date of birth")}>
-          <TextInput type="date" value={nacimiento} onChange={(e) => setNacimiento(e.target.value)} />
-        </Field>
-        <Field label={tx("¿Qué eres?", "What are you?")}>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-            {ROLE_KEYS.map((r) => (
-              <ChipToggle key={r} active={rol === r} onClick={() => setRol(r)}>{ROLE_LABEL[lang][r]}</ChipToggle>
-            ))}
-          </div>
-          {rol === "otro" && <TextInput className="mt-2" value={rolOtro} onChange={(e) => setRolOtro(e.target.value)} placeholder={tx("¿Qué eres?", "What are you?")} />}
-        </Field>
-        <Field label={tx("Género", "Gender")}>
-          <div className="flex gap-2">
-            <ChipToggle active={genero === "mujer"} onClick={() => setGenero("mujer")}>{tx("Mujer", "Woman")}</ChipToggle>
-            <ChipToggle active={genero === "hombre"} onClick={() => setGenero("hombre")}>{tx("Hombre", "Man")}</ChipToggle>
-          </div>
-        </Field>
-        <Btn onClick={saveProfile}>{saved ? <><Check size={15} />{tx("Guardado", "Saved")}</> : tx("Guardar perfil", "Save profile")}</Btn>
-      </Card>
-
-      <Card className="mb-5">
-        <h3 className="font-bold mb-4" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}>{tx("Idioma", "Language")}</h3>
-        <div className="flex gap-2">
-          <ChipToggle active={data.settings.lang === "es"} onClick={() => setData((d) => ({ ...d, settings: { ...d.settings, lang: "es" } }))}>Español</ChipToggle>
-          <ChipToggle active={data.settings.lang === "en"} onClick={() => setData((d) => ({ ...d, settings: { ...d.settings, lang: "en" } }))}>English</ChipToggle>
-        </div>
-      </Card>
-
-      <Card className="mb-5">
-        <h3 className="font-bold mb-4" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}>Display</h3>
-        <div className="flex gap-2">
-          <ChipToggle active={data.settings.theme === "dia"} onClick={() => setData((d) => ({ ...d, settings: { ...d.settings, theme: "dia" } }))}><SunMedium size={13} className="inline mr-1" />{tx("Día", "Day")}</ChipToggle>
-          <ChipToggle active={data.settings.theme === "noche"} onClick={() => setData((d) => ({ ...d, settings: { ...d.settings, theme: "noche" } }))}><Moon size={13} className="inline mr-1" />{tx("Noche", "Night")}</ChipToggle>
-        </div>
-      </Card>
-
-        </>
-      )}
+      ) : null}
 
       <Card>
-        <h3 className="font-bold mb-4 flex items-center gap-2" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}>{data.settings.notif ? <Bell size={17} /> : <BellOff size={17} />}{tx("Notificaciones", "Notifications")}</h3>
+        <h3 className="font-bold mb-4 flex items-center gap-2" style={{ color: th.text }}>{data.settings.notif ? <Bell size={17} /> : <BellOff size={17} />}{tx("Notificaciones", "Notifications")}</h3>
         <p className="text-xs mb-4" style={{ color: th.textMuted }}>{tx("Avisos 2 días antes, 1 día antes y el mismo día de cada entrega o examen.", "Reminders 2 days before, 1 day before, and the same day of each due date or exam.")}</p>
         <button disabled={Boolean(cuenta)} onClick={() => setData((d) => ({ ...d, settings: { ...d.settings, notif: !d.settings.notif } }))}
           className="px-4 py-2 rounded-xl text-sm font-semibold" style={data.settings.notif ? { background: "#27AE60", color: "#fff" } : { background: th.surfaceAlt, color: th.textMuted }}>
@@ -2773,60 +2462,15 @@ function ConfiguracionView() {
 }
 
 /* ============================================================
-   SOBRE NOSOTROS
-============================================================ */
-function SobreNosotrosView() {
-  const { th, tx } = useApp();
-  return (
-    <div className="max-w-2xl mx-auto px-4 md:px-8 py-6 md:py-10 pb-28">
-      <h1 className="text-2xl md:text-3xl font-extrabold mb-6" style={{ color: th.text, fontFamily: "'Space Grotesk', sans-serif" }}>{tx("Sobre nosotros", "About us")}</h1>
-      <Card>
-        <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4" style={{ background: th.primarySoft, color: th.primary }}><Sparkles size={22} /></div>
-        <p className="text-sm leading-relaxed mb-4" style={{ color: th.text }}>
-          {tx(
-            "TASKUP! fue creado por Daniela Schneir. Como muchas otras personas, ha tenido dificultades para manejar bien su tiempo entre tareas, exámenes, proyectos y todo lo demás.",
-            "TASKUP! was created by Daniela Schneir. Like many other people, she has struggled to manage her time well between homework, exams, projects, and everything else."
-          )}
-        </p>
-        <p className="text-sm leading-relaxed mb-4" style={{ color: th.text }}>
-          {tx(
-            "Pensó mucho en cuánto le había bajado el promedio por no organizarse a tiempo, y en cuánto podría subir si su horario estuviera realmente bien organizado. De esa idea nació TASKUP!.",
-            "She thought a lot about how much her grades had dropped from not organizing herself in time, and how much they could improve if her schedule were actually well organized. That idea is where TASKUP! came from."
-          )}
-        </p>
-        <p className="text-sm leading-relaxed mb-4" style={{ color: th.text }}>
-          {tx(
-            "TASKUP! no es una simple lista de tareas: analiza tu horario, tus responsabilidades y tus trabajos pendientes para decidir cuándo es el mejor momento para hacer cada cosa, sin tomar decisiones importantes por ti.",
-            "TASKUP! is not a simple to-do list: it analyzes your schedule, your responsibilities, and your pending work to decide the best moment to do each thing, without making important decisions for you."
-          )}
-        </p>
-        <p className="text-sm leading-relaxed" style={{ color: th.text }}>
-          {tx("Esta app fue construida con la ayuda de Claude, el modelo de inteligencia artificial de Anthropic.", "This app was built with the help of Claude, Anthropic's AI model.")}
-        </p>
-      </Card>
-    </div>
-  );
-}
-
-/* ============================================================
    APP PRINCIPAL
 ============================================================ */
-const VIEW_TITLES = {
-  inicio: { es: "Inicio", en: "Home" },
-  horarios: { es: "Horarios", en: "Schedule" },
-  hechos: { es: "Trabajos hechos", en: "Done" },
-  progreso: { es: "Progreso", en: "Progress" },
-  historial: { es: "Historial", en: "History" },
-  config: { es: "Configuración", en: "Settings" },
-  nosotros: { es: "Sobre nosotros", en: "About us" },
-};
 
 function App() {
   const [data, setDataRaw] = useState(null);
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState("inicio");
-  const [drawerOpen, setDrawerOpen] = useState(false);
   const [showAddTask, setShowAddTask] = useState(false);
+  const [prefill, setPrefill] = useState(null);
   const [editingTask, setEditingTask] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [showAI, setShowAI] = useState(false);
@@ -2834,14 +2478,18 @@ function App() {
   const claveActual = useRef(null);
   const cuenta = useCuenta(); // undefined = todavía cargando
   const correo = cuenta?.correo ?? null;
+  // Clases de Horario (solo estudiantes: el horario de profesores viene después).
+  const horarioIAE = useHorario(cuenta?.rol === "estudiante" ? cuenta.correo : null);
+  const bloquesIAE = useMemo(() => (cuenta?.rol === "estudiante" ? bloquesDeHorario(horarioIAE) : []), [cuenta?.rol, horarioIAE]);
 
   useEffect(() => {
-    if (cuenta === undefined) return;
+    // Tareas solo se usa con la cuenta de IAE LIFE (no pide datos aparte).
+    if (!cuenta) return;
     let vigente = true;
     const clave = claveDe(correo);
     (async () => {
       const guardado = await loadState(clave);
-      const loaded = guardado || defaultData();
+      let loaded = guardado || defaultData();
       if (!vigente) return;
       // Con cuenta, los datos y los ajustes salen de los Ajustes de IAE LIFE (sirven para todas las apps).
       if (cuenta) {
@@ -2865,14 +2513,36 @@ function App() {
           ...(typeof cuenta.notif === "boolean" ? { notif: cuenta.notif } : {}),
         };
       }
+      // Pendientes de la vieja guía de Colegio: se pasan una vez, se guardan y se borra la lista vieja.
+      const viejos = pendientesDeLaGuia();
+      if (viejos.length) {
+        loaded = { ...loaded, tasks: [...(loaded.tasks || []), ...viejos] };
+        loaded = { ...loaded, tasks: scheduleAll(loaded) };
+      }
+      if (viejos.length) {
+        await saveState(clave, loaded);
+        borrarPendientesDeLaGuia();
+      }
+      if (!vigente) return;
       claveActual.current = clave;
       firstLoad.current = true;
       setDataRaw(loaded);
       setLoading(false);
+      const p = leerPrefill();
+      if (p) {
+        setPrefill(p);
+        window.history.replaceState(null, "", window.location.pathname);
+      }
     })();
     return () => { vigente = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [correo, cuenta === undefined]);
+
+  // Las clases de Horario entran al cargar y cada vez que cambias tu horario (también en otra pestaña).
+  useEffect(() => {
+    if (loading) return;
+    setDataRaw((d) => (d ? conClasesDeHorario(d, bloquesIAE) : d));
+  }, [bloquesIAE, loading]);
 
   // Si cambian los Ajustes de IAE LIFE (por ejemplo en otra pestaña), TASKUP! los aplica al momento.
   const idiomaCuenta = cuenta?.idioma;
@@ -2915,8 +2585,7 @@ function App() {
   const reschedule = useCallback((d) => scheduleAll(d), []);
 
   const lang = data?.settings?.lang || "es";
-  const themeKey = data?.settings?.theme || "dia";
-  const th = THEMES[themeKey];
+  const th = THEMES.dia;
   const tx = useTx(lang);
 
   const ctxValue = useMemo(() => ({ data, setData, th, lang, tx, reschedule }), [data, setData, th, lang, tx, reschedule]);
@@ -2937,7 +2606,7 @@ function App() {
         const key = `task-${t.id}-${tISOToday}`;
         if (!newLog[key]) {
           try {
-            new Notification("TASKUP!", { body: lang === "es"
+            new Notification("IAE LIFE · Tareas", { body: lang === "es"
               ? `"${t.name}" ${days === 0 ? "se entrega hoy" : days === 1 ? "se entrega mañana" : "se entrega en 2 días"}.`
               : `"${t.name}" ${days === 0 ? "is due today" : days === 1 ? "is due tomorrow" : "is due in 2 days"}.` });
           } catch (e) {}
@@ -2951,7 +2620,7 @@ function App() {
         const key = `exam-${ex.id}-${tISOToday}`;
         if (!newLog[key]) {
           try {
-            new Notification("TASKUP!", { body: lang === "es" ? `Examen "${ex.title}" es mañana.` : `Exam "${ex.title}" is tomorrow.` });
+            new Notification("IAE LIFE · Tareas", { body: lang === "es" ? `Examen "${ex.title}" es mañana.` : `Exam "${ex.title}" is tomorrow.` });
           } catch (e) {}
           newLog[key] = true; changed = true;
         }
@@ -2974,52 +2643,63 @@ function App() {
     setDeleteTarget(null);
   }
 
+  const pestanas = NAV_ITEMS.map((n) => ({ id: n.key, texto: lang === "es" ? n.es : n.en, icono: n.icon }));
+  const marco = (contenido) => (
+    <Pantalla icono={ClipboardCheck} titulo="Tareas" texto={tx("Tus trabajos repartidos en tu semana, sin dejar todo para el último día.", "Your work spread across your week, without leaving it all for the last day.")} ancho="ancho">
+      {contenido}
+    </Pantalla>
+  );
+
+  if (cuenta === null) {
+    return marco(
+      <Card className="mx-auto max-w-md text-center">
+        <p className="font-bold text-azul-950">Entra con tu cuenta del colegio</p>
+        <p className="mt-1 text-sm text-azul-900/65">Tareas usa tu cuenta de IAE LIFE: no te pide tus datos otra vez.</p>
+        <Link href="/entrar" className={`${botonPrimario} mt-4`}>Entrar</Link>
+      </Card>
+    );
+  }
+
   if (loading || !data) {
-    return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: THEMES.dia.bg }}>
-        <style>{`${FONT_IMPORT}`}</style>
-        <Loader2 className="animate-spin" size={28} style={{ color: THEMES.dia.primary }} />
+    return marco(
+      <div className="flex justify-center py-16" aria-busy>
+        <Loader2 className="animate-spin text-azul-800" size={28} />
       </div>
     );
   }
 
   return (
     <AppCtx.Provider value={ctxValue}>
-      <div style={{ background: th.bg, minHeight: "100vh", fontFamily: "'Inter', sans-serif", color: th.text }}>
+      {marco(
+        <div style={{ color: th.text }}>
         <style>{`
-          ${FONT_IMPORT}
-          * { box-sizing: border-box; }
           input:focus, textarea:focus, select:focus { box-shadow: 0 0 0 3px ${th.primarySoft}; border-color: ${th.primary}; }
-          ::-webkit-scrollbar { width: 8px; height: 8px; }
-          ::-webkit-scrollbar-thumb { background: ${th.border}; border-radius: 8px; }
-          ::selection { background: ${th.primarySoft}; }
         `}</style>
 
         {!data.onboarded ? (
           <Onboarding />
         ) : (
-          <div className="flex">
-            <Sidebar view={view} setView={(v) => { if (v === "agregar") setShowAddTask(true); else setView(v); }} user={data.user} />
-            <div className="flex-1 min-w-0">
-              <MobileTopBar setDrawerOpen={setDrawerOpen} title={lang === "es" ? (VIEW_TITLES[view]?.es || "TASKUP!") : (VIEW_TITLES[view]?.en || "TASKUP!")} />
-              <MobileDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} view={view} user={data.user}
-                setView={(v) => { if (v === "agregar") setShowAddTask(true); else setView(v); }} />
-
+          <>
+            <Pestanas
+              etiqueta="Secciones de Tareas"
+              opciones={pestanas}
+              valor={view}
+              onCambio={(v) => { if (v === "agregar") setShowAddTask(true); else setView(v); }}
+            />
+            <div className="min-w-0">
               {view === "inicio" && <HomeView setEditingTask={setEditingTask} requestDelete={requestDelete} />}
               {view === "horarios" && <HorariosView />}
               {view === "hechos" && <TrabajosHechosView />}
               {view === "progreso" && <ProgresoView />}
               {view === "historial" && <HistorialView />}
               {view === "config" && <ConfiguracionView />}
-              {view === "nosotros" && <SobreNosotrosView />}
-
-              <FloatingAI onClick={() => setShowAI(true)} />
             </div>
-          </div>
+            <FloatingAI onClick={() => setShowAI(true)} />
+          </>
         )}
 
-        {(showAddTask || editingTask) && (
-          <AddTaskModal editingTask={editingTask} onClose={() => { setShowAddTask(false); setEditingTask(null); }} />
+        {(showAddTask || editingTask || (prefill && data.onboarded)) && (
+          <AddTaskModal editingTask={editingTask} prefill={prefill} onClose={() => { setShowAddTask(false); setEditingTask(null); setPrefill(null); }} />
         )}
 
         {showAI && <AIAssistantModal onClose={() => setShowAI(false)} />}
@@ -3035,12 +2715,13 @@ function App() {
             onCancel={() => setDeleteTarget(null)}
           />
         )}
-      </div>
+        </div>
+      )}
     </AppCtx.Provider>
   );
 }
 
-// Al cambiar de cuenta se vuelve a montar TASKUP! desde cero: así no quedan abiertos
+// Al cambiar de cuenta se vuelve a montar Tareas desde cero: así no quedan abiertos
 // diálogos, borradores ni la conversación de la cuenta anterior.
 export default function TaskUp() {
   const cuenta = useCuenta();
