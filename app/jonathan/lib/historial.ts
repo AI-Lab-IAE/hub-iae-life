@@ -46,8 +46,9 @@ function migrarHistoriales() {
       const datos: unknown = JSON.parse(original ?? "null");
       if (!Array.isArray(datos)) continue;
       const limpio = JSON.stringify(datos.map(limpiar).filter((r) => r !== null));
-      // Solo se escribe si nadie lo cambió mientras tanto. Queda una ventana mínima entre leer y escribir
-      // (localStorage no tiene transacciones); es aceptable: la migración corre una sola vez y es instantánea.
+      // Corre al cargar cada pestaña, pero solo escribe si encuentra registros de la versión vieja
+      // y nadie los cambió mientras tanto. localStorage no tiene transacciones: queda una ventana mínima
+      // (solo la primera vez, con datos viejos) en la que otra pestaña podría guardar justo en medio.
       if (limpio !== original && localStorage.getItem(c) === original) localStorage.setItem(c, limpio);
     } catch {
       // un registro dañado no frena a los demás
