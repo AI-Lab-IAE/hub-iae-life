@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { Estudiar } from "../components/Estudiar";
 
 export const metadata: Metadata = {
-  title: "Estudiar · EstudIA",
+  title: "Estudiar",
 };
 
 export default function PaginaEstudiar() {

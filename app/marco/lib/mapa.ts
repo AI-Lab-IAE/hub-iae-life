@@ -38,8 +38,8 @@ export const ESTADOS: Record<
     nombre: "Por aprender",
     corto: "Sabes que te falta",
     descripcion: "Fallaste y lo sabías. Al menos no te va a sorprender: toca aprenderlo desde la base.",
-    color: "#3e5bd8",
-    fondo: "#e3e8fc",
+    color: "#0082ec",
+    fondo: "#e3edf8",
     orden: 1,
   },
   fragil: {

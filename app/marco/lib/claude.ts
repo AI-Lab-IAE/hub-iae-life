@@ -92,7 +92,7 @@ export async function pedirJSON<T extends z.ZodType>(opciones: {
         continue;
       }
       if (error instanceof Anthropic.RateLimitError) {
-        throw new ErrorIA("Hay mucha gente usando EstudIA ahora. Espera un minuto y vuelve a intentar.", 429);
+        throw new ErrorIA("Hay mucha gente usando Estudiar ahora. Espera un minuto y vuelve a intentar.", 429);
       }
       if (error instanceof Anthropic.APIError) {
         console.error(`[claude] error ${error.status}:`, error.message);

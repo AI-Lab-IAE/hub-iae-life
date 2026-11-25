@@ -8,7 +8,9 @@ import { llamarAPI } from "../lib/api";
 import { APUNTES_EJEMPLO, MATERIA_EJEMPLO } from "../lib/ejemplo";
 import type { Analisis, Calificacion, PedidoRepaso, Repaso } from "../lib/esquemas";
 import { evaluarSesion, type Sesion } from "../lib/mapa";
-import { botonSecundario } from "./estilos";
+import { BookOpen } from "lucide-react";
+import { Pantalla } from "../../_life/Pantalla";
+import { botonPrimario, botonSecundario, tarjeta } from "./estilos";
 import { PasoMapa } from "./PasoMapa";
 import { PasoQuiz } from "./PasoQuiz";
 import { PasoRepaso } from "./PasoRepaso";
@@ -34,22 +36,17 @@ const PASOS_REPASO = [
 
 const MATERIAL_VACIO: Material = { materia: "", texto: "", archivos: [], ejemplo: false };
 
+// Barra de Estudiar dentro del marco de IAE LIFE: volver al inicio de Estudiar y empezar otro diagnóstico.
 function EncabezadoEstudiar({ onNuevo, mostrarNuevo }: { onNuevo: () => void; mostrarNuevo: boolean }) {
+  if (!mostrarNuevo) return null;
   return (
-    <div className="flex items-center justify-between gap-4 border-b border-[#e4dccb] py-4">
-      <Link href="/marco" className="font-serif text-lg font-semibold tracking-tight text-[#15203b]">
-        Estud<span className="bg-[#ffe45c] px-0.5">IA</span>
+    <div className={`${tarjeta} mb-6 flex items-center justify-between gap-4 p-2 pl-4`}>
+      <Link href="/marco" className="text-sm font-semibold text-azul-700 hover:text-azul-900">
+        ← Estudiar
       </Link>
-      <div className="flex items-center gap-1 text-sm">
-        {mostrarNuevo && (
-          <button onClick={onNuevo} className="rounded-full px-3 py-2 text-[#4a5475] hover:text-[#15203b]">
-            Nuevo diagnóstico
-          </button>
-        )}
-        <Link href="/" className="hidden rounded-full px-3 py-2 text-[#4a5475] hover:text-[#15203b] sm:inline">
-          ← HUB IAE LIFE
-        </Link>
-      </div>
+      <button onClick={onNuevo} className="rounded-2xl px-3 py-2 text-sm font-semibold text-azul-800 hover:bg-azul-50">
+        Nuevo diagnóstico
+      </button>
     </div>
   );
 }
@@ -220,10 +217,10 @@ export function Estudiar() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
+    <Pantalla icono={BookOpen} titulo="Estudiar" texto="Encuentra lo que no sabes antes del examen." ancho="ancho">
       <EncabezadoEstudiar onNuevo={nuevo} mostrarNuevo={vista !== "subir"} />
 
-      <main className="flex-1 pb-24 pt-10 sm:pt-14">
+      <div className={`pb-16 ${vista === "subir" ? "pt-14" : "pt-2"}`}>
         {vista === "subir" && (
           <PasoSubir
             key={`${material.ejemplo}-${material.texto.length}`}
@@ -256,7 +253,7 @@ export function Estudiar() {
             <div className="mx-auto max-w-lg space-y-4 py-16 text-center">
               <Aviso>{error}</Aviso>
               <div className="flex flex-col justify-center gap-3 sm:flex-row">
-                <button onClick={() => calificar(sesion)} className="rounded-full bg-[#15203b] px-6 py-3 font-semibold text-[#faf7f0]">
+                <button onClick={() => calificar(sesion)} className={`${botonPrimario} px-6 py-3`}>
                   Reintentar
                 </button>
                 <button
@@ -296,7 +293,7 @@ export function Estudiar() {
             onVolver={() => setVista("mapa")}
           />
         )}
-      </main>
-    </div>
+      </div>
+    </Pantalla>
   );
 }
