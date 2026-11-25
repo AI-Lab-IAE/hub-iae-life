@@ -2509,7 +2509,7 @@ function App() {
         loaded.settings = {
           ...loaded.settings,
           ...(cuenta.idioma ? { lang: cuenta.idioma } : {}),
-          ...(cuenta.tema ? { theme: cuenta.tema } : {}),
+          theme: "dia", // IAE LIFE usa un solo tema (el modo noche quedó para después)
           ...(typeof cuenta.notif === "boolean" ? { notif: cuenta.notif } : {}),
         };
       }
@@ -2546,7 +2546,6 @@ function App() {
 
   // Si cambian los Ajustes de IAE LIFE (por ejemplo en otra pestaña), TASKUP! los aplica al momento.
   const idiomaCuenta = cuenta?.idioma;
-  const temaCuenta = cuenta?.tema;
   const notifCuenta = cuenta?.notif;
   const cuentaCargada = Boolean(cuenta);
   const generoCuenta = cuenta?.genero;
@@ -2560,7 +2559,7 @@ function App() {
             settings: {
               ...d.settings,
               ...(idiomaCuenta ? { lang: idiomaCuenta } : {}),
-              ...(temaCuenta ? { theme: temaCuenta } : {}),
+              theme: "dia",
               ...(typeof notifCuenta === "boolean" ? { notif: notifCuenta } : {}),
             },
             user: d.user && cuentaCargada
@@ -2569,7 +2568,7 @@ function App() {
           }
         : d,
     );
-  }, [idiomaCuenta, temaCuenta, notifCuenta, generoCuenta, nacimientoCuenta, cuentaCargada, loading]);
+  }, [idiomaCuenta, notifCuenta, generoCuenta, nacimientoCuenta, cuentaCargada, loading]);
 
   // Se guarda en cuanto cambia algo (localStorage es rápido): así no se pierde nada al cerrar o cambiar de cuenta.
   useEffect(() => {

@@ -259,6 +259,8 @@ export function enlaceMailto(cc: string): string {
 }
 
 // Abre la ventana de "Redactar" de Gmail. El estudiante escribe el destinatario, pega el mensaje y envía.
+// El enlace no lleva nada de lo que escribe el estudiante; solo el CC a sus padres (sale del Perfil),
+// que es justo lo que pidió Jonathan.
 export function enlaceGmail(cc: string): string {
   const c = limpio(cc);
   const partes = [
