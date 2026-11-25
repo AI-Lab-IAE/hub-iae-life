@@ -7,7 +7,7 @@ const colores: Record<Club["color"], string> = {
   rose: "from-rose-400 to-rose-600",
   violet: "from-violet-400 to-violet-600",
   emerald: "from-emerald-400 to-emerald-600",
-  indigo: "from-indigo-400 to-indigo-600",
+  indigo: "from-azul-400 to-azul-800",
 };
 
 // Logo inventado de un club: un dibujo sobre un círculo de color.
@@ -25,8 +25,8 @@ export function EstadoClub({ abierto }: { abierto: boolean }) {
     <span
       className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${
         abierto
-          ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300"
-          : "bg-slate-200 text-slate-600 dark:bg-slate-800 dark:text-slate-300"
+          ? "bg-emerald-100 text-emerald-800"
+          : "bg-azul-100 text-azul-900/70"
       }`}
     >
       {abierto ? "Abierto" : "Cerrado por ahora"}

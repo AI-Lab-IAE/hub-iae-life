@@ -19,12 +19,12 @@ export function Filtros<T extends string>({ opciones, elegido, alElegir }: Props
             onClick={() => alElegir(o.valor)}
             className={`${tocar} flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm font-medium ${
               activo
-                ? "border-indigo-600 bg-indigo-600 text-white shadow-sm shadow-indigo-500/25"
-                : "border-slate-200 bg-white text-slate-600 hover:border-indigo-300 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
+                ? "border-azul-800 bg-azul-800 text-white shadow-sm shadow-azul-500/25"
+                : "border-azul-100 bg-white text-azul-900/70 hover:border-azul-300"
             }`}
           >
             {o.nombre}
-            <span className={`rounded-full px-1.5 text-xs ${activo ? "bg-white/25" : "bg-indigo-50 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300"}`}>
+            <span className={`rounded-full px-1.5 text-xs ${activo ? "bg-white/25" : "bg-azul-50 text-azul-900"}`}>
               {o.cantidad}
             </span>
           </button>

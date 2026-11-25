@@ -1,37 +1,7 @@
 // Datos de ejemplo de la guía. Todo es inventado: no hay personas, teléfonos ni correos reales.
 // El repositorio es público: aquí NUNCA van datos reales de personas, ni ahora ni más adelante.
 
-export const anuncios = [
-  {
-    fecha: "2026-11-10",
-    titulo: "Feria de Ciencias de Prueba",
-    texto: "La feria será en el Patio Prueba A. Cada grupo presenta su proyecto de 8:00 a 11:00.",
-    detalle:
-      "Trae tu cartel y tu proyecto armado desde las 7:30 a. m. Los jueces de ejemplo pasarán por cada mesa. Las familias pueden visitar la feria de 10:00 a 11:00.",
-    importante: true,
-  },
-  {
-    fecha: "2026-11-03",
-    titulo: "Cambio de horario de la biblioteca",
-    texto: "Durante esta semana, la Biblioteca Prueba abre de 7:30 a 13:00.",
-    detalle: "Si necesitas devolver un libro después de la 1:00 p. m., déjalo en Coordinación Prueba. La próxima semana vuelve el horario normal.",
-    importante: false,
-  },
-  {
-    fecha: "2026-10-27",
-    titulo: "Entrega de boletas de ejemplo",
-    texto: "Las boletas del primer periodo se entregan en Coordinación Prueba.",
-    detalle: "Cada familia recoge la boleta en el horario que le toca. Si no puedes ir ese día, escribe a Coordinación Prueba para pedir otra fecha.",
-    importante: true,
-  },
-  {
-    fecha: "2026-10-20",
-    titulo: "Nuevo club de lectura",
-    texto: "El Profesor Prueba 3 abre inscripciones al club de lectura de los viernes.",
-    detalle: "El club se reúne los viernes en la Biblioteca Prueba. Para inscribirte, habla con el Profesor Prueba 3 o escríbele desde Contactos.",
-    importante: false,
-  },
-];
+// Los anuncios del colegio ahora viven en Avisos (app/abraham/datos.ts): un solo lugar para los avisos.
 
 export const eventos = [
   { fecha: "2026-11-02", titulo: "Día sin clases", tipo: "Vacaciones", descripcion: "No hay clases ni actividades en el colegio." },
@@ -203,38 +173,7 @@ export const pisos = [
   },
 ];
 
-// Horario de secundaria con las horas del timbre del colegio. No se ponen materias ni salones,
-// porque cada grupo tiene su propio horario.
-// "desde" y "hasta" van en formato de 24 horas para saber qué bloque toca ahora.
-export const bloquesSecundaria = [
-  { nombre: "Rezo", hora: "7:15 – 8:00 a. m.", tipo: "rezo", desde: "07:15", hasta: "08:00" },
-  { nombre: "Período 2", hora: "8:05 – 8:45 a. m.", tipo: "clase", desde: "08:05", hasta: "08:45" },
-  { nombre: "Período 3", hora: "8:50 – 9:30 a. m.", tipo: "clase", desde: "08:50", hasta: "09:30" },
-  { nombre: "Recreo", hora: "9:30 – 9:55 a. m.", tipo: "descanso", desde: "09:30", hasta: "09:55" },
-  { nombre: "Período 4", hora: "9:55 – 10:35 a. m.", tipo: "clase", desde: "09:55", hasta: "10:35" },
-  { nombre: "Período 5", hora: "10:40 – 11:20 a. m.", tipo: "clase", desde: "10:40", hasta: "11:20" },
-  { nombre: "Período 6", hora: "11:25 a. m. – 12:05 p. m.", tipo: "clase", desde: "11:25", hasta: "12:05" },
-  { nombre: "Período 7", hora: "12:10 – 12:50 p. m.", tipo: "clase", desde: "12:10", hasta: "12:50" },
-  { nombre: "Almuerzo", hora: "12:50 – 1:30 p. m.", tipo: "descanso", desde: "12:50", hasta: "13:30" },
-  { nombre: "Período 9", hora: "1:30 – 2:05 p. m.", tipo: "clase", desde: "13:30", hasta: "14:05" },
-  { nombre: "Período 10", hora: "2:10 – 2:50 p. m.", tipo: "clase", desde: "14:10", hasta: "14:50" },
-  { nombre: "Período 11", hora: "2:55 – 3:30 p. m.", tipo: "clase", desde: "14:55", hasta: "15:30" },
-] as const;
-
-// Cuántas clases hay cada día. El viernes la salida es a las 12:50 p. m.: solo hasta el periodo 7.
-export const semanaSecundaria = [
-  { dia: "Lunes", corto: "Lun", clases: 9 },
-  { dia: "Martes", corto: "Mar", clases: 9 },
-  { dia: "Miércoles", corto: "Mié", clases: 9 },
-  { dia: "Jueves", corto: "Jue", clases: 9 },
-  { dia: "Viernes", corto: "Vie", clases: 6 },
-];
-
-export const horarioSecundaria = {
-  entrada: "7:15 a. m.",
-  salida: "3:30 p. m.",
-  salidaViernes: "12:50 p. m.",
-};
+// El horario de clases ahora vive en Horario (app/_life/horario.ts): un solo horario para toda la app.
 
 export const reglas = [
   "Llega a tiempo: después de la hora de entrada se registra un retardo.",
