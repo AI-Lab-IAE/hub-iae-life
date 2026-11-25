@@ -46,7 +46,8 @@ function migrarHistoriales() {
       const datos: unknown = JSON.parse(original ?? "null");
       if (!Array.isArray(datos)) continue;
       const limpio = JSON.stringify(datos.map(limpiar).filter((r) => r !== null));
-      // Solo se escribe si nadie lo cambió mientras tanto.
+      // Solo se escribe si nadie lo cambió mientras tanto. Queda una ventana mínima entre leer y escribir
+      // (localStorage no tiene transacciones); es aceptable: la migración corre una sola vez y es instantánea.
       if (limpio !== original && localStorage.getItem(c) === original) localStorage.setItem(c, limpio);
     } catch {
       // un registro dañado no frena a los demás
