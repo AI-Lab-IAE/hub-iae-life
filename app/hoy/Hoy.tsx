@@ -1,14 +1,13 @@
 "use client";
 
-// Pantalla Hoy (boceto de Camille, 24-nov): la próxima clase arriba, luego mis pendientes y los avisos recientes.
-// Lee lo que ya guardan otras funciones en este navegador: el horario, los pendientes de School Guide
-// y los avisos de AvisoYa. No guarda nada nuevo.
+// Pantalla Hoy, la portada de IAE LIFE (boceto de Camille, 24-nov): la próxima clase arriba,
+// luego mis tareas y los avisos recientes. Lee lo que ya guardan las otras funciones en este navegador:
+// el horario (Horario), las tareas (Tareas) y los avisos (Avisos). No guarda nada nuevo.
 import Link from "next/link";
 import { useSyncExternalStore } from "react";
 import {
   BookOpen,
   CalendarDays,
-  Check,
   CheckCircle2,
   ChevronRight,
   ClipboardCheck,
@@ -19,7 +18,7 @@ import {
 } from "lucide-react";
 import { useCuenta } from "../_life/cuenta";
 import { BLOQUES, materia, momentoEnPanama, resumenDelDia, useHorario } from "../_life/horario";
-import { cambiarHecho, usePendientes } from "../camille/components/pendientes";
+import { useTareasPendientes } from "../daniela/lib/tareas";
 import { useAvisos } from "../abraham/almacen";
 
 // "¿Qué quieres hacer hoy?": tarjetas suaves de colores (idea de Dribbble que mandó Camille).
@@ -40,7 +39,7 @@ const ATAJOS = [
   },
   {
     href: "/camille",
-    titulo: "El colegio",
+    titulo: "Colegio",
     texto: "Mapa, clubes y contactos",
     icono: Compass,
     fondo: "bg-orange-50 text-orange-700",
@@ -73,7 +72,7 @@ export default function Hoy() {
   const correo = cuenta?.rol === "estudiante" ? cuenta.correo : null;
   const horario = useHorario(correo);
   const minuto = useSyncExternalStore(suscribirReloj, minutoActual, () => null);
-  const { pendientes, listo } = usePendientes();
+  const tareas = useTareasPendientes(cuenta?.correo ?? null);
   const avisos = useAvisos();
 
   const fecha = minuto === null ? null : new Date(minuto * 60_000);
@@ -83,15 +82,15 @@ export default function Hoy() {
   const clase = horario && bloque !== null && dia !== null ? materia(horario[bloque][dia]) : null;
   const esAhora = resumen?.actual !== null && resumen?.actual === bloque;
 
-  const porHacer = pendientes.filter((p) => !p.hecho).slice(0, 3);
-  // Solo avisos para todo el colegio: los de un salón o un estudiante se ven en AvisoYa, según quién seas.
+  const porHacer = (tareas ?? []).slice(0, 3);
+  // Solo avisos para todo el colegio: los de un salón o un estudiante se ven en Avisos, según quién seas.
   const ultimos = avisos.filter((a) => a.audiencia === "Toda la escuela").slice(0, 3);
   const nombre = cuenta?.nombre.split(" ")[0];
 
   return (
-    <main className="relative flex-1 overflow-hidden">
+    <main className="relative flex-1 overflow-hidden bg-azul-50/60">
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-56 bg-linear-to-b from-azul-800 to-azul-700"
+        className="pointer-events-none absolute inset-x-0 top-0 h-56 bg-linear-to-br from-azul-900 via-azul-800 to-azul-700"
         aria-hidden
       />
       <div className="relative mx-auto max-w-2xl px-4 pb-10 pt-8">
@@ -151,32 +150,34 @@ export default function Hoy() {
           ))}
         </div>
 
-        {/* Mis pendientes */}
+        {/* Mis tareas: las mismas de la función Tareas */}
         <section className="mt-5 rounded-3xl bg-white p-5 shadow-sm ring-1 ring-azul-900/5">
-          <Titulo icono={CheckCircle2} texto="Mis pendientes" href="/camille/pendientes" ver="Ver todas" />
-          {!listo ? null : porHacer.length === 0 ? (
+          <Titulo icono={CheckCircle2} texto="Mis tareas" href="/daniela" ver="Ver todas" />
+          {tareas === null ? null : porHacer.length === 0 ? (
             <p className="mt-3 text-sm text-azul-900/60">
-              No tienes pendientes.{" "}
-              <Link href="/camille/pendientes" className="font-semibold text-azul-700">
-                Agrega uno
+              No tienes tareas pendientes.{" "}
+              <Link href="/daniela" className="font-semibold text-azul-700">
+                Agrega una
               </Link>
             </p>
           ) : (
             <ul className="mt-2 divide-y divide-azul-100">
-              {porHacer.map((p) => (
-                <li key={p.id} className="flex items-center gap-3 py-3">
-                  <button
-                    type="button"
-                    onClick={() => cambiarHecho(p.id)}
-                    aria-label={`Marcar «${p.titulo}» como hecho`}
-                    className="group grid size-7 shrink-0 place-items-center rounded-lg border-2 border-azul-200 transition-colors hover:border-azul-700"
-                  >
-                    <Check className="size-4 text-azul-700 opacity-0 group-hover:opacity-100" aria-hidden />
-                  </button>
-                  <span className="min-w-0">
-                    <span className="block truncate text-azul-950">{p.titulo}</span>
-                    {p.materia && <span className="block text-xs text-azul-900/55">{p.materia}</span>}
-                  </span>
+              {porHacer.map((t) => (
+                <li key={t.id}>
+                  <Link href="/daniela" className="flex items-center gap-3 py-3">
+                    <span className="grid size-8 shrink-0 place-items-center rounded-full bg-violet-100 text-violet-700">
+                      <ClipboardCheck className="size-4" aria-hidden />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-azul-950">{t.nombre}</span>
+                      <span className="block text-xs text-azul-900/55">
+                        {[t.materia, t.entrega && `Entrega ${DIA_CORTO.format(new Date(`${t.entrega}T12:00:00-05:00`))}`]
+                          .filter(Boolean)
+                          .join(" · ")}
+                      </span>
+                    </span>
+                    <ChevronRight className="size-5 shrink-0 text-azul-900/40" aria-hidden />
+                  </Link>
                 </li>
               ))}
             </ul>

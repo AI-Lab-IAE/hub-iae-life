@@ -1,6 +1,7 @@
 "use client";
 
 // Barra de abajo en el celular (boceto de Camille): Hoy, Estudiar, Tareas, Avisos y Perfil.
+// Faltar, Colegio y Horario se abren desde Hoy o desde "Funciones" arriba.
 // En computadora no sale; ahí se usa la barra de arriba. En el HUB (/hub y /coordinador) tampoco.
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -10,15 +11,14 @@ import { BookOpen, ClipboardCheck, Home, Megaphone, UserRound } from "lucide-rea
 const PESTANAS = [
   { href: "/marco", texto: "Estudiar", icono: BookOpen },
   { href: "/daniela", texto: "Tareas", icono: ClipboardCheck },
-  { href: "/hoy", texto: "Hoy", icono: Home },
+  { href: "/", texto: "Hoy", icono: Home },
   { href: "/abraham", texto: "Avisos", icono: Megaphone },
   { href: "/perfil", texto: "Perfil", icono: UserRound },
 ];
 
 export default function BarraAbajo() {
   const ruta = usePathname();
-  // En el inicio no hay barras: las funciones se abren con sus botones (pedido de Daniela, 24-nov).
-  if (ruta === "/" || ruta.startsWith("/hub") || ruta.startsWith("/coordinador")) return null;
+  if (ruta.startsWith("/hub") || ruta.startsWith("/coordinador")) return null;
 
   return (
     <>
@@ -29,8 +29,8 @@ export default function BarraAbajo() {
       >
         <ul className="mx-auto grid max-w-md grid-cols-5">
           {PESTANAS.map((p) => {
-            const activa = ruta === p.href || ruta.startsWith(`${p.href}/`);
-            if (p.href === "/hoy") {
+            const activa = p.href === "/" ? ruta === "/" : ruta === p.href || ruta.startsWith(`${p.href}/`);
+            if (p.href === "/") {
               return (
                 <li key={p.href} className="flex justify-center">
                   <Link

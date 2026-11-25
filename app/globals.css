@@ -66,36 +66,10 @@ body {
   font-family: var(--font-roboto), var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
-/* Título animado de la portada: cada letra sube y se ilumina. */
+/* Entrada suave de tarjetas y menús. */
 @media (prefers-reduced-motion: no-preference) {
-  .life-letra {
-    display: inline-block;
-    animation: life-letra 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
-  }
   .life-entrar {
     animation: life-entrar 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
-  }
-  .life-brillo {
-    background-size: 200% 100%;
-    animation: life-brillo 6s ease-in-out infinite;
-  }
-  .life-letra.life-brillo {
-    animation:
-      life-letra 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both,
-      life-brillo 6s ease-in-out infinite;
-  }
-}
-
-@keyframes life-letra {
-  from {
-    opacity: 0;
-    transform: translateY(0.4em) rotateX(-70deg);
-    filter: blur(8px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-    filter: none;
   }
 }
 
@@ -107,25 +81,5 @@ body {
   to {
     opacity: 1;
     transform: none;
-  }
-}
-
-@keyframes life-brillo {
-  0%,
-  100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-/* "Abrir la app" baja deslizando hasta las funciones. */
-html {
-  scroll-behavior: smooth;
-}
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
   }
 }

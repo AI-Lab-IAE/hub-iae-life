@@ -1,8 +1,6 @@
-import type { Metadata } from "next";
-import Hoy from "./Hoy";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = { title: "Hoy" };
-
+// Hoy ahora es la portada (/). Los enlaces viejos a /hoy siguen funcionando.
 export default function Pagina() {
-  return <Hoy />;
+  redirect("/");
 }

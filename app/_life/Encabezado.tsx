@@ -3,13 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ArrowRight, CalendarDays, Home, Settings, Menu, Users, X } from "lucide-react";
+import { ArrowRight, Home, Settings, Menu, Users, X } from "lucide-react";
 import { funciones, type Funcion } from "./funciones";
 import { Marca } from "./Marca";
 import BotonCuenta from "./BotonCuenta";
 
-// Barra de IAE LIFE: fija arriba en todas las funciones. Las funciones se abren desde el inicio
-// o con el botón "Funciones" (sin repetirlas en la barra, para que no confunda). En el HUB (/hub y /coordinador) no se muestra.
+// Barra de IAE LIFE: fija arriba en todas las pantallas, también en Hoy (la portada).
+// Las funciones se abren desde Hoy o con el botón "Funciones". En el HUB (/hub y /coordinador) no se muestra.
 export default function Encabezado() {
   const ruta = usePathname();
   const [abierto, setAbierto] = useState(false);
@@ -32,8 +32,7 @@ export default function Encabezado() {
     };
   }, [abierto]);
 
-  // En el inicio no hay barras: las funciones se abren con sus botones (pedido de Daniela, 24-nov).
-  if (ruta === "/" || ruta.startsWith("/hub") || ruta.startsWith("/coordinador")) return null;
+  if (ruta.startsWith("/hub") || ruta.startsWith("/coordinador")) return null;
 
   const activa = (f: Funcion) => ruta === f.href || ruta.startsWith(`${f.href}/`);
 
@@ -83,22 +82,12 @@ export default function Encabezado() {
               ))}
             </ul>
             <Link
-              href="/hoy"
+              href="/"
               onClick={() => setAbierto(false)}
               className="mt-3 flex items-center justify-between rounded-2xl bg-azul-800 px-4 py-3 text-sm font-medium text-white"
             >
               <span className="flex items-center gap-2">
                 <Home className="size-4" aria-hidden /> Hoy
-              </span>
-              <ArrowRight className="size-4" aria-hidden />
-            </Link>
-            <Link
-              href="/horario"
-              onClick={() => setAbierto(false)}
-              className="mt-3 flex items-center justify-between rounded-2xl bg-azul-50 px-4 py-3 text-sm font-medium text-azul-800"
-            >
-              <span className="flex items-center gap-2">
-                <CalendarDays className="size-4" aria-hidden /> Mi horario
               </span>
               <ArrowRight className="size-4" aria-hidden />
             </Link>
@@ -118,7 +107,7 @@ export default function Encabezado() {
               className="mt-3 flex items-center justify-between rounded-2xl bg-azul-50 px-4 py-3 text-sm font-medium text-azul-800"
             >
               <span className="flex items-center gap-2">
-                <Users className="size-4" aria-hidden /> Quién creó cada función
+                <Users className="size-4" aria-hidden /> Créditos
               </span>
               <ArrowRight className="size-4" aria-hidden />
             </Link>
@@ -130,32 +119,6 @@ export default function Encabezado() {
 }
 
 function ElementoMenu({ f, activa, alCerrar }: { f: Funcion; activa: boolean; alCerrar: () => void }) {
-  const contenido = (
-    <>
-      <span
-        className={`grid size-11 shrink-0 place-items-center rounded-xl ${
-          f.estado === "lista" ? "bg-azul-800 text-white" : "bg-azul-50 text-azul-400"
-        }`}
-      >
-        <f.icono className="size-5" aria-hidden />
-      </span>
-      <span className="min-w-0">
-        <span className="flex items-center gap-2 font-semibold text-azul-950">
-          {f.proyecto}
-          {f.estado === "proximamente" && (
-            <span className="rounded-full bg-azul-50 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-azul-600">
-              Pronto
-            </span>
-          )}
-        </span>
-        <span className="block truncate text-sm text-azul-900/60">{f.resumen}</span>
-      </span>
-    </>
-  );
-
-  if (f.estado !== "lista") {
-    return <div className="flex items-center gap-3 rounded-2xl p-3 opacity-70">{contenido}</div>;
-  }
   return (
     <Link
       href={f.href}
@@ -165,7 +128,13 @@ function ElementoMenu({ f, activa, alCerrar }: { f: Funcion; activa: boolean; al
         activa ? "bg-azul-50 ring-1 ring-azul-200" : "hover:bg-azul-50"
       }`}
     >
-      {contenido}
+      <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-azul-800 text-white">
+        <f.icono className="size-5" aria-hidden />
+      </span>
+      <span className="min-w-0">
+        <span className="block font-semibold text-azul-950">{f.nombre}</span>
+        <span className="block truncate text-sm text-azul-900/60">{f.resumen}</span>
+      </span>
     </Link>
   );
 }
