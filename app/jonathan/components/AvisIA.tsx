@@ -134,8 +134,13 @@ function Flujo({ cuenta }: { cuenta: Cuenta | null }) {
                 profesor: revísalo, ábrelo en Gmail y envíalo tú. Nada se envía solo.
               </p>
 
+              <p className="mt-4 rounded-2xl bg-oro/15 px-4 py-3 text-sm text-azul-950">
+                <strong className="font-semibold">Correos de ejemplo:</strong> los profesores y sus correos son inventados.
+                En el piloto, los correos reales de los profesores vendrán del colegio.
+              </p>
+
               <div
-                className={`mt-4 flex items-start gap-3 rounded-2xl px-4 py-3 text-sm ${
+                className={`mt-3 flex items-start gap-3 rounded-2xl px-4 py-3 text-sm ${
                   cc ? "bg-lime-50 text-lime-900" : "bg-azul-50 text-azul-900"
                 }`}
               >

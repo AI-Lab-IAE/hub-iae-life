@@ -104,14 +104,30 @@ function escribir(correo: string, lista: Registro[]): boolean {
   return ok;
 }
 
+// Lee lo guardado justo ahora, sin pasar por el caché (otra pestaña pudo cambiarlo hace un momento).
+function leerFresco(correo: string): Registro[] {
+  try {
+    const datos: unknown = JSON.parse(localStorage.getItem(clave(correo)) ?? "null");
+    return Array.isArray(datos) ? datos.map(limpiar).filter((r): r is Registro => r !== null) : [];
+  } catch {
+    return [];
+  }
+}
+
+// Agregar y borrar releen la lista justo antes de escribir y aplican un solo cambio (por id) sobre ella,
+// para no pisar lo que otra pestaña guardó. Límite que queda: localStorage no tiene transacciones, así que
+// si dos pestañas escriben en el mismo instante, el último que escribe gana (ver DESPUES.md).
 export function agregarAlHistorial(correo: string, registro: Registro): boolean {
-  return escribir(correo, [registro, ...leer(correo)].slice(0, MAXIMO));
+  const lista = leerFresco(correo).filter((r) => r.id !== registro.id);
+  return escribir(correo, [registro, ...lista].slice(0, MAXIMO));
 }
 
 export function borrarDelHistorial(correo: string, id: string): boolean {
+  const lista = leerFresco(correo);
+  if (!lista.some((r) => r.id === id)) return true; // ya no estaba (quizá se borró en otra pestaña)
   return escribir(
     correo,
-    leer(correo).filter((r) => r.id !== id),
+    lista.filter((r) => r.id !== id),
   );
 }
 

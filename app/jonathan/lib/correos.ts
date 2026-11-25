@@ -239,19 +239,24 @@ export function correoValido(v: string | undefined): v is string {
 // Solo deja pasar un correo válido; si no, queda vacío y el enlace sale sin ese campo.
 const limpio = (v: string) => (correoValido(v) ? v.trim() : "");
 
-// Abre la app de correo del dispositivo con todo escrito. No envía nada solo.
-export function enlaceMailto(para: string, asunto: string, cuerpo: string, cc: string): string {
+// El enlace (Gmail o mailto) queda en el historial del navegador, así que NO lleva el mensaje:
+// lo que el estudiante escribió puede tener detalles de salud. Solo va el destinatario, la copia, el asunto
+// y este texto. El mensaje completo se copia al portapapeles y el estudiante lo pega.
+export const CUERPO_ENLACE = "(Pega aquí el mensaje que copiaste en IAE LIFE.)";
+
+// Abre la app de correo del dispositivo con el destinatario y el asunto. No envía nada solo.
+export function enlaceMailto(para: string, asunto: string, cc: string): string {
   const c = limpio(cc);
   const partes = [
     c && `cc=${encodeURIComponent(c)}`,
     `subject=${encodeURIComponent(asunto)}`,
-    `body=${encodeURIComponent(cuerpo)}`,
+    `body=${encodeURIComponent(CUERPO_ENLACE)}`,
   ];
   return `mailto:${encodeURIComponent(limpio(para))}?${partes.filter(Boolean).join("&")}`;
 }
 
-// Abre la ventana de "Redactar" de Gmail en el navegador, ya escrita. El estudiante revisa y envía.
-export function enlaceGmail(para: string, asunto: string, cuerpo: string, cc: string): string {
+// Abre la ventana de "Redactar" de Gmail con el destinatario y el asunto. El estudiante pega el mensaje y envía.
+export function enlaceGmail(para: string, asunto: string, cc: string): string {
   const c = limpio(cc);
   const partes = [
     "view=cm",
@@ -259,7 +264,7 @@ export function enlaceGmail(para: string, asunto: string, cuerpo: string, cc: st
     `to=${encodeURIComponent(limpio(para))}`,
     c && `cc=${encodeURIComponent(c)}`,
     `su=${encodeURIComponent(asunto)}`,
-    `body=${encodeURIComponent(cuerpo)}`,
+    `body=${encodeURIComponent(CUERPO_ENLACE)}`,
   ];
   return `https://mail.google.com/mail/?${partes.filter(Boolean).join("&")}`;
 }

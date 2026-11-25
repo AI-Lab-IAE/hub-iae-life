@@ -55,14 +55,22 @@ export default function TarjetaCorreo({ correo, cc, abierto, onTono, onLargo, on
   const [copiado, setCopiado] = useState(false);
   const para = correo.profesor.correo;
 
-  async function copiar() {
+  // Copia solo el mensaje (el asunto ya va en el enlace). Devuelve si se pudo.
+  async function copiar(): Promise<boolean> {
     try {
-      await navigator.clipboard.writeText(`${correo.asunto}\n\n${correo.cuerpo}`);
+      await navigator.clipboard.writeText(correo.cuerpo);
       setCopiado(true);
-      setTimeout(() => setCopiado(false), 2000);
+      setTimeout(() => setCopiado(false), 2500);
+      return true;
     } catch {
-      // el navegador no dejó copiar
+      return false; // el navegador no dejó copiar
     }
+  }
+
+  // Al abrir Gmail o la app de correo, el mensaje se copia solo para pegarlo (no viaja en el enlace).
+  function abrir() {
+    void copiar();
+    onAbierto();
   }
 
   const campo =
@@ -81,7 +89,12 @@ export default function TarjetaCorreo({ correo, cc, abierto, onTono, onLargo, on
         <div className="min-w-0 flex-1">
           <p className="font-bold text-azul-950">{correo.profesor.nombre}</p>
           <p className="text-sm text-azul-800">{materiasDe(correo.clases)}</p>
-          <p className="mt-1 break-all text-xs text-azul-900/60">Para: {para}</p>
+          <p className="mt-1 break-all text-xs text-azul-900/60">
+            Para: {para}{" "}
+            <span className="whitespace-nowrap rounded-full bg-oro/20 px-1.5 py-0.5 font-semibold text-azul-950">
+              correo de ejemplo
+            </span>
+          </p>
           {cc && <p className="break-all text-xs text-azul-900/60">CC: {cc}</p>}
         </div>
         {abierto && (
@@ -117,22 +130,26 @@ export default function TarjetaCorreo({ correo, cc, abierto, onTono, onLargo, on
           </label>
         </div>
 
+        <p className="rounded-2xl bg-azul-50 px-3 py-2 text-xs text-azul-900/70">
+          Al abrir el correo, el mensaje se copia solo: pégalo en el cuerpo. Así lo que escribiste no queda en el
+          historial del navegador.
+        </p>
         <div className="grid grid-cols-2 gap-2">
           <a
-            href={enlaceGmail(para, correo.asunto, correo.cuerpo, cc)}
+            href={enlaceGmail(para, correo.asunto, cc)}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={onAbierto}
+            onClick={abrir}
             className="col-span-2 flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-azul-800 px-4 font-bold text-white transition hover:bg-azul-900"
           >
             <ExternalLink className="size-4" aria-hidden />
             Abrir en Gmail
           </a>
           <a
-            href={enlaceMailto(para, correo.asunto, correo.cuerpo, cc)}
+            href={enlaceMailto(para, correo.asunto, cc)}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={onAbierto}
+            onClick={abrir}
             className="flex min-h-11 items-center justify-center gap-2 rounded-2xl bg-azul-50 px-3 text-sm font-semibold text-azul-800 ring-1 ring-azul-100 hover:bg-azul-100"
           >
             <Mail className="size-4" aria-hidden />
@@ -152,7 +169,7 @@ export default function TarjetaCorreo({ correo, cc, abierto, onTono, onLargo, on
             className="col-span-2 flex min-h-10 items-center justify-center gap-2 rounded-2xl text-sm font-semibold text-azul-700 hover:bg-azul-50"
           >
             {copiado ? <Check className="size-4" aria-hidden /> : <Copy className="size-4" aria-hidden />}
-            {copiado ? "¡Copiado!" : "Copiar asunto y mensaje"}
+            {copiado ? "¡Mensaje copiado! Pégalo en el correo" : "Copiar texto"}
           </button>
         </div>
       </div>
