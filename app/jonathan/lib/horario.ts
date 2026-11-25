@@ -1,5 +1,7 @@
 // Horario semanal de ejemplo. Los profesores y correos son inventados.
+// Solo se usa cuando no hay cuenta: con cuenta de estudiante, AvisIA lee el horario real de IAE LIFE.
 // Para cambiar una clase, edita la lista del día correspondiente.
+import { BLOQUES, hayBloque, materia, type Horario as HorarioLife } from "../../_life/horario";
 
 export type Dia = "lunes" | "martes" | "miercoles" | "jueves" | "viernes";
 
@@ -66,3 +68,23 @@ export const HORARIO: Record<Dia, Clase[]> = {
   jueves: dia(["espanol", "matematicas", "ciencias", "ingles", "historia", "educacionFisica"]),
   viernes: dia(["hebreo", "informatica", "matematicas", "espanol", "ciencias", "historia"]),
 };
+
+export const ORDEN_DIAS: Dia[] = ["lunes", "martes", "miercoles", "jueves", "viernes"];
+
+// Convierte el horario de "Mi horario" de IAE LIFE (bloques × días) en las clases de un día.
+export function clasesDeIAELife(horario: HorarioLife, dia: Dia): Clase[] {
+  const d = ORDEN_DIAS.indexOf(dia); // 0 = lunes … 4 = viernes
+  const clases: Clase[] = [];
+  BLOQUES.forEach((b, i) => {
+    if (!hayBloque(i, d)) return;
+    const m = materia(horario[i][d]);
+    if (!m) return;
+    clases.push({
+      inicio: b.desde,
+      fin: b.hasta,
+      materia: m.nombre,
+      profesor: { nombre: m.profesor, correo: m.correo },
+    });
+  });
+  return clases;
+}
