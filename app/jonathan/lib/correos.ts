@@ -239,31 +239,33 @@ export function correoValido(v: string | undefined): v is string {
 // Solo deja pasar un correo válido; si no, queda vacío y el enlace sale sin ese campo.
 const limpio = (v: string) => (correoValido(v) ? v.trim() : "");
 
-// El enlace (Gmail o mailto) queda en el historial del navegador, así que NO lleva el mensaje:
-// lo que el estudiante escribió puede tener detalles de salud. Solo va el destinatario, la copia, el asunto
-// y este texto. El mensaje completo se copia al portapapeles y el estudiante lo pega.
+// El enlace (Gmail o mailto) queda en el historial del navegador, así que NO lleva nada escrito por el
+// estudiante: ni el mensaje (puede tener detalles de salud) ni el asunto editado. Va un asunto genérico,
+// la copia a los padres y este texto; el asunto y el mensaje se copian y se pegan.
+// Tampoco va el "Para": los correos de los profesores del horario de ejemplo son inventados y podrían existir,
+// así que el estudiante escribe el correo real de su profesor. En el piloto vendrán del colegio.
+export const ASUNTO_ENLACE = "Aviso de ausencia";
 export const CUERPO_ENLACE = "(Pega aquí el mensaje que copiaste en IAE LIFE.)";
 
-// Abre la app de correo del dispositivo con el destinatario y el asunto. No envía nada solo.
-export function enlaceMailto(para: string, asunto: string, cc: string): string {
+// Abre la app de correo del dispositivo. No envía nada solo.
+export function enlaceMailto(cc: string): string {
   const c = limpio(cc);
   const partes = [
     c && `cc=${encodeURIComponent(c)}`,
-    `subject=${encodeURIComponent(asunto)}`,
+    `subject=${encodeURIComponent(ASUNTO_ENLACE)}`,
     `body=${encodeURIComponent(CUERPO_ENLACE)}`,
   ];
-  return `mailto:${encodeURIComponent(limpio(para))}?${partes.filter(Boolean).join("&")}`;
+  return `mailto:?${partes.filter(Boolean).join("&")}`;
 }
 
-// Abre la ventana de "Redactar" de Gmail con el destinatario y el asunto. El estudiante pega el mensaje y envía.
-export function enlaceGmail(para: string, asunto: string, cc: string): string {
+// Abre la ventana de "Redactar" de Gmail. El estudiante escribe el destinatario, pega el mensaje y envía.
+export function enlaceGmail(cc: string): string {
   const c = limpio(cc);
   const partes = [
     "view=cm",
     "fs=1",
-    `to=${encodeURIComponent(limpio(para))}`,
     c && `cc=${encodeURIComponent(c)}`,
-    `su=${encodeURIComponent(asunto)}`,
+    `su=${encodeURIComponent(ASUNTO_ENLACE)}`,
     `body=${encodeURIComponent(CUERPO_ENLACE)}`,
   ];
   return `https://mail.google.com/mail/?${partes.filter(Boolean).join("&")}`;

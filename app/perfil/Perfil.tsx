@@ -61,7 +61,6 @@ function PerfilDe({ cuenta }: { cuenta: Cuenta }) {
   const fechaValida =
     dia !== "" && mes !== "" && new Date(2000, Number(mes) - 1, Number(dia)).getMonth() === Number(mes) - 1;
   const nacimiento = fechaValida ? `2000-${mes.padStart(2, "0")}-${dia.padStart(2, "0")}` : "";
-  const [tema, setTema] = useState<"dia" | "noche">(cuenta.tema ?? "dia");
   const [notif, setNotif] = useState(cuenta.notif ?? true);
   const faltanDatos = !cuenta.genero || !cuenta.nacimiento;
   const [guardado, setGuardado] = useState<"" | "si" | "memoria">("");
@@ -78,7 +77,8 @@ function PerfilDe({ cuenta }: { cuenta: Cuenta }) {
       idioma,
       genero: genero === "mujer" || genero === "hombre" ? genero : undefined,
       nacimiento: nacimiento || undefined,
-      tema,
+      // Toda IAE LIFE es clara por ahora (el modo noche para toda la app está en DESPUES.md).
+      tema: undefined,
       notif,
     });
     setGuardado(ok ? "si" : "memoria");
@@ -137,8 +137,7 @@ function PerfilDe({ cuenta }: { cuenta: Cuenta }) {
         >
           <h2 className="font-bold text-azul-950">Ajustes de IAE LIFE</h2>
           <p className="mt-1 text-sm text-azul-900/65">
-            Las apps de IAE LIFE los usan para no volver a pedírtelos (por ahora TASKUP!; el tema y el idioma irán
-            llegando a las demás).
+            Todas las funciones de IAE LIFE los usan para no volver a pedírtelos (el idioma, por ahora, solo en Tareas).
           </p>
           {faltanDatos && (
             <p className="mt-3 rounded-2xl bg-oro/15 px-4 py-3 text-sm font-medium text-azul-950">
@@ -215,32 +214,6 @@ function PerfilDe({ cuenta }: { cuenta: Cuenta }) {
             )}
           </fieldset>
 
-          <fieldset className="mt-5">
-            <legend className="text-sm font-medium text-azul-900">Tema</legend>
-            <div className="mt-2 inline-flex rounded-full bg-azul-50 p-1">
-              {(
-                [
-                  ["dia", "Día"],
-                  ["noche", "Noche"],
-                ] as const
-              ).map(([valor, texto]) => (
-                <button
-                  key={valor}
-                  type="button"
-                  onClick={() => {
-                    setTema(valor);
-                    setGuardado("");
-                  }}
-                  aria-pressed={tema === valor}
-                  className={`rounded-full px-4 py-1.5 text-sm font-semibold transition ${
-                    tema === valor ? "bg-azul-800 text-white" : "text-azul-900"
-                  }`}
-                >
-                  {texto}
-                </button>
-              ))}
-            </div>
-          </fieldset>
 
           <label className="mt-5 flex items-center justify-between gap-3 text-sm font-medium text-azul-900">
             Recordatorios de tareas y exámenes

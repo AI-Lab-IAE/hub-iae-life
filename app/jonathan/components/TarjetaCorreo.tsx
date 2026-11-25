@@ -52,24 +52,23 @@ type Props = {
 };
 
 export default function TarjetaCorreo({ correo, cc, abierto, onTono, onLargo, onRegenerar, onEditar, onAbierto }: Props) {
-  const [copiado, setCopiado] = useState(false);
+  // Qué se copió por última vez ("asunto" o "mensaje"), o "error" si el navegador no dejó copiar.
+  const [copia, setCopia] = useState<"" | "asunto" | "mensaje" | "error">("");
   const para = correo.profesor.correo;
 
-  // Copia solo el mensaje (el asunto ya va en el enlace). Devuelve si se pudo.
-  async function copiar(): Promise<boolean> {
+  async function copiar(que: "asunto" | "mensaje"): Promise<void> {
     try {
-      await navigator.clipboard.writeText(correo.cuerpo);
-      setCopiado(true);
-      setTimeout(() => setCopiado(false), 2500);
-      return true;
+      await navigator.clipboard.writeText(que === "asunto" ? correo.asunto : correo.cuerpo);
+      setCopia(que);
+      setTimeout(() => setCopia((c) => (c === que ? "" : c)), 2500);
     } catch {
-      return false; // el navegador no dejó copiar
+      setCopia("error"); // no se dice "copiado": se muestra el texto para copiarlo a mano
     }
   }
 
   // Al abrir Gmail o la app de correo, el mensaje se copia solo para pegarlo (no viaja en el enlace).
   function abrir() {
-    void copiar();
+    void copiar("mensaje");
     onAbierto();
   }
 
@@ -92,7 +91,7 @@ export default function TarjetaCorreo({ correo, cc, abierto, onTono, onLargo, on
           <p className="mt-1 break-all text-xs text-azul-900/60">
             Para: {para}{" "}
             <span className="whitespace-nowrap rounded-full bg-oro/20 px-1.5 py-0.5 font-semibold text-azul-950">
-              correo de ejemplo
+              correo de ejemplo: escribe el real
             </span>
           </p>
           {cc && <p className="break-all text-xs text-azul-900/60">CC: {cc}</p>}
@@ -131,12 +130,12 @@ export default function TarjetaCorreo({ correo, cc, abierto, onTono, onLargo, on
         </div>
 
         <p className="rounded-2xl bg-azul-50 px-3 py-2 text-xs text-azul-900/70">
-          Al abrir el correo, el mensaje se copia solo: pégalo en el cuerpo. Así lo que escribiste no queda en el
-          historial del navegador.
+          Al abrir el correo, el mensaje se copia solo: pégalo en el cuerpo, copia el asunto y escribe el correo real
+          de tu profesor. Así lo que escribiste no queda en el historial del navegador.
         </p>
         <div className="grid grid-cols-2 gap-2">
           <a
-            href={enlaceGmail(para, correo.asunto, cc)}
+            href={enlaceGmail(cc)}
             target="_blank"
             rel="noopener noreferrer"
             onClick={abrir}
@@ -146,7 +145,7 @@ export default function TarjetaCorreo({ correo, cc, abierto, onTono, onLargo, on
             Abrir en Gmail
           </a>
           <a
-            href={enlaceMailto(para, correo.asunto, cc)}
+            href={enlaceMailto(cc)}
             target="_blank"
             rel="noopener noreferrer"
             onClick={abrir}
@@ -163,15 +162,30 @@ export default function TarjetaCorreo({ correo, cc, abierto, onTono, onLargo, on
             <RefreshCw className="size-4" aria-hidden />
             Regenerar
           </button>
-          <button
-            type="button"
-            onClick={copiar}
-            className="col-span-2 flex min-h-10 items-center justify-center gap-2 rounded-2xl text-sm font-semibold text-azul-700 hover:bg-azul-50"
-          >
-            {copiado ? <Check className="size-4" aria-hidden /> : <Copy className="size-4" aria-hidden />}
-            {copiado ? "¡Mensaje copiado! Pégalo en el correo" : "Copiar texto"}
-          </button>
+          {(["asunto", "mensaje"] as const).map((que) => (
+            <button
+              key={que}
+              type="button"
+              onClick={() => copiar(que)}
+              className="flex min-h-10 items-center justify-center gap-2 rounded-2xl text-sm font-semibold text-azul-700 hover:bg-azul-50"
+            >
+              {copia === que ? <Check className="size-4" aria-hidden /> : <Copy className="size-4" aria-hidden />}
+              {copia === que ? "¡Copiado!" : que === "asunto" ? "Copiar asunto" : "Copiar mensaje"}
+            </button>
+          ))}
         </div>
+        {copia === "error" && (
+          <div role="alert" className="rounded-2xl bg-red-50 p-3 text-sm text-red-800">
+            <p className="font-semibold">Tu navegador no dejó copiar. Selecciona el texto y cópialo a mano:</p>
+            <textarea
+              readOnly
+              value={`${correo.asunto}\n\n${correo.cuerpo}`}
+              onFocus={(e) => e.currentTarget.select()}
+              rows={8}
+              className="mt-2 w-full rounded-xl border border-red-200 bg-white px-3 py-2 text-azul-950"
+            />
+          </div>
+        )}
       </div>
     </article>
   );

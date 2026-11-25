@@ -52,3 +52,14 @@ Reúne los `DESPUES.md` de cada función. El detalle sigue en `app/<nombre>/DESP
 - Lista real de profesores autorizados (hoy `app/_life/profesores.ts` tiene los profesores inventados).
 - Que AusencIA use el correo de los padres del perfil para la copia.
 - Esconder "Probar con un usuario de ejemplo" cuando la app pase a datos reales.
+
+## Una sola app (25-nov)
+
+IAE LIFE se ve y funciona como una sola app: Hoy es la portada, las funciones se llaman por lo que hacen
+(Estudiar, Tareas, Avisos, Faltar, Colegio, Horario) y los proyectos y autores solo salen en Créditos. Lo que falta:
+
+- Modo noche para toda la app (antes solo lo tenía Tareas; se quitó del Perfil hasta que sea de todas).
+- Idioma inglés para todas las funciones (hoy solo Tareas lo usa).
+- Guardar todo por cuenta en una base de datos (hoy cada función guarda en el navegador).
+- Marcar tareas como hechas desde Hoy (hoy Hoy las muestra y abre Tareas).
+- Ver el detalle por función en `app/<nombre>/DESPUES.md`.
