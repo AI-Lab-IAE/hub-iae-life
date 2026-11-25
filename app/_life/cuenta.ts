@@ -8,6 +8,11 @@ import { useSyncExternalStore } from "react";
 import { PROFESORES_AUTORIZADOS } from "./profesores";
 
 export const DOMINIO = "iae.edu";
+
+// Correo con forma válida (sin espacios, una @, dominio con partes no vacías: rechaza "a@b..com").
+export function correoValido(correo: string) {
+  return /^[^\s@]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+$/.test(correo.trim());
+}
 const CLAVE = "iae-life:cuenta";
 const EVENTO = "iae-life:cuenta";
 
