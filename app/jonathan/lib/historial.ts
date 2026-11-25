@@ -42,10 +42,12 @@ function migrarHistoriales() {
   }
   for (const c of claves) {
     try {
-      const datos: unknown = JSON.parse(localStorage.getItem(c) ?? "null");
+      const original = localStorage.getItem(c); // se lee una sola vez
+      const datos: unknown = JSON.parse(original ?? "null");
       if (!Array.isArray(datos)) continue;
       const limpio = JSON.stringify(datos.map(limpiar).filter((r) => r !== null));
-      if (limpio !== localStorage.getItem(c)) localStorage.setItem(c, limpio);
+      // Solo se escribe si nadie lo cambió mientras tanto.
+      if (limpio !== original && localStorage.getItem(c) === original) localStorage.setItem(c, limpio);
     } catch {
       // un registro dañado no frena a los demás
     }
