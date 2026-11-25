@@ -58,13 +58,15 @@ export default function FormularioAusencia({ inicial, onEnviar }: Props) {
   const dia = fecha ? diaDeFecha(fecha) : null;
   const usaHorarioReal = correo !== null && horarioLife !== null;
   const clasesDelDia = !dia ? [] : usaHorarioReal ? clasesDeIAELife(horarioLife, dia) : HORARIO[dia];
-  const todas = clasesDelDia.length > 0 && marcadas.length === clasesDelDia.length;
+  // Solo cuentan las marcadas que siguen en el horario actual (el horario pudo cambiar en otra pestaña).
+  const elegidas = clasesDelDia.filter((c) => marcadas.includes(c.inicio));
+  const todas = clasesDelDia.length > 0 && elegidas.length === clasesDelDia.length;
 
   const faltan: string[] = [];
   if (nombre.trim() === "") faltan.push("escribir tu nombre");
   if (!fecha) faltan.push("elegir la fecha");
   else if (!dia) faltan.push("elegir un día de lunes a viernes");
-  else if (marcadas.length === 0) faltan.push("marcar al menos una clase");
+  else if (elegidas.length === 0) faltan.push("marcar al menos una clase");
   if (motivo === "otro" && detalle.trim() === "") faltan.push("contar el motivo en el texto");
 
   function cambiarFecha(nueva: string) {
@@ -84,7 +86,7 @@ export default function FormularioAusencia({ inicial, onEnviar }: Props) {
       nombre: nombre.trim(),
       fecha,
       dia,
-      clases: clasesDelDia.filter((c) => marcadas.includes(c.inicio)),
+      clases: elegidas,
       motivo,
       detalle: detalle.trim(),
     });
@@ -185,7 +187,7 @@ export default function FormularioAusencia({ inicial, onEnviar }: Props) {
           ) : (
             <ul className="grid gap-2">
               {clasesDelDia.map((c) => {
-                const on = marcadas.includes(c.inicio);
+                const on = elegidas.includes(c);
                 return (
                   <li key={c.inicio}>
                     <label

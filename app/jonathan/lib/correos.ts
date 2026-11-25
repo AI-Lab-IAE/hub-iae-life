@@ -42,7 +42,7 @@ type Plantilla = {
   intro: (clases: string, motivo: string) => string;
   introCorta: (clases: string, motivo: string) => string;
   cierres: string[];
-  cierreCorto: string;
+  cierresCortos: string[]; // también 3, para que "Regenerar" cambie el correo corto
   extraLargo: string;
   gracias: string;
   firma: (n: string) => string;
@@ -63,7 +63,11 @@ const PLANTILLAS: Record<Tono, Plantilla> = {
       "Quedo atento a sus indicaciones sobre el material o las actividades pendientes.",
       "Agradeceré me informe si hay alguna evaluación o tarea que deba reponer.",
     ],
-    cierreCorto: "Agradeceré sus indicaciones sobre el material pendiente.",
+    cierresCortos: [
+      "Agradeceré sus indicaciones sobre el material pendiente.",
+      "Quedo atento a lo que deba recuperar.",
+      "Le agradeceré que me indique si hay tareas pendientes.",
+    ],
     extraLargo:
       "Soy consciente de que mi ausencia puede afectar el desarrollo normal de la clase, por lo cual me comprometo a ponerme al día con los contenidos, las tareas y las evaluaciones correspondientes a la brevedad posible. De ser necesario, quedo a su disposición para acordar un horario en el que pueda resolver cualquier duda.",
     gracias: "Agradezco de antemano su comprensión.",
@@ -80,7 +84,11 @@ const PLANTILLAS: Record<Tono, Plantilla> = {
       "Quedo atento a la información sobre lo que deba recuperar.",
       "Por favor, indíqueme si hay actividades que deba reponer.",
     ],
-    cierreCorto: "Agradeceré indicaciones sobre el material pendiente.",
+    cierresCortos: [
+      "Agradeceré indicaciones sobre el material pendiente.",
+      "Por favor, indíqueme qué debo recuperar.",
+      "Quedo atento a las tareas pendientes.",
+    ],
     extraLargo:
       "A mi regreso revisaré el contenido y las tareas correspondientes a la clase. Si es necesario, puedo coordinar un horario para resolver dudas.",
     gracias: "Gracias.",
@@ -97,7 +105,11 @@ const PLANTILLAS: Record<Tono, Plantilla> = {
       "Le agradecería si me puede compartir qué material voy a perder para ponerme al día.",
       "Quedo atento a cualquier tarea o material que deba revisar al volver.",
     ],
-    cierreCorto: "¿Hay algo que deba recuperar?",
+    cierresCortos: [
+      "¿Hay algo que deba recuperar?",
+      "¿Me podría decir qué material voy a perder?",
+      "Me pondré al día al volver.",
+    ],
     extraLargo:
       "Entiendo que faltar puede afectar el avance de la clase, así que me comprometo a ponerme al día con el contenido, las tareas y cualquier evaluación pendiente lo antes posible. Si es necesario, puedo acercarme a usted en otro momento para resolver dudas.",
     gracias: "Muchas gracias.",
@@ -114,7 +126,11 @@ const PLANTILLAS: Record<Tono, Plantilla> = {
       "Si hay tarea o material, me avisas y lo reviso cuando vuelva.",
       "Cuéntame si tengo algo pendiente para recuperar.",
     ],
-    cierreCorto: "¿Hay algo que deba recuperar?",
+    cierresCortos: [
+      "¿Hay algo que deba recuperar?",
+      "Si hay tarea, me avisas.",
+      "Cuando vuelva me pongo al día.",
+    ],
     extraLargo:
       "Sé que me voy a perder cosas de la clase, así que apenas vuelva me pongo al día con el material y las tareas. Si necesitas que hablemos en algún recreo o después de clase para resolver dudas, con gusto.",
     gracias: "¡Gracias!",
@@ -168,7 +184,7 @@ function escribir(clases: Clase[], ausencia: Ausencia, o: Opciones): { asunto: s
 
   let cuerpo: string;
   if (o.largo === "corto") {
-    cuerpo = `${saludo}\n\n${T.introCorta(c, motivo)}${extra} ${T.cierreCorto}\n\n${T.firmaCorta(nombre)}`;
+    cuerpo = `${saludo}\n\n${T.introCorta(c, motivo)}${extra} ${T.cierresCortos[o.cierre % T.cierresCortos.length]}\n\n${T.firmaCorta(nombre)}`;
   } else if (o.largo === "largo") {
     cuerpo = `${saludo}\n\n${T.intro(c, motivo)}${extra}\n\n${T.extraLargo}\n\n${cierre}\n\n${T.gracias}\n\n${T.firma(nombre)}`;
   } else {
@@ -216,21 +232,37 @@ export function generarCorreos(ausencia: Ausencia, tono: Tono = "estandar", larg
   });
 }
 
+// Un solo correo, sin espacios, comas ni caracteres que rompan el enlace (?, &, #, %, <, >...).
+const CORREO = /^[A-Za-z0-9._+-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}$/;
+
 export function correoValido(v: string | undefined): v is string {
-  return !!v && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+  return !!v && CORREO.test(v.trim());
 }
+
+// Solo deja pasar un correo válido; si no, queda vacío y el enlace sale sin ese campo.
+const limpio = (v: string) => (correoValido(v) ? v.trim() : "");
 
 // Abre la app de correo del dispositivo con todo escrito. No envía nada solo.
 export function enlaceMailto(para: string, asunto: string, cuerpo: string, cc: string): string {
-  const partes = [cc && `cc=${encodeURIComponent(cc)}`, `subject=${encodeURIComponent(asunto)}`, `body=${encodeURIComponent(cuerpo)}`];
-  return `mailto:${para}?${partes.filter(Boolean).join("&")}`;
+  const c = limpio(cc);
+  const partes = [
+    c && `cc=${encodeURIComponent(c)}`,
+    `subject=${encodeURIComponent(asunto)}`,
+    `body=${encodeURIComponent(cuerpo)}`,
+  ];
+  return `mailto:${encodeURIComponent(limpio(para))}?${partes.filter(Boolean).join("&")}`;
 }
 
 // Abre la ventana de "Redactar" de Gmail en el navegador, ya escrita. El estudiante revisa y envía.
 export function enlaceGmail(para: string, asunto: string, cuerpo: string, cc: string): string {
-  const p = new URLSearchParams({ view: "cm", fs: "1", to: para });
-  if (cc) p.set("cc", cc);
-  p.set("su", asunto);
-  p.set("body", cuerpo);
-  return `https://mail.google.com/mail/?${p.toString()}`;
+  const c = limpio(cc);
+  const partes = [
+    "view=cm",
+    "fs=1",
+    `to=${encodeURIComponent(limpio(para))}`,
+    c && `cc=${encodeURIComponent(c)}`,
+    `su=${encodeURIComponent(asunto)}`,
+    `body=${encodeURIComponent(cuerpo)}`,
+  ];
+  return `https://mail.google.com/mail/?${partes.filter(Boolean).join("&")}`;
 }
