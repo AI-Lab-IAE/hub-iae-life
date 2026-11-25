@@ -1,5 +1,6 @@
 // Generador de correos de AvisIA: tono × largo × motivo, con frases de Jonathan.
 // No usa IA: "Regenerar" solo elige otra combinación de frases.
+import { correoValido as validarCorreo } from "../../_life/cuenta";
 import type { Clase } from "./horario";
 import type { Ausencia, Correo, Largo, MotivoId, Opciones, Tono } from "./tipos";
 
@@ -126,11 +127,7 @@ const PLANTILLAS: Record<Tono, Plantilla> = {
       "Si hay tarea o material, me avisas y lo reviso cuando vuelva.",
       "Cuéntame si tengo algo pendiente para recuperar.",
     ],
-    cierresCortos: [
-      "¿Hay algo que deba recuperar?",
-      "Si hay tarea, me avisas.",
-      "Cuando vuelva me pongo al día.",
-    ],
+    cierresCortos: ["¿Hay algo que deba recuperar?", "Si hay tarea, me avisas.", "Cuando vuelva me pongo al día."],
     extraLargo:
       "Sé que me voy a perder cosas de la clase, así que apenas vuelva me pongo al día con el material y las tareas. Si necesitas que hablemos en algún recreo o después de clase para resolver dudas, con gusto.",
     gracias: "¡Gracias!",
@@ -234,10 +231,9 @@ export function generarCorreos(ausencia: Ausencia, tono: Tono = "estandar", larg
 
 // La misma regla que usa Perfil para el correo de los padres. Los caracteres raros (?, &, #, %...)
 // no rompen el enlace porque cada parte se codifica con encodeURIComponent.
-const CORREO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
+// La misma regla que el Perfil de IAE LIFE (rechaza cosas como "a@b..com").
 export function correoValido(v: string | undefined): v is string {
-  return !!v && CORREO.test(v.trim());
+  return !!v && validarCorreo(v);
 }
 
 // Solo deja pasar un correo válido; si no, queda vacío y el enlace sale sin ese campo.

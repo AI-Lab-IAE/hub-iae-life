@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { ArrowRight, CalendarDays, GraduationCap, LogIn, LogOut, Mail, Save, UserRound } from "lucide-react";
-import { guardarCuenta, iniciales, salir, useCuenta, type Cuenta, type Idioma } from "../_life/cuenta";
+import { correoValido, guardarCuenta, iniciales, salir, useCuenta, type Cuenta, type Idioma } from "../_life/cuenta";
 
 const MESES = [
   "enero",
@@ -66,7 +66,7 @@ function PerfilDe({ cuenta }: { cuenta: Cuenta }) {
   const faltanDatos = !cuenta.genero || !cuenta.nacimiento;
   const [guardado, setGuardado] = useState<"" | "si" | "memoria">("");
 
-  const correoPadresValido = correoPadres.trim() === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correoPadres.trim());
+  const correoPadresValido = correoPadres.trim() === "" || correoValido(correoPadres);
 
   const guardar = (e: React.FormEvent) => {
     e.preventDefault();

@@ -31,6 +31,28 @@ function limpiar(r: unknown): Registro | null {
   };
 }
 
+// Una sola vez al cargar: lo guardado por la versión vieja (con el texto de los correos y la copia)
+// se reescribe al momento solo con los campos mínimos.
+function migrarHistoriales() {
+  let claves: string[] = [];
+  try {
+    claves = Object.keys(localStorage).filter((c) => c.startsWith("avisia:historial:"));
+  } catch {
+    return;
+  }
+  for (const c of claves) {
+    try {
+      const datos: unknown = JSON.parse(localStorage.getItem(c) ?? "null");
+      if (!Array.isArray(datos)) continue;
+      const limpio = JSON.stringify(datos.map(limpiar).filter((r) => r !== null));
+      if (limpio !== localStorage.getItem(c)) localStorage.setItem(c, limpio);
+    } catch {
+      // un registro dañado no frena a los demás
+    }
+  }
+}
+if (typeof window !== "undefined") migrarHistoriales();
+
 function leer(correo: string): Registro[] {
   let texto: string | null;
   try {
