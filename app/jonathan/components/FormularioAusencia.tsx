@@ -6,7 +6,7 @@ import { CalendarDays, Check, Ellipsis, Plane, Sparkles, Stethoscope, Thermomete
 import type { LucideIcon } from "lucide-react";
 import { useCuenta } from "../../_life/cuenta";
 import { useHorario } from "../../_life/horario";
-import { HORARIO, clasesDeIAELife } from "../lib/horario";
+import { clasesDeIAELife } from "../lib/horario";
 import { diaDeFecha, NOMBRES_DIAS } from "../lib/fechas";
 import { MOTIVOS } from "../lib/correos";
 import type { Ausencia, MotivoId } from "../lib/tipos";
@@ -41,7 +41,7 @@ function Paso({ n, titulo, children }: { n: number; titulo: string; children: Re
 type Props = { inicial: Ausencia | null; onEnviar: (a: Ausencia) => void };
 
 export default function FormularioAusencia({ inicial, onEnviar }: Props) {
-  // Con cuenta de IAE LIFE el nombre ya se sabe y el horario es el de "Mi horario".
+  // Con cuenta de IAE LIFE el nombre ya se sabe y el horario es el tuyo de Horario.
   const cuenta = useCuenta();
   const correo = cuenta?.rol === "estudiante" ? cuenta.correo : null;
   const horarioLife = useHorario(correo);
@@ -56,8 +56,9 @@ export default function FormularioAusencia({ inicial, onEnviar }: Props) {
   const [intento, setIntento] = useState(false);
 
   const dia = fecha ? diaDeFecha(fecha) : null;
-  const usaHorarioReal = correo !== null && horarioLife !== null;
-  const clasesDelDia = !dia ? [] : usaHorarioReal ? clasesDeIAELife(horarioLife, dia) : HORARIO[dia];
+  // Un solo horario para toda la app: el de Horario (sin cuenta, el de ejemplo de Horario).
+  const usaHorarioReal = correo !== null;
+  const clasesDelDia = !dia || !horarioLife ? [] : clasesDeIAELife(horarioLife, dia);
   // Solo cuentan las marcadas que siguen en el horario actual (el horario pudo cambiar en otra pestaña).
   const elegidas = clasesDelDia.filter((c) => marcadas.includes(c.inicio));
   const todas = clasesDelDia.length > 0 && elegidas.length === clasesDelDia.length;
@@ -169,7 +170,12 @@ export default function FormularioAusencia({ inicial, onEnviar }: Props) {
                   </Link>
                 </>
               ) : (
-                "Horario de ejemplo"
+                <>
+                  Del{" "}
+                  <Link href="/horario" className="font-semibold text-azul-700 hover:underline">
+                    horario de ejemplo
+                  </Link>
+                </>
               )}
             </p>
             {clasesDelDia.length > 0 && (

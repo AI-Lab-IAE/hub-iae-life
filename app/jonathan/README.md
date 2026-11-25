@@ -6,7 +6,8 @@
 
 ## Qué hace (unido a IAE LIFE)
 
-- Usa la cuenta de IAE LIFE: el nombre y el horario salen de la cuenta y de **Mi horario**. Sin cuenta, pide el nombre y usa el horario de ejemplo de `lib/horario.ts`.
+- **En IAE LIFE se llama «Faltar»** (`/jonathan`). El nombre AvisIA y el autor solo salen en Créditos.
+- Usa la cuenta de IAE LIFE: el nombre y el horario salen de la cuenta y de **Horario** (el único horario de la app). Sin cuenta, pide el nombre y usa el horario de ejemplo de Horario.
 - Motivo opcional (enfermedad, cita médica, competencia, viaje familiar, otro) más texto libre.
 - En cada correo: tono (formal, neutral, estándar, casual), largo (corto, medio, largo) y **Regenerar** para otra redacción. Sin IA: son las plantillas de Jonathan (`lib/correos.ts`).
 - **Abrir en Gmail** (ventana de redactar) o **App de correo** (`mailto:`), en una pestaña nueva. Nada se envía solo.

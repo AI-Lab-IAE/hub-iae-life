@@ -22,19 +22,19 @@ const PASOS: { id: Paso; texto: string }[] = [
 function Pasos({ actual }: { actual: Paso }) {
   const i = PASOS.findIndex((p) => p.id === actual);
   return (
-    <ol className="flex items-center gap-2 text-xs font-semibold" aria-label="Pasos">
+    <ol className="flex items-center gap-2 rounded-3xl border border-azul-100 bg-white p-4 text-xs font-semibold shadow-sm" aria-label="Pasos">
       {PASOS.map((p, j) => (
         <li key={p.id} className="flex flex-1 items-center gap-2">
           <span
             className={`grid size-6 shrink-0 place-items-center rounded-full ${
-              j < i ? "bg-oro text-azul-950" : j === i ? "bg-white text-azul-800" : "bg-white/20 text-white"
+              j < i ? "bg-oro text-azul-950" : j === i ? "bg-azul-800 text-white" : "bg-azul-100 text-azul-800"
             }`}
             aria-current={j === i ? "step" : undefined}
           >
             {j < i ? <Check className="size-3.5" aria-hidden /> : j + 1}
           </span>
-          <span className={j === i ? "text-white" : "text-azul-100/70"}>{p.texto}</span>
-          {j < PASOS.length - 1 && <span className="h-px flex-1 bg-white/25" aria-hidden />}
+          <span className={j === i ? "text-azul-950" : "text-azul-900/55"}>{p.texto}</span>
+          {j < PASOS.length - 1 && <span className="h-px flex-1 bg-azul-100" aria-hidden />}
         </li>
       ))}
     </ol>
@@ -131,7 +131,7 @@ function Flujo({ cuenta }: { cuenta: Cuenta | null }) {
               </h2>
               <p className="mt-1 text-sm text-azul-900/70">
                 Para el <span className="font-semibold text-azul-900">{fechaEnPalabras(ausencia.fecha)}</span>. Uno por
-                profesor: revísalo, ábrelo en Gmail y envíalo tú. AvisIA no envía nada solo.
+                profesor: revísalo, ábrelo en Gmail y envíalo tú. Nada se envía solo.
               </p>
 
               <div
