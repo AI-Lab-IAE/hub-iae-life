@@ -1,14 +1,12 @@
-import { EncabezadoSeccion } from "../components/EncabezadoSeccion";
 import { ListaContactos } from "../components/ListaContactos";
-import { Pantalla } from "../components/Pantalla";
+import { Seccion } from "../components/Seccion";
 
 export default function Page() {
   return (
-    <Pantalla>
-      <EncabezadoSeccion ruta="contactos" />
+    <Seccion ruta="contactos">
       <div className="mt-6">
         <ListaContactos />
       </div>
-    </Pantalla>
+    </Seccion>
   );
 }

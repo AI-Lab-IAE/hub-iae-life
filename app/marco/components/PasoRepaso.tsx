@@ -29,7 +29,7 @@ export function PasoRepaso({
 
   return (
     <div className="mx-auto max-w-3xl">
-      <button onClick={onVolver} className="text-sm font-medium text-[#4a5475] hover:text-[#15203b]">
+      <button onClick={onVolver} className="text-sm font-medium text-azul-900/70 hover:text-azul-950">
         ← Volver a mi mapa
       </button>
 
@@ -45,8 +45,8 @@ export function PasoRepaso({
               onClick={() => setActual(i)}
               className={`rounded-full border px-3.5 py-1.5 text-sm transition-colors ${
                 i === actual
-                  ? "border-[#15203b] bg-[#15203b] text-[#faf7f0]"
-                  : "border-[#d6ccb6] bg-[#fffdf8] text-[#4a5475] hover:border-[#7c849e]"
+                  ? "border-azul-950 bg-azul-950 text-white"
+                  : "border-azul-200 bg-white text-azul-900/70 hover:border-azul-300"
               }`}
             >
               {hecho && "✓ "}
@@ -55,20 +55,20 @@ export function PasoRepaso({
           );
         })}
       </div>
-      <p className="mt-3 text-sm text-[#7c849e]">
+      <p className="mt-3 text-sm text-azul-900/55">
         {completados} de {repaso.temas.length} temas comprobados
       </p>
 
       <article key={temaRepaso.temaId} className="mt-6 space-y-5">
         <div className={`${tarjeta} p-6 sm:p-8`}>
           <Insignia estado={estado} grande />
-          <h1 className="mt-4 font-serif text-4xl tracking-tight">{tema?.nombre}</h1>
-          <p className="mt-5 text-lg leading-relaxed text-[#4a5475]">{temaRepaso.explicacion}</p>
+          <h1 className="font-bold text-azul-950 mt-4 text-3xl tracking-tight">{tema?.nombre}</h1>
+          <p className="mt-5 text-lg leading-relaxed text-azul-900/70">{temaRepaso.explicacion}</p>
 
           <ul className="mt-6 space-y-2.5">
             {temaRepaso.claves.map((c, i) => (
               <li key={i} className="flex gap-3">
-                <span className="grid size-6 shrink-0 place-items-center rounded-full bg-[#ffe45c] font-mono text-xs font-semibold">{i + 1}</span>
+                <span className="grid size-6 shrink-0 place-items-center rounded-full bg-oro tabular-nums text-xs font-semibold">{i + 1}</span>
                 <span className="leading-relaxed">{c}</span>
               </li>
             ))}
@@ -76,24 +76,24 @@ export function PasoRepaso({
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="rounded-[20px] border-2 p-6" style={{ borderColor: "#e0492f", background: "#fde6df" }}>
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#e0492f]">Lo que confundiste</p>
+          <div className="rounded-3xl border-2 p-6" style={{ borderColor: "#e0492f", background: "#fde6df" }}>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-red-600">Lo que confundiste</p>
             <p className="mt-3 leading-relaxed">{temaRepaso.tuError}</p>
           </div>
-          <div className="rounded-[20px] bg-[#15203b] p-6 text-[#faf7f0]">
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#ffe45c]">Truco para recordarlo</p>
-            <p className="mt-3 font-serif text-xl leading-snug">{temaRepaso.truco}</p>
+          <div className="rounded-3xl bg-azul-950 p-6 text-white">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-oro">Truco para recordarlo</p>
+            <p className="mt-3 text-xl leading-snug">{temaRepaso.truco}</p>
           </div>
         </div>
 
         <div className={`${tarjeta} p-6`}>
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#3e5bd8]">Ejemplo</p>
-          <p className="mt-3 leading-relaxed text-[#4a5475]">{temaRepaso.ejemplo}</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-azul-500">Ejemplo</p>
+          <p className="mt-3 leading-relaxed text-azul-900/70">{temaRepaso.ejemplo}</p>
         </div>
 
         <div className="pt-4">
-          <h2 className="font-serif text-2xl">Comprueba que ya lo tienes</h2>
-          <p className="mt-1 text-[#4a5475]">Dos preguntas nuevas, pensadas para tu error.</p>
+          <h2 className="font-bold text-azul-950 text-2xl">Comprueba que ya lo tienes</h2>
+          <p className="mt-1 text-azul-900/70">Dos preguntas nuevas, pensadas para tu error.</p>
           <div className="mt-5 space-y-4">
             {temaRepaso.preguntas.map((p, i) => (
               <PreguntaCorta
@@ -109,13 +109,13 @@ export function PasoRepaso({
 
         {puntaje !== null && (
           <div
-            className="rounded-[20px] p-6"
+            className="rounded-3xl p-6"
             style={{ background: puntaje === 100 ? "#dcf2e7" : puntaje >= 50 ? "#fcefd6" : "#fde6df" }}
           >
-            <p className="font-serif text-2xl">
+            <p className=" text-2xl">
               {puntaje === 100 ? "¡Ya lo tienes!" : puntaje >= 50 ? "Vas mejor, pero no del todo." : "Todavía no."}
             </p>
-            <p className="mt-1 text-[#4a5475]">
+            <p className="mt-1 text-azul-900/70">
               {puntaje === 100
                 ? "Acertaste las dos preguntas nuevas."
                 : "Vuelve a leer lo que confundiste y el truco. Mañana haz otro diagnóstico de este tema."}
@@ -154,16 +154,16 @@ function PreguntaCorta({
 
   return (
     <div className={`${tarjeta} p-5 sm:p-6`}>
-      <p className="font-mono text-xs text-[#7c849e]">Pregunta {numero}</p>
+      <p className="tabular-nums text-xs text-azul-900/55">Pregunta {numero}</p>
       <p className="mt-2 text-lg font-medium leading-snug">{pregunta.enunciado}</p>
       <ul className="mt-4 space-y-2">
         {pregunta.opciones.map((o, i) => {
           const marcada = elegida === i;
-          let estilo = marcada ? "border-[#15203b] bg-[#f3eee2]" : "border-[#d6ccb6] bg-[#fffdf8] hover:border-[#7c849e]";
+          let estilo = marcada ? "border-azul-950 bg-azul-50" : "border-azul-200 bg-white hover:border-azul-300";
           if (confirmada) {
-            if (i === pregunta.correcta) estilo = "border-[#1f9466] bg-[#dcf2e7]";
-            else if (marcada) estilo = "border-[#e0492f] bg-[#fde6df]";
-            else estilo = "border-[#e4dccb] bg-[#fffdf8] opacity-60";
+            if (i === pregunta.correcta) estilo = "border-emerald-600 bg-emerald-50";
+            else if (marcada) estilo = "border-red-600 bg-red-50";
+            else estilo = "border-azul-100 bg-white opacity-60";
           }
           return (
             <li key={i}>
@@ -173,7 +173,7 @@ function PreguntaCorta({
                 aria-pressed={marcada}
                 className={`flex w-full gap-3 rounded-xl border px-3.5 py-3 text-left text-[15px] transition-all disabled:cursor-default ${estilo}`}
               >
-                <span className="font-semibold text-[#7c849e]">
+                <span className="font-semibold text-azul-900/55">
                   <Letra i={i} />
                 </span>
                 {o}

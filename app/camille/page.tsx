@@ -1,146 +1,106 @@
 import Link from "next/link";
+import { CalendarDays, ChevronRight, ClipboardCheck, Compass, Mail, Megaphone, type LucideIcon } from "lucide-react";
+import { Pantalla, tarjeta } from "../_life/Pantalla";
 import anim from "./animaciones.module.css";
-import { Bienvenida } from "./components/Bienvenida";
-import { HorarioHoy } from "./components/HorarioHoy";
-import { Icono } from "./components/Icono";
-import { ProximosPendientes } from "./components/ProximosPendientes";
 import { Tarjeta } from "./components/Tarjeta";
-import { TarjetaPendientes } from "./components/TarjetaPendientes";
 import { TituloBloque } from "./components/TituloBloque";
-import { elevar, retraso, tarjeta, tocar } from "./components/estilos";
-import { anuncios, clubes, contactos, eventos, pisos, reglas } from "./datos";
-import { diaYMes, formatearFecha } from "./formato";
-import { info } from "./info";
+import { elevar, retraso, tocar } from "./components/estilos";
+import { clubes, contactos, eventos, pisos, reglas } from "./datos";
+import { diaYMes } from "./formato";
 import { secciones, type RutaSeccion } from "./secciones";
 
-// Número y texto que aparecen en cada tarjeta de "Mis secciones" (el número sube al abrir el inicio).
-const datoSeccion: Record<Exclude<RutaSeccion, "pendientes">, { numero: number; texto: string }> = {
+// Número y texto que aparecen en cada tarjeta de las secciones (el número sube al abrir la página).
+const datoSeccion: Record<RutaSeccion, { numero: number; texto: string }> = {
   mapa: { numero: pisos.length, texto: "pisos" },
   contactos: { numero: contactos.length, texto: "contactos" },
   clubes: { numero: clubes.length, texto: "clubes" },
   calendario: { numero: eventos.length, texto: "fechas" },
-  anuncios: { numero: anuncios.length, texto: `anuncios · ${anuncios.filter((a) => a.importante).length} importantes` },
   informacion: { numero: reglas.length, texto: "reglas" },
 };
 
+// Lo que antes repetía la guía y ahora vive en una sola función de IAE LIFE.
+const EN_OTRA_FUNCION: { href: string; titulo: string; texto: string; icono: LucideIcon }[] = [
+  { href: "/horario", titulo: "Horario", texto: "Tu horario de clases", icono: CalendarDays },
+  { href: "/daniela", titulo: "Tareas", texto: "Tus pendientes", icono: ClipboardCheck },
+  { href: "/abraham", titulo: "Avisos", texto: "Los anuncios del colegio", icono: Megaphone },
+];
+
 export default function Page() {
-  const recientes = [...anuncios].sort((a, b) => b.fecha.localeCompare(a.fecha));
-  // El aviso resaltado es el importante más reciente; debajo van los demás.
-  const destacado = recientes.find((a) => a.importante) ?? recientes[0];
-  const otros = recientes.filter((a) => a !== destacado).slice(0, 2);
   const fechas = [...eventos].sort((a, b) => a.fecha.localeCompare(b.fecha)).slice(0, 4);
   const coordinacion = contactos.find((c) => c.cargo === "Coordinación académica")!;
 
   return (
-    <main className={`mx-auto w-full max-w-6xl flex-1 px-4 py-4 sm:px-8 sm:py-6 ${anim.entrar}`}>
+    <Pantalla icono={Compass} titulo="Colegio" texto="Mapa, contactos, clubes, calendario y reglas del IAE." ancho="ancho">
       <div className="grid gap-8 lg:grid-cols-3">
         <div className="flex min-w-0 flex-col gap-8 lg:col-span-2">
-          <Bienvenida />
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
+            {secciones.map((s, i) => (
+              <div key={s.ruta} className={anim.crecer} style={retraso(i + 1)}>
+                <Tarjeta ruta={s.ruta} nombre={s.nombre} {...datoSeccion[s.ruta]} />
+              </div>
+            ))}
+          </div>
 
-          {/* Mis secciones */}
-          <section className={anim.aparecer} style={retraso(1)}>
-            <TituloBloque titulo="Mis secciones" />
-            <div className="grid grid-cols-2 gap-2.5 sm:gap-4 md:grid-cols-4">
-              {secciones.map((s, i) => (
-                <div key={s.ruta} className={anim.crecer} style={retraso(i + 2)}>
-                  {s.ruta === "pendientes" ? (
-                    <TarjetaPendientes nombre={s.nombre} />
-                  ) : (
-                    <Tarjeta ruta={s.ruta} icono={s.icono} nombre={s.nombre} {...datoSeccion[s.ruta]} />
-                  )}
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* Mis pendientes: se guardan solo en este dispositivo */}
+          {/* Próximas fechas */}
           <section className={anim.aparecer} style={retraso(3)}>
-            <TituloBloque titulo="Mis pendientes" href="/camille/pendientes" />
-            <ProximosPendientes />
-          </section>
-
-          <div className="grid gap-8 sm:grid-cols-2">
-            {/* Avisos */}
-            <section className={anim.aparecer} style={retraso(4)}>
-              <TituloBloque titulo="Avisos" href="/camille/anuncios" />
-              <div className="flex flex-col gap-3">
-                <Link
-                  href="/camille/anuncios"
-                  className={`${tocar} flex items-center gap-3 rounded-2xl bg-indigo-500 p-4 text-white shadow-lg shadow-indigo-500/30 hover:bg-indigo-600`}
-                >
-                  <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-white/20">
-                    <Icono nombre="campana" className={`size-5 ${anim.sonar}`} />
-                  </span>
-                  <span className="min-w-0">
-                    <span className="block text-xs text-indigo-100">
-                      {destacado.importante ? "¡Importante!" : "Nuevo"} · {formatearFecha(destacado.fecha)}
-                    </span>
-                    <span className="block font-semibold">{destacado.titulo}</span>
-                  </span>
-                </Link>
-                {otros.map((a) => (
-                  <Link key={a.titulo} href="/camille/anuncios" className={`${tarjeta} ${elevar} ${tocar} flex items-center gap-3 p-3`}>
-                    <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-300">
-                      <Icono nombre="anuncios" className="size-5" />
+            <TituloBloque titulo="Próximas fechas" href="/camille/calendario" />
+            <ul className="flex flex-col gap-3">
+              {fechas.map((e) => {
+                const { dia, mes } = diaYMes(e.fecha);
+                return (
+                  <li key={e.titulo} className={`${tarjeta} flex items-center gap-3 p-3`}>
+                    <span className="flex size-11 shrink-0 flex-col items-center justify-center rounded-xl bg-azul-800 leading-none text-white">
+                      <span className="font-bold">{dia}</span>
+                      <span className="text-[9px] uppercase">{mes}</span>
                     </span>
                     <span className="min-w-0">
-                      <span className="block truncate text-sm font-semibold">{a.titulo}</span>
-                      <span className="block text-xs text-slate-500 dark:text-slate-400">{formatearFecha(a.fecha)}</span>
+                      <span className="block truncate text-sm font-semibold text-azul-950">{e.titulo}</span>
+                      <span className="block text-xs text-azul-700">{e.tipo}</span>
                     </span>
-                  </Link>
-                ))}
-              </div>
-            </section>
-
-            {/* Próximas fechas */}
-            <section className={anim.aparecer} style={retraso(5)}>
-              <TituloBloque titulo="Próximas fechas" href="/camille/calendario" />
-              <ul className="flex flex-col gap-3">
-                {fechas.map((e) => {
-                  const { dia, mes } = diaYMes(e.fecha);
-                  return (
-                    <li key={e.titulo} className={`${tarjeta} flex items-center gap-3 p-3`}>
-                      <span className="flex size-11 shrink-0 flex-col items-center justify-center rounded-xl bg-indigo-950 leading-none text-white">
-                        <span className="font-bold">{dia}</span>
-                        <span className="text-[9px] uppercase">{mes}</span>
-                      </span>
-                      <span className="min-w-0">
-                        <span className="block truncate text-sm font-semibold">{e.titulo}</span>
-                        <span className="block text-xs text-indigo-600 dark:text-indigo-300">{e.tipo}</span>
-                      </span>
-                    </li>
-                  );
-                })}
-              </ul>
-            </section>
-          </div>
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
         </div>
 
-        {/* Columna derecha: horario de hoy y ayuda */}
         <aside className="flex flex-col gap-8">
-          <section className={anim.aparecer} style={retraso(3)}>
-            <TituloBloque titulo="Horario de hoy" />
-            <HorarioHoy />
+          <section className={anim.aparecer} style={retraso(4)}>
+            <TituloBloque titulo="También en IAE LIFE" />
+            <ul className={`${tarjeta} divide-y divide-azul-100`}>
+              {EN_OTRA_FUNCION.map((f) => (
+                <li key={f.href}>
+                  <Link href={f.href} className="flex items-center gap-3 p-3">
+                    <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-azul-100 text-azul-800">
+                      <f.icono className="size-5" aria-hidden />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-semibold text-azul-950">{f.titulo}</span>
+                      <span className="block text-sm text-azul-900/60">{f.texto}</span>
+                    </span>
+                    <ChevronRight className="size-5 shrink-0 text-azul-900/40" aria-hidden />
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </section>
 
-          <section className={anim.aparecer} style={retraso(6)}>
+          <section className={anim.aparecer} style={retraso(5)}>
             <a href={`mailto:${coordinacion.correo}`} className={`${tarjeta} ${elevar} ${tocar} flex items-center gap-3 p-4`}>
-              <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-300">
-                <Icono nombre="correo" />
+              <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-azul-100 text-azul-800">
+                <Mail className="size-5" aria-hidden />
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block font-semibold">¿Necesitas ayuda?</span>
-                <span className="block text-sm text-slate-500 dark:text-slate-400">Escríbele a {coordinacion.lugar}</span>
+                <span className="block font-semibold text-azul-950">¿Necesitas ayuda?</span>
+                <span className="block text-sm text-azul-900/60">Escríbele a {coordinacion.lugar}</span>
               </span>
-              <Icono nombre="adelante" className="size-5 shrink-0 text-slate-400" />
+              <ChevronRight className="size-5 shrink-0 text-azul-900/40" aria-hidden />
             </a>
           </section>
         </aside>
       </div>
 
-      <p className="mt-10 text-center text-xs text-slate-400">
-        {info.proyecto} · un proyecto de {info.estudiante} · AI Lab IAE · Datos de ejemplo, ficticios
-      </p>
-    </main>
+      <p className="mt-10 text-center text-xs text-azul-900/45">Vista previa: los datos son de ejemplo, ficticios.</p>
+    </Pantalla>
   );
 }

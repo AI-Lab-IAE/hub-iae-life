@@ -1,14 +1,6 @@
-import { EncabezadoSeccion } from "../components/EncabezadoSeccion";
-import { ListaAnuncios } from "../components/ListaAnuncios";
-import { Pantalla } from "../components/Pantalla";
+import { redirect } from "next/navigation";
 
+// Los anuncios del colegio ahora están en Avisos.
 export default function Page() {
-  return (
-    <Pantalla>
-      <EncabezadoSeccion ruta="anuncios" />
-      <div className="mt-6">
-        <ListaAnuncios />
-      </div>
-    </Pantalla>
-  );
+  redirect("/abraham");
 }

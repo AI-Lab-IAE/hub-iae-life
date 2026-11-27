@@ -21,27 +21,27 @@ export function ListaContactos() {
     <div>
       <label className="relative block">
         <span className="sr-only">Buscar contacto</span>
-        <Icono nombre="buscar" className="absolute top-1/2 left-3.5 size-5 -translate-y-1/2 text-slate-400" />
+        <Icono nombre="buscar" className="absolute top-1/2 left-3.5 size-5 -translate-y-1/2 text-azul-900/50" />
         <input
           type="search"
           value={busqueda}
           onChange={(e) => setBusqueda(e.target.value)}
           placeholder="Buscar por nombre, materia u oficina"
-          className="w-full rounded-2xl border border-slate-200 bg-white py-3 pr-4 pl-11 shadow-sm shadow-slate-200/60 outline-none focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100 dark:border-slate-800 dark:bg-slate-900 dark:shadow-none dark:focus:ring-indigo-950"
+          className="w-full rounded-2xl border border-azul-100 bg-white py-3 pr-4 pl-11 shadow-sm shadow-azul-100/60 outline-none focus:border-azul-400 focus:ring-4 focus:ring-azul-100"
         />
       </label>
 
-      <p className="mt-3 text-xs text-slate-500 dark:text-slate-400" aria-live="polite">
+      <p className="mt-3 text-xs text-azul-900/60" aria-live="polite">
         {visibles.length === contactos.length ? `${contactos.length} contactos` : `${visibles.length} de ${contactos.length} contactos`}
       </p>
 
       {visibles.length === 0 ? (
-        <p className={`${tarjeta} mt-3 p-6 text-center text-sm text-slate-500 dark:text-slate-400`}>
+        <p className={`${tarjeta} mt-3 p-6 text-center text-sm text-azul-900/60`}>
           No encontramos a nadie con «{busqueda}». Prueba con otra palabra.
         </p>
       ) : (
         // Lista limpia con líneas divisorias: nombre y cargo a la izquierda, lugar y correo a la derecha.
-        <ul className={`${tarjeta} mt-3 divide-y divide-slate-200 px-4 dark:divide-slate-800`}>
+        <ul className={`${tarjeta} mt-3 divide-y divide-azul-100 px-4`}>
           {visibles.map((c, i) => (
             <li
               key={c.correo}
@@ -49,17 +49,17 @@ export function ListaContactos() {
               style={retraso(i * 0.5)}
             >
               <div>
-                <h2 className="font-medium text-slate-900 dark:text-slate-100">{c.nombre}</h2>
-                <p className="text-sm text-slate-500 dark:text-slate-400">{c.cargo}</p>
+                <h2 className="font-medium text-azul-950">{c.nombre}</h2>
+                <p className="text-sm text-azul-900/60">{c.cargo}</p>
               </div>
-              <div className="flex flex-col gap-1 text-sm text-slate-500 sm:items-end dark:text-slate-400">
+              <div className="flex flex-col gap-1 text-sm text-azul-900/60 sm:items-end">
                 <span className="flex items-center gap-1.5">
                   <Icono nombre="ubicacion" className="size-3.5 shrink-0" />
                   {c.lugar}
                 </span>
                 <a
                   href={`mailto:${c.correo}`}
-                  className="flex items-center gap-1.5 rounded text-indigo-700 hover:underline focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none dark:text-indigo-300"
+                  className="flex items-center gap-1.5 rounded text-azul-900 hover:underline focus-visible:ring-2 focus-visible:ring-azul-500 focus-visible:outline-none"
                 >
                   <Icono nombre="correo" className="size-3.5 shrink-0" />
                   <span className="break-all">{c.correo}</span>

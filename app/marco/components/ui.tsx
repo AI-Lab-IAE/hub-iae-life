@@ -33,7 +33,7 @@ export function SelectorSeguridad({
 }) {
   return (
     <fieldset disabled={deshabilitado}>
-      <legend className="mb-2.5 text-sm font-medium text-[#4a5475]">¿Qué tan seguro estás?</legend>
+      <legend className="mb-2.5 text-sm font-medium text-azul-900/70">¿Qué tan seguro estás?</legend>
       <div className="grid grid-cols-3 gap-2">
         {OPCIONES_SEGURIDAD.map((o) => {
           const activo = valor === o.valor;
@@ -45,12 +45,12 @@ export function SelectorSeguridad({
               aria-pressed={activo}
               className={`rounded-2xl border px-3 py-3 text-left transition-all disabled:cursor-default ${
                 activo
-                  ? "border-[#15203b] bg-[#15203b] text-[#faf7f0] shadow-[0_4px_0_-1px_#ffe45c]"
-                  : "border-[#d6ccb6] bg-[#fffdf8] hover:border-[#7c849e]"
+                  ? "border-azul-950 bg-azul-950 text-white"
+                  : "border-azul-200 bg-white hover:border-azul-300"
               }`}
             >
               <span className="block font-semibold">{o.titulo}</span>
-              <span className={`block text-xs ${activo ? "text-[#faf7f0]/70" : "text-[#7c849e]"}`}>{o.detalle}</span>
+              <span className={`block text-xs ${activo ? "text-white/70" : "text-azul-900/55"}`}>{o.detalle}</span>
             </button>
           );
         })}
@@ -67,7 +67,7 @@ export function Aviso({ children, tipo = "error" }: { children: React.ReactNode;
       style={
         tipo === "error"
           ? { borderColor: "#e0492f", background: "#fde6df", color: "#8a2a19" }
-          : { borderColor: "#d6ccb6", background: "#f3eee2", color: "#4a5475" }
+          : { borderColor: "#c5d9f0", background: "#f1f5f9", color: "#3d5a80" }
       }
     >
       {children}
@@ -87,38 +87,38 @@ export function Cargando({ pasos, titulo, onCancelar }: { pasos: string[]; titul
     <div className="mx-auto flex max-w-lg flex-col items-center py-16 text-center">
       <div className="relative size-24">
         <svg viewBox="0 0 100 100" className="size-24 animate-[spin_2.4s_linear_infinite]" aria-hidden>
-          <circle cx="50" cy="50" r="42" fill="none" stroke="#e4dccb" strokeWidth="8" />
+          <circle cx="50" cy="50" r="42" fill="none" stroke="#e3edf8" strokeWidth="8" />
           <circle
             cx="50"
             cy="50"
             r="42"
             fill="none"
-            stroke="#15203b"
+            stroke="#00285a"
             strokeWidth="8"
             strokeLinecap="round"
             strokeDasharray="70 200"
           />
         </svg>
-        <span className="absolute inset-0 grid place-items-center font-serif text-2xl">
-          <span className="bg-[#ffe45c] px-1">IA</span>
+        <span className="absolute inset-0 grid place-items-center text-2xl">
+          <span className="font-bold text-azul-800">IA</span>
         </span>
       </div>
-      <h2 className="mt-8 font-serif text-3xl tracking-tight">{titulo}</h2>
+      <h2 className="font-bold text-azul-950 mt-8 text-3xl tracking-tight">{titulo}</h2>
       <ul className="mt-6 w-full space-y-2 text-left" aria-live="polite">
         {pasos.map((p, i) => (
           <li
             key={p}
             className={`flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm transition-all duration-500 ${
               i < indice
-                ? "text-[#7c849e]"
+                ? "text-azul-900/55"
                 : i === indice
-                  ? "bg-[#fffdf8] font-medium text-[#15203b] shadow-sm"
-                  : "text-[#7c849e]/50"
+                  ? "bg-white font-medium text-azul-950 shadow-sm"
+                  : "text-azul-900/40"
             }`}
           >
             <span
               className={`grid size-5 shrink-0 place-items-center rounded-full text-[10px] ${
-                i < indice ? "bg-[#1f9466] text-white" : i === indice ? "bg-[#ffe45c]" : "border border-[#d6ccb6]"
+                i < indice ? "bg-emerald-600 text-white" : i === indice ? "bg-oro" : "border border-azul-200"
               }`}
             >
               {i < indice ? "✓" : ""}
@@ -127,9 +127,9 @@ export function Cargando({ pasos, titulo, onCancelar }: { pasos: string[]; titul
           </li>
         ))}
       </ul>
-      <p className="mt-6 font-mono text-xs text-[#7c849e]">{segundos}s · suele tardar entre 30 y 90 segundos</p>
+      <p className="mt-6 tabular-nums text-xs text-azul-900/55">{segundos}s · suele tardar entre 30 y 90 segundos</p>
       {onCancelar && (
-        <button onClick={onCancelar} className="mt-4 text-sm text-[#4a5475] underline underline-offset-4 hover:text-[#15203b]">
+        <button onClick={onCancelar} className="mt-4 text-sm text-azul-900/70 underline underline-offset-4 hover:text-azul-950">
           Cancelar
         </button>
       )}

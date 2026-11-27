@@ -4,19 +4,22 @@
    así todos los módulos se ven iguales aunque el celular esté en modo oscuro. */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Azul del escudo del IAE. "azul-800" es el color principal de la marca. */
+/* Colores del IAE (sacados de iae.edu, 24-nov): azul IAE #004D9C ("azul-800"), azul brillante #0082EC ("azul-500"),
+   fondo gris muy claro #F8FAFC. De acento: verde lima #97BD00 y dorado #F2B705 (en "lima" y "oro"). */
 @theme {
-  --color-azul-50: #f2f6fe;
-  --color-azul-100: #e3ebfc;
-  --color-azul-200: #c9d8f9;
-  --color-azul-300: #9fbaf3;
-  --color-azul-400: #6b93ea;
-  --color-azul-500: #416fdc;
-  --color-azul-600: #2c55c4;
-  --color-azul-700: #2244a3;
-  --color-azul-800: #1d3a8a;
-  --color-azul-900: #172f6c;
-  --color-azul-950: #0d1c45;
+  --color-azul-50: #f1f5f9;
+  --color-azul-100: #e3edf8;
+  --color-azul-200: #c5d9f0;
+  --color-azul-300: #93b9e3;
+  --color-azul-400: #4f9ae6;
+  --color-azul-500: #0082ec;
+  --color-azul-600: #006fd0;
+  --color-azul-700: #005cb4;
+  --color-azul-800: #004d9c;
+  --color-azul-900: #003c7a;
+  --color-azul-950: #00285a;
+  --color-lima: #97bd00;
+  --color-oro: #f2b705;
 
   /* Los módulos que usan las paletas "indigo" o "blue" de Tailwind toman el azul IAE, sin tocar su código. */
   --color-blue-50: var(--color-azul-50);
@@ -25,8 +28,8 @@
   --color-blue-300: var(--color-azul-300);
   --color-blue-400: var(--color-azul-400);
   --color-blue-500: var(--color-azul-500);
-  --color-blue-600: var(--color-azul-700);
-  --color-blue-700: var(--color-azul-800);
+  --color-blue-600: var(--color-azul-800);
+  --color-blue-700: var(--color-azul-900);
   --color-blue-800: var(--color-azul-900);
   --color-blue-900: var(--color-azul-950);
   --color-blue-950: var(--color-azul-950);
@@ -37,15 +40,15 @@
   --color-indigo-300: var(--color-azul-300);
   --color-indigo-400: var(--color-azul-400);
   --color-indigo-500: var(--color-azul-500);
-  --color-indigo-600: var(--color-azul-600);
-  --color-indigo-700: var(--color-azul-700);
+  --color-indigo-600: var(--color-azul-800);
+  --color-indigo-700: var(--color-azul-900);
   --color-indigo-800: var(--color-azul-800);
   --color-indigo-900: var(--color-azul-900);
   --color-indigo-950: var(--color-azul-950);
 }
 
 :root {
-  --background: #ffffff;
+  --background: #f8fafc;
   --foreground: #10193a;
   --alto-encabezado: 3.5rem;
 }
@@ -53,46 +56,20 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-roboto), var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-roboto), var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
-/* Título animado de la portada: cada letra sube y se ilumina. */
+/* Entrada suave de tarjetas y menús. */
 @media (prefers-reduced-motion: no-preference) {
-  .life-letra {
-    display: inline-block;
-    animation: life-letra 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
-  }
   .life-entrar {
     animation: life-entrar 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
-  }
-  .life-brillo {
-    background-size: 200% 100%;
-    animation: life-brillo 6s ease-in-out infinite;
-  }
-  .life-letra.life-brillo {
-    animation:
-      life-letra 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both,
-      life-brillo 6s ease-in-out infinite;
-  }
-}
-
-@keyframes life-letra {
-  from {
-    opacity: 0;
-    transform: translateY(0.4em) rotateX(-70deg);
-    filter: blur(8px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-    filter: none;
   }
 }
 
@@ -104,15 +81,5 @@ body {
   to {
     opacity: 1;
     transform: none;
-  }
-}
-
-@keyframes life-brillo {
-  0%,
-  100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
   }
 }

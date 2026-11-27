@@ -6,8 +6,9 @@
 - Con fechas reales, el Calendario debería ocultar los eventos que ya pasaron.
 - Horario de materias por grado (con materias y salones inventados, nunca los reales).
 - Horario de primaria (cuando estén las horas confirmadas).
-- Logo oficial del IAE en la barra superior (cuando el coordinador lo autorice; por ahora la app usa un logo propio e inventado).
-- Guardar el perfil en una cuenta para usarlo en varios dispositivos (necesita base de datos e inicio de sesión).
 - Conectar de verdad a los estudiantes en los clubes (solicitar entrada, mensajes o publicaciones): necesita cuentas, base de datos y autorización del colegio, porque son menores.
 - Logos reales de los clubes (solo con autorización del coordinador).
-- Guardar los pendientes en una cuenta para verlos en varios dispositivos.
+- Una sola app (25-nov): se quitaron de Colegio el perfil propio, «Mis pendientes», los anuncios y el horario, porque ya están en IAE LIFE (Perfil, Tareas, Avisos y Horario). Lo que falta:
+  - Los pendientes que alguien ya tenía guardados en la guía se pasan solos a Tareas la primera vez que abre Tareas en ese navegador (sin las notas). Cuando haya base de datos, esto se puede borrar.
+  - Los anuncios de ejemplo de la guía pasaron a los avisos de ejemplo de Avisos. Quien ya había abierto Avisos los ve al tocar «Reiniciar la demo».
+  - El grado del estudiante (que pedía el perfil de la guía) debería venir de la cuenta de IAE LIFE cuando haya datos del colegio.

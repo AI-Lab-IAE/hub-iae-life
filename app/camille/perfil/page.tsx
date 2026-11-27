@@ -1,12 +1,6 @@
-import { EditorPerfil } from "../components/EditorPerfil";
-import { Pantalla } from "../components/Pantalla";
+import { redirect } from "next/navigation";
 
+// El perfil es el de la cuenta de IAE LIFE.
 export default function Page() {
-  return (
-    <Pantalla>
-      <div className="mx-auto max-w-lg">
-        <EditorPerfil />
-      </div>
-    </Pantalla>
-  );
+  redirect("/perfil");
 }

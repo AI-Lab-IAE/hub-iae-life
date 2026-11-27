@@ -76,22 +76,22 @@ export function PasoSubir({
   return (
     <div className="mx-auto max-w-3xl">
       <div className="text-center">
-        <h1 className="font-serif text-4xl tracking-tight sm:text-5xl">
-          ¿Qué vas a <span className="bg-[#ffe45c] px-1 italic">estudiar</span>?
+        <h1 className="font-bold text-azul-950 text-3xl tracking-tight sm:text-4xl">
+          ¿Qué vas a <span className="text-azul-700">estudiar</span>?
         </h1>
-        <p className="mx-auto mt-4 max-w-xl text-lg text-[#4a5475]">
+        <p className="mx-auto mt-4 max-w-xl text-lg text-azul-900/70">
           Sube los apuntes del tema de tu examen. Mientras más completos, mejores preguntas.
         </p>
       </div>
 
       <div className={`${tarjeta} mt-10 p-5 sm:p-7`}>
         <label className="block">
-          <span className="text-sm font-medium text-[#4a5475]">Materia (opcional)</span>
+          <span className="text-sm font-medium text-azul-900/70">Materia (opcional)</span>
           <input
             value={materia}
             onChange={(e) => setMateria(e.target.value.slice(0, 80))}
             placeholder="Ej. Biología, Historia, Química…"
-            className="mt-2 w-full rounded-xl border border-[#d6ccb6] bg-[#faf7f0] px-4 py-3 text-base outline-none placeholder:text-[#7c849e] focus:border-[#15203b]"
+            className="mt-2 w-full rounded-xl border border-azul-200 bg-azul-50 px-4 py-3 text-base outline-none placeholder:text-azul-900/55 focus:border-azul-950"
           />
         </label>
 
@@ -107,7 +107,7 @@ export function PasoSubir({
             agregar(e.dataTransfer.files);
           }}
           className={`mt-5 rounded-2xl border-2 border-dashed p-6 text-center transition-colors ${
-            arrastrando ? "border-[#15203b] bg-[#fff2a8]" : "border-[#d6ccb6] bg-[#faf7f0]"
+            arrastrando ? "border-azul-950 bg-oro/30" : "border-azul-200 bg-azul-50"
           }`}
         >
           <input
@@ -119,7 +119,7 @@ export function PasoSubir({
             id="archivos"
             onChange={(e) => agregar(e.target.files)}
           />
-          <div className="mx-auto grid size-12 place-items-center rounded-full bg-[#fffdf8] shadow-sm" aria-hidden>
+          <div className="mx-auto grid size-12 place-items-center rounded-full bg-white shadow-sm" aria-hidden>
             <svg viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 16V4m0 0-4.5 4.5M12 4l4.5 4.5" />
               <path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" />
@@ -127,33 +127,33 @@ export function PasoSubir({
           </div>
           <p className="mt-3 font-medium">
             Arrastra fotos del cuaderno o PDFs, o{" "}
-            <label htmlFor="archivos" className="cursor-pointer underline decoration-[#ffe45c] decoration-4 underline-offset-4">
+            <label htmlFor="archivos" className="cursor-pointer underline decoration-oro decoration-4 underline-offset-4">
               elígelos
             </label>
           </p>
-          <p className="mt-1 text-sm text-[#7c849e]">
+          <p className="mt-1 text-sm text-azul-900/55">
             Hasta 8 archivos · {formatoPeso(TOTAL_MAXIMO)} en total · En el celular puedes tomar la foto directo
           </p>
-          {procesando && <p className="mt-3 text-sm text-[#4a5475]">Preparando archivos…</p>}
+          {procesando && <p className="mt-3 text-sm text-azul-900/70">Preparando archivos…</p>}
         </div>
 
         {archivos.length > 0 && (
           <ul className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
             {archivos.map((a, i) => (
-              <li key={`${a.nombre}-${i}`} className="group relative overflow-hidden rounded-xl border border-[#e4dccb] bg-[#faf7f0]">
+              <li key={`${a.nombre}-${i}`} className="group relative overflow-hidden rounded-xl border border-azul-100 bg-azul-50">
                 {a.vista ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={a.vista} alt={a.nombre} className="aspect-[4/3] w-full object-cover" />
                 ) : (
-                  <div className="grid aspect-[4/3] place-items-center bg-[#fde6df] font-mono text-sm font-semibold text-[#e0492f]">PDF</div>
+                  <div className="grid aspect-[4/3] place-items-center bg-red-50 tabular-nums text-sm font-semibold text-red-600">PDF</div>
                 )}
                 <div className="px-2.5 py-2">
                   <p className="truncate text-xs font-medium">{a.nombre}</p>
-                  <p className="text-[11px] text-[#7c849e]">{formatoPeso(a.bytes)}</p>
+                  <p className="text-[11px] text-azul-900/55">{formatoPeso(a.bytes)}</p>
                 </div>
                 <button
                   onClick={() => setArchivos(archivos.filter((_, j) => j !== i))}
-                  className="absolute right-1.5 top-1.5 grid size-7 place-items-center rounded-full bg-[#15203b]/80 text-sm text-[#faf7f0] hover:bg-[#15203b]"
+                  className="absolute right-1.5 top-1.5 grid size-7 place-items-center rounded-full bg-azul-950/80 text-sm text-white hover:bg-azul-950"
                   aria-label={`Quitar ${a.nombre}`}
                 >
                   ×
@@ -163,8 +163,8 @@ export function PasoSubir({
           </ul>
         )}
 
-        <div className="my-5 flex items-center gap-3 text-xs font-medium uppercase tracking-widest text-[#7c849e]">
-          <span className="h-px flex-1 bg-[#e4dccb]" />o pega el texto<span className="h-px flex-1 bg-[#e4dccb]" />
+        <div className="my-5 flex items-center gap-3 text-xs font-medium uppercase tracking-widest text-azul-900/55">
+          <span className="h-px flex-1 bg-azul-100" />o pega el texto<span className="h-px flex-1 bg-azul-100" />
         </div>
 
         <textarea
@@ -175,7 +175,7 @@ export function PasoSubir({
           }}
           rows={7}
           placeholder="Pega aquí tus apuntes, el resumen del libro o la guía del profe…"
-          className="w-full resize-y rounded-xl border border-[#d6ccb6] bg-[#faf7f0] px-4 py-3 font-mono text-sm leading-relaxed outline-none placeholder:font-sans placeholder:text-[#7c849e] focus:border-[#15203b]"
+          className="w-full resize-y rounded-xl border border-azul-200 bg-azul-50 px-4 py-3 tabular-nums text-sm leading-relaxed outline-none placeholder:font-sans placeholder:text-azul-900/55 focus:border-azul-950"
         />
 
         {textoCorto && (
@@ -194,7 +194,7 @@ export function PasoSubir({
         )}
 
         <div className="mt-6 flex flex-col-reverse items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <button onClick={usarEjemplo} className="text-sm font-medium text-[#4a5475] underline underline-offset-4 hover:text-[#15203b]">
+          <button onClick={usarEjemplo} className="text-sm font-medium text-azul-900/70 underline underline-offset-4 hover:text-azul-950">
             Usar apuntes de ejemplo (Biología)
           </button>
           <button
@@ -207,13 +207,13 @@ export function PasoSubir({
         </div>
       </div>
 
-      <p className="mt-5 text-center text-sm text-[#7c849e]">
+      <p className="mt-5 text-center text-sm text-azul-900/55">
         Tus apuntes solo se usan para crear el quiz. No se guardan en ningún servidor.
       </p>
 
       {sesiones.length > 0 && (
         <section className="mt-14">
-          <h2 className="font-serif text-2xl">Tus diagnósticos anteriores</h2>
+          <h2 className="font-bold text-azul-950 text-2xl">Tus diagnósticos anteriores</h2>
           <ul className="mt-4 space-y-3">
             {sesiones.map((s) => {
               const r = evaluarSesion(s);
@@ -222,11 +222,11 @@ export function PasoSubir({
               return (
                 <li key={s.id} className={`${tarjeta} flex items-center gap-4 p-4`}>
                   <button onClick={() => onAbrir(s)} className="min-w-0 flex-1 text-left">
-                    <p className="text-xs uppercase tracking-wider text-[#7c849e]">
+                    <p className="text-xs uppercase tracking-wider text-azul-900/55">
                       {s.analisis.materia} · {new Date(s.creada).toLocaleDateString("es-PA", { day: "numeric", month: "short" })}
                     </p>
                     <p className="truncate font-medium">{s.analisis.titulo}</p>
-                    <p className="mt-0.5 text-sm text-[#4a5475]">
+                    <p className="mt-0.5 text-sm text-azul-900/70">
                       {respondidas < total
                         ? `En progreso · ${respondidas} de ${total} preguntas`
                         : `${r.nota}% aciertos · ${r.ciegos} ${r.ciegos === 1 ? "punto ciego" : "puntos ciegos"}`}
@@ -234,7 +234,7 @@ export function PasoSubir({
                   </button>
                   <button
                     onClick={() => onBorrar(s.id)}
-                    className="rounded-full px-3 py-2 text-sm text-[#7c849e] hover:bg-[#f3eee2] hover:text-[#e0492f]"
+                    className="rounded-full px-3 py-2 text-sm text-azul-900/55 hover:bg-azul-50 hover:text-red-600"
                     aria-label={`Borrar diagnóstico de ${s.analisis.titulo}`}
                   >
                     Borrar

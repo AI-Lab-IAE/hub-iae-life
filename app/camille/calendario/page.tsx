@@ -1,14 +1,12 @@
-import { EncabezadoSeccion } from "../components/EncabezadoSeccion";
 import { ListaEventos } from "../components/ListaEventos";
-import { Pantalla } from "../components/Pantalla";
+import { Seccion } from "../components/Seccion";
 
 export default function Page() {
   return (
-    <Pantalla>
-      <EncabezadoSeccion ruta="calendario" />
+    <Seccion ruta="calendario">
       <div className="mt-6">
         <ListaEventos />
       </div>
-    </Pantalla>
+    </Seccion>
   );
 }

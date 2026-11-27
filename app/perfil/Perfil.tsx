@@ -1,0 +1,326 @@
+"use client";
+
+import Link from "next/link";
+import { useState } from "react";
+import { ArrowRight, CalendarDays, GraduationCap, LogIn, LogOut, Mail, Save, UserRound } from "lucide-react";
+import { correoValido, guardarCuenta, iniciales, salir, useCuenta, type Cuenta, type Idioma } from "../_life/cuenta";
+
+const MESES = [
+  "enero",
+  "febrero",
+  "marzo",
+  "abril",
+  "mayo",
+  "junio",
+  "julio",
+  "agosto",
+  "septiembre",
+  "octubre",
+  "noviembre",
+  "diciembre",
+];
+
+const COLORES = ["#004d9c", "#0082ec", "#0e7490", "#047857", "#b45309", "#be123c", "#7c3aed"];
+
+export default function Perfil() {
+  const cuenta = useCuenta();
+
+  if (cuenta === undefined) {
+    return <main className="flex-1 bg-azul-50/60" aria-busy />;
+  }
+
+  if (!cuenta) {
+    return (
+      <main className="flex flex-1 items-center justify-center bg-azul-50/60 px-4 py-16">
+        <div className="w-full max-w-sm rounded-3xl border border-azul-100 bg-white p-8 text-center">
+          <UserRound className="mx-auto size-10 text-azul-300" aria-hidden />
+          <h1 className="mt-4 text-xl font-bold text-azul-950">Todavía no has entrado</h1>
+          <p className="mt-2 text-sm text-azul-900/60">Entra con tu cuenta del colegio para ver tu perfil.</p>
+          <Link
+            href="/entrar"
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-azul-800 px-5 py-2.5 text-sm font-semibold text-white hover:bg-azul-900"
+          >
+            <LogIn className="size-4" aria-hidden /> Entrar
+          </Link>
+        </div>
+      </main>
+    );
+  }
+
+  return <PerfilDe cuenta={cuenta} key={cuenta.correo} />;
+}
+
+function PerfilDe({ cuenta }: { cuenta: Cuenta }) {
+  const [correoPadres, setCorreoPadres] = useState(cuenta.correoPadres ?? "");
+  const [color, setColor] = useState(cuenta.color ?? COLORES[0]);
+  const [idioma, setIdioma] = useState<Idioma>(cuenta.idioma ?? "es");
+  const [genero, setGenero] = useState(cuenta.genero ?? "");
+  const [dia, setDia] = useState(cuenta.nacimiento ? String(Number(cuenta.nacimiento.slice(8, 10))) : "");
+  const [mes, setMes] = useState(cuenta.nacimiento ? String(Number(cuenta.nacimiento.slice(5, 7))) : "");
+  // Solo se guarda si el día existe en ese mes (2000 es bisiesto, así vale el 29 de febrero).
+  const fechaValida =
+    dia !== "" && mes !== "" && new Date(2000, Number(mes) - 1, Number(dia)).getMonth() === Number(mes) - 1;
+  const nacimiento = fechaValida ? `2000-${mes.padStart(2, "0")}-${dia.padStart(2, "0")}` : "";
+  const [notif, setNotif] = useState(cuenta.notif ?? true);
+  const faltanDatos = !cuenta.genero || !cuenta.nacimiento;
+  const [guardado, setGuardado] = useState<"" | "si" | "memoria">("");
+
+  const correoPadresValido = correoPadres.trim() === "" || correoValido(correoPadres);
+
+  const guardar = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!correoPadresValido || ((dia !== "" || mes !== "") && !fechaValida)) return;
+    const ok = guardarCuenta({
+      ...cuenta,
+      correoPadres: correoPadres.trim() || undefined,
+      color,
+      idioma,
+      genero: genero === "mujer" || genero === "hombre" ? genero : undefined,
+      nacimiento: nacimiento || undefined,
+      // Toda IAE LIFE es clara por ahora (el modo noche para toda la app está en DESPUES.md).
+      tema: undefined,
+      notif,
+    });
+    setGuardado(ok ? "si" : "memoria");
+  };
+
+  return (
+    <main className="flex-1 bg-azul-50/60">
+      <div className="h-36 bg-linear-to-br from-azul-900 via-azul-800 to-azul-700" aria-hidden />
+      <div className="mx-auto -mt-24 max-w-lg px-4 pb-10">
+        <section className="life-entrar overflow-hidden rounded-3xl border border-azul-100 bg-white text-center shadow-xl shadow-azul-900/10">
+          <div className="h-20" style={{ background: `linear-gradient(135deg, ${color}, ${color}99)` }} aria-hidden />
+          <div className="px-6 pb-6">
+            <span
+              className="mx-auto -mt-10 grid size-20 place-items-center rounded-full text-2xl font-bold text-white ring-4 ring-white"
+              style={{ backgroundColor: color }}
+              aria-hidden
+            >
+              {iniciales(cuenta.nombre)}
+            </span>
+            <h1 className="mt-4 text-2xl font-bold tracking-tight text-azul-950">{cuenta.nombre}</h1>
+            <p className="mt-1 flex items-center justify-center gap-1.5 text-sm text-azul-900/60">
+              <Mail className="size-4" aria-hidden /> {cuenta.correo}
+            </p>
+            <p className="mt-4 inline-flex items-center gap-2 rounded-full bg-azul-50 px-4 py-1.5 text-sm font-semibold text-azul-800">
+              <GraduationCap className="size-4" aria-hidden />
+              {cuenta.rol === "estudiante" ? `Estudiante · Promoción ${cuenta.promocion}` : "Profesor"}
+            </p>
+            {cuenta.prueba && (
+              <p className="mt-3 text-xs text-azul-900/50">Usuario de ejemplo: los datos son inventados.</p>
+            )}
+          </div>
+        </section>
+
+        {cuenta.rol === "estudiante" && (
+          <Link
+            href="/horario"
+            className="group mt-6 flex items-center justify-between rounded-3xl border border-azul-100 bg-white p-5 font-semibold text-azul-900 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-azul-900/10"
+          >
+            <span className="flex items-center gap-3">
+              <span className="grid size-10 place-items-center rounded-xl bg-azul-100 text-azul-800">
+                <CalendarDays className="size-5" aria-hidden />
+              </span>
+              <span>
+                Mi horario
+                <span className="block text-xs font-normal text-azul-900/55">Tu clase de ahora y la semana</span>
+              </span>
+            </span>
+            <ArrowRight className="size-4" aria-hidden />
+          </Link>
+        )}
+
+        <form
+          id="ajustes"
+          onSubmit={guardar}
+          className="mt-6 scroll-mt-20 rounded-3xl border border-azul-100 bg-white p-6 shadow-sm"
+        >
+          <h2 className="font-bold text-azul-950">Ajustes de IAE LIFE</h2>
+          <p className="mt-1 text-sm text-azul-900/65">
+            Todas las funciones de IAE LIFE los usan para no volver a pedírtelos (el idioma, por ahora, solo en Tareas).
+          </p>
+          {faltanDatos && (
+            <p className="mt-3 rounded-2xl bg-oro/15 px-4 py-3 text-sm font-medium text-azul-950">
+              Bienvenido/a 👋 Completa tus datos para empezar.
+            </p>
+          )}
+
+          <fieldset className="mt-5">
+            <legend className="text-sm font-medium text-azul-900">Género</legend>
+            <div className="mt-2 inline-flex rounded-full bg-azul-50 p-1">
+              {(
+                [
+                  ["mujer", "Mujer"],
+                  ["hombre", "Hombre"],
+                ] as const
+              ).map(([valor, texto]) => (
+                <button
+                  key={valor}
+                  type="button"
+                  onClick={() => {
+                    setGenero(valor);
+                    setGuardado("");
+                  }}
+                  aria-pressed={genero === valor}
+                  className={`rounded-full px-4 py-1.5 text-sm font-semibold transition ${
+                    genero === valor ? "bg-azul-800 text-white" : "text-azul-900"
+                  }`}
+                >
+                  {texto}
+                </button>
+              ))}
+            </div>
+          </fieldset>
+
+          {/* Solo día y mes (sin año): basta para el saludo de cumpleaños y es menos dato personal. */}
+          <fieldset className="mt-5">
+            <legend className="text-sm font-medium text-azul-900">Cumpleaños (solo día y mes)</legend>
+            <div className="mt-1 flex gap-2">
+              <select
+                aria-label="Día"
+                value={dia}
+                onChange={(e) => {
+                  setDia(e.target.value);
+                  setGuardado("");
+                }}
+                className="rounded-xl border border-azul-100 px-3 py-2 text-azul-950"
+              >
+                <option value="">Día</option>
+                {Array.from({ length: 31 }, (_, i) => (
+                  <option key={i + 1} value={i + 1}>
+                    {i + 1}
+                  </option>
+                ))}
+              </select>
+              <select
+                aria-label="Mes"
+                value={mes}
+                onChange={(e) => {
+                  setMes(e.target.value);
+                  setGuardado("");
+                }}
+                className="flex-1 rounded-xl border border-azul-100 px-3 py-2 text-azul-950"
+              >
+                <option value="">Mes</option>
+                {MESES.map((m, i) => (
+                  <option key={m} value={i + 1}>
+                    {m}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {(dia !== "" || mes !== "") && !fechaValida && (
+              <span className="mt-1 block text-xs text-red-600">Elige un día y un mes que existan.</span>
+            )}
+          </fieldset>
+
+
+          <label className="mt-5 flex items-center justify-between gap-3 text-sm font-medium text-azul-900">
+            Recordatorios de tareas y exámenes
+            <input
+              type="checkbox"
+              checked={notif}
+              onChange={(e) => {
+                setNotif(e.target.checked);
+                setGuardado("");
+              }}
+              className="size-5 accent-azul-800"
+            />
+          </label>
+
+          {cuenta.rol === "estudiante" && (
+            <label className="mt-4 block text-sm font-medium text-azul-900">
+              Correo de tus padres
+              <input
+                type="email"
+                value={correoPadres}
+                onChange={(e) => {
+                  setCorreoPadres(e.target.value);
+                  setGuardado("");
+                }}
+                placeholder="papa.ejemplo@correo.com"
+                aria-invalid={!correoPadresValido}
+                className="mt-1.5 block w-full rounded-xl border border-azul-200 px-3 py-2.5 text-base text-azul-950 outline-none focus:border-azul-500 focus:ring-2 focus:ring-azul-200"
+              />
+              <span className="mt-1 block text-xs text-azul-900/50">
+                Más adelante, AusencIA lo usará para mandarles copia cuando avises una ausencia. Se queda solo en este
+                navegador.
+              </span>
+              {!correoPadresValido && (
+                <span className="mt-1 block text-xs text-red-600">Ese correo no se ve bien.</span>
+              )}
+            </label>
+          )}
+
+          <fieldset className="mt-5">
+            <legend className="text-sm font-medium text-azul-900">Idioma de las apps</legend>
+            <div className="mt-2 inline-flex rounded-full bg-azul-50 p-1">
+              {(
+                [
+                  ["es", "Español"],
+                  ["en", "English"],
+                ] as const
+              ).map(([valor, texto]) => (
+                <button
+                  key={valor}
+                  type="button"
+                  onClick={() => {
+                    setIdioma(valor);
+                    setGuardado("");
+                  }}
+                  aria-pressed={idioma === valor}
+                  className={`rounded-full px-4 py-1.5 text-sm font-semibold transition ${
+                    idioma === valor ? "bg-azul-800 text-white" : "text-azul-900"
+                  }`}
+                >
+                  {texto}
+                </button>
+              ))}
+            </div>
+          </fieldset>
+
+          <fieldset className="mt-5">
+            <legend className="text-sm font-medium text-azul-900">Color</legend>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {COLORES.map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => {
+                    setColor(c);
+                    setGuardado("");
+                  }}
+                  aria-label={`Color ${c}`}
+                  aria-pressed={color === c}
+                  className={`size-9 rounded-full transition-transform ${color === c ? "scale-110 ring-2 ring-azul-950 ring-offset-2" : ""}`}
+                  style={{ backgroundColor: c }}
+                />
+              ))}
+            </div>
+          </fieldset>
+
+          <button
+            type="submit"
+            disabled={!correoPadresValido}
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-azul-800 px-5 py-2.5 text-sm font-semibold text-white hover:bg-azul-900 disabled:opacity-50"
+          >
+            <Save className="size-4" aria-hidden /> Guardar
+          </button>
+          {guardado && (
+            <span role="status" className={`ml-3 text-sm ${guardado === "si" ? "text-emerald-700" : "text-amber-700"}`}>
+              {guardado === "si" ? "Guardado" : "Este navegador no deja guardar: se pierde al cerrar."}
+            </span>
+          )}
+        </form>
+
+        <button
+          type="button"
+          onClick={salir}
+          className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-azul-700 hover:text-azul-900"
+        >
+          <LogOut className="size-4" aria-hidden /> Salir
+        </button>
+      </div>
+    </main>
+  );
+}

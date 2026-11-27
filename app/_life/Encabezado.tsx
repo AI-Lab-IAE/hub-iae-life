@@ -3,12 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ArrowRight, Menu, Users, X } from "lucide-react";
+import { ArrowRight, Home, Settings, Menu, Users, X } from "lucide-react";
 import { funciones, type Funcion } from "./funciones";
 import { Marca } from "./Marca";
+import BotonCuenta from "./BotonCuenta";
 
-// Barra de IAE LIFE: fija arriba en todas las funciones. En computadora muestra las funciones;
-// en celular, un botón abre el menú. En el HUB (/hub y /coordinador) no se muestra.
+// Barra de IAE LIFE: fija arriba en todas las pantallas, también en Hoy (la portada).
+// Las funciones se abren desde Hoy o con el botón "Funciones". En el HUB (/hub y /coordinador) no se muestra.
 export default function Encabezado() {
   const ruta = usePathname();
   const [abierto, setAbierto] = useState(false);
@@ -43,38 +44,16 @@ export default function Encabezado() {
             <Marca />
           </Link>
 
-          <nav aria-label="Funciones" className="ml-auto hidden items-center gap-1 lg:flex">
-            {funciones.map((f) =>
-              f.estado === "lista" ? (
-                <Link
-                  key={f.slug}
-                  href={f.href}
-                  aria-current={activa(f) ? "page" : undefined}
-                  className={`flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
-                    activa(f) ? "bg-azul-800 text-white" : "text-azul-900/70 hover:bg-azul-50 hover:text-azul-800"
-                  }`}
-                >
-                  <f.icono className="size-4" aria-hidden />
-                  {f.proyecto}
-                </Link>
-              ) : (
-                <span key={f.slug} className="flex items-center gap-2 px-3 py-1.5 text-sm text-azul-900/35">
-                  <f.icono className="size-4" aria-hidden />
-                  {f.proyecto}
-                  <span className="rounded-full bg-azul-50 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-azul-600">
-                    Pronto
-                  </span>
-                </span>
-              ),
-            )}
-          </nav>
+          <div className="ml-auto">
+            <BotonCuenta />
+          </div>
 
           <button
             type="button"
             onClick={() => setAbierto((a) => !a)}
             aria-expanded={abierto}
             aria-controls="menu-funciones"
-            className="ml-auto flex items-center gap-2 rounded-full border border-azul-100 px-3 py-1.5 text-sm font-medium text-azul-800 transition-colors hover:bg-azul-50 lg:hidden"
+            className="flex items-center gap-2 rounded-full border border-azul-100 px-3 py-1.5 text-sm font-medium text-azul-800 transition-colors hover:bg-azul-50"
           >
             {abierto ? <X className="size-4" aria-hidden /> : <Menu className="size-4" aria-hidden />}
             Funciones
@@ -83,7 +62,7 @@ export default function Encabezado() {
       </header>
 
       {abierto && (
-        <div className="fixed inset-0 top-(--alto-encabezado) z-40 lg:hidden">
+        <div className="fixed inset-0 top-(--alto-encabezado) z-50">
           <button
             type="button"
             aria-label="Cerrar el menú"
@@ -93,21 +72,42 @@ export default function Encabezado() {
           <nav
             id="menu-funciones"
             aria-label="Funciones"
-            className="life-entrar relative max-h-full overflow-y-auto rounded-b-3xl bg-white p-4 shadow-2xl shadow-azul-950/20"
+            className="life-entrar relative mx-auto max-h-full max-w-3xl overflow-y-auto rounded-b-3xl bg-white p-4 shadow-2xl shadow-azul-950/20"
           >
             <ul className="grid gap-2 sm:grid-cols-2">
               {funciones.map((f) => (
                 <li key={f.slug}>
-                  <ElementoMenu f={f} activa={activa(f)} />
+                  <ElementoMenu f={f} activa={activa(f)} alCerrar={() => setAbierto(false)} />
                 </li>
               ))}
             </ul>
             <Link
-              href="/creditos"
+              href="/"
+              onClick={() => setAbierto(false)}
+              className="mt-3 flex items-center justify-between rounded-2xl bg-azul-800 px-4 py-3 text-sm font-medium text-white"
+            >
+              <span className="flex items-center gap-2">
+                <Home className="size-4" aria-hidden /> Hoy
+              </span>
+              <ArrowRight className="size-4" aria-hidden />
+            </Link>
+            <Link
+              href="/perfil#ajustes"
+              onClick={() => setAbierto(false)}
               className="mt-3 flex items-center justify-between rounded-2xl bg-azul-50 px-4 py-3 text-sm font-medium text-azul-800"
             >
               <span className="flex items-center gap-2">
-                <Users className="size-4" aria-hidden /> Quién creó cada función
+                <Settings className="size-4" aria-hidden /> Ajustes
+              </span>
+              <ArrowRight className="size-4" aria-hidden />
+            </Link>
+            <Link
+              href="/creditos"
+              onClick={() => setAbierto(false)}
+              className="mt-3 flex items-center justify-between rounded-2xl bg-azul-50 px-4 py-3 text-sm font-medium text-azul-800"
+            >
+              <span className="flex items-center gap-2">
+                <Users className="size-4" aria-hidden /> Créditos
               </span>
               <ArrowRight className="size-4" aria-hidden />
             </Link>
@@ -118,42 +118,23 @@ export default function Encabezado() {
   );
 }
 
-function ElementoMenu({ f, activa }: { f: Funcion; activa: boolean }) {
-  const contenido = (
-    <>
-      <span
-        className={`grid size-11 shrink-0 place-items-center rounded-xl ${
-          f.estado === "lista" ? "bg-azul-800 text-white" : "bg-azul-50 text-azul-400"
-        }`}
-      >
-        <f.icono className="size-5" aria-hidden />
-      </span>
-      <span className="min-w-0">
-        <span className="flex items-center gap-2 font-semibold text-azul-950">
-          {f.proyecto}
-          {f.estado === "proximamente" && (
-            <span className="rounded-full bg-azul-50 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-azul-600">
-              Pronto
-            </span>
-          )}
-        </span>
-        <span className="block truncate text-sm text-azul-900/60">{f.resumen}</span>
-      </span>
-    </>
-  );
-
-  if (f.estado !== "lista") {
-    return <div className="flex items-center gap-3 rounded-2xl p-3 opacity-70">{contenido}</div>;
-  }
+function ElementoMenu({ f, activa, alCerrar }: { f: Funcion; activa: boolean; alCerrar: () => void }) {
   return (
     <Link
       href={f.href}
+      onClick={alCerrar}
       aria-current={activa ? "page" : undefined}
       className={`flex items-center gap-3 rounded-2xl p-3 transition-colors ${
         activa ? "bg-azul-50 ring-1 ring-azul-200" : "hover:bg-azul-50"
       }`}
     >
-      {contenido}
+      <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-azul-800 text-white">
+        <f.icono className="size-5" aria-hidden />
+      </span>
+      <span className="min-w-0">
+        <span className="block font-semibold text-azul-950">{f.nombre}</span>
+        <span className="block truncate text-sm text-azul-900/60">{f.resumen}</span>
+      </span>
     </Link>
   );
 }

@@ -12,18 +12,18 @@ type Tipo = (typeof eventos)[number]["tipo"];
 
 const estilos: Record<Tipo, { fecha: string; etiqueta: string; plural: string }> = {
   Examen: {
-    fecha: "bg-indigo-600 text-white",
-    etiqueta: "bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-200",
+    fecha: "bg-azul-800 text-white",
+    etiqueta: "bg-azul-100 text-azul-900",
     plural: "Exámenes",
   },
   Evento: {
     fecha: "bg-emerald-500 text-white",
-    etiqueta: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200",
+    etiqueta: "bg-emerald-100 text-emerald-800",
     plural: "Eventos",
   },
   Vacaciones: {
     fecha: "bg-violet-500 text-white",
-    etiqueta: "bg-violet-100 text-violet-800 dark:bg-violet-950 dark:text-violet-200",
+    etiqueta: "bg-violet-100 text-violet-800",
     plural: "Vacaciones",
   },
 };
@@ -59,7 +59,7 @@ export function ListaEventos() {
       <div key={filtro}>
         {[...meses].map(([mes, lista], m) => (
           <section key={mes} className={`mt-6 ${anim.aparecer}`} style={retraso(m)}>
-            <h2 className="mb-3 text-xs font-semibold tracking-wider text-slate-500 uppercase dark:text-slate-400">{mes}</h2>
+            <h2 className="mb-3 text-xs font-semibold tracking-wider text-azul-900/60 uppercase">{mes}</h2>
             <ol className="flex flex-col gap-3">
               {lista.map((e) => {
                 const { dia, mes: mesCorto } = diaYMes(e.fecha);
@@ -72,11 +72,11 @@ export function ListaEventos() {
                     </span>
                     <span className="min-w-0 flex-1">
                       <span className="block font-semibold">{e.titulo}</span>
-                      <span className="block text-sm text-slate-500 dark:text-slate-400">{e.descripcion}</span>
+                      <span className="block text-sm text-azul-900/60">{e.descripcion}</span>
                       <span className="mt-1 flex flex-wrap items-center gap-2">
                         <span className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${estilos[e.tipo].etiqueta}`}>{e.tipo}</span>
                         {faltan != null && (
-                          <span className="text-xs font-medium text-indigo-700 dark:text-indigo-400">{textoFaltan(faltan)}</span>
+                          <span className="text-xs font-medium text-azul-900">{textoFaltan(faltan)}</span>
                         )}
                       </span>
                     </span>

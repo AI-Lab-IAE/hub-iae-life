@@ -1,16 +1,14 @@
 import Link from "next/link";
 import anim from "../animaciones.module.css";
-import { EncabezadoSeccion } from "../components/EncabezadoSeccion";
 import { Icono } from "../components/Icono";
 import { EstadoClub, LogoClub } from "../components/LogoClub";
-import { Pantalla } from "../components/Pantalla";
+import { Seccion } from "../components/Seccion";
 import { elevar, retraso, tarjeta, tocar } from "../components/estilos";
 import { clubes } from "../datos";
 
 export default function Page() {
   return (
-    <Pantalla>
-      <EncabezadoSeccion ruta="clubes" />
+    <Seccion ruta="clubes">
 
       <ul className="mt-6 grid gap-3 sm:grid-cols-2">
         {clubes.map((c, i) => (
@@ -22,8 +20,8 @@ export default function Page() {
                 <span className="mt-1 block">
                   <EstadoClub abierto={c.abierto} />
                 </span>
-                <span className="mt-0.5 block text-sm text-slate-500 dark:text-slate-400">{c.descripcion}</span>
-                <span className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs font-medium text-indigo-700 dark:text-indigo-300">
+                <span className="mt-0.5 block text-sm text-azul-900/60">{c.descripcion}</span>
+                <span className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs font-medium text-azul-900">
                   <span className="flex items-center gap-1">
                     <Icono nombre="reloj" className="size-3.5" /> {c.dia}
                   </span>
@@ -32,11 +30,11 @@ export default function Page() {
                   </span>
                 </span>
               </span>
-              <Icono nombre="adelante" className="size-5 shrink-0 text-slate-400" />
+              <Icono nombre="adelante" className="size-5 shrink-0 text-azul-900/50" />
             </Link>
           </li>
         ))}
       </ul>
-    </Pantalla>
+    </Seccion>
   );
 }

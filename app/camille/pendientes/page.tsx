@@ -1,14 +1,6 @@
-import { EncabezadoSeccion } from "../components/EncabezadoSeccion";
-import { ListaPendientes } from "../components/ListaPendientes";
-import { Pantalla } from "../components/Pantalla";
+import { redirect } from "next/navigation";
 
+// Los pendientes ahora están en Tareas (una sola lista).
 export default function Page() {
-  return (
-    <Pantalla>
-      <EncabezadoSeccion ruta="pendientes" />
-      <div className="mt-6">
-        <ListaPendientes />
-      </div>
-    </Pantalla>
-  );
+  redirect("/daniela");
 }

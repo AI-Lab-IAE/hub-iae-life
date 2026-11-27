@@ -34,10 +34,10 @@ export function PasoQuiz({
     <div className="mx-auto max-w-2xl">
       <div className="mb-6">
         <div className="flex items-center justify-between text-sm">
-          <span className="font-medium text-[#4a5475]">
-            Tema {item.numeroTema} de {sesion.analisis.temas.length} · <span className="text-[#15203b]">{item.tema.nombre}</span>
+          <span className="font-medium text-azul-900/70">
+            Tema {item.numeroTema} de {sesion.analisis.temas.length} · <span className="text-azul-950">{item.tema.nombre}</span>
           </span>
-          <span className="font-mono text-xs text-[#7c849e]">
+          <span className="tabular-nums text-xs text-azul-900/55">
             {indice + 1}/{items.length}
           </span>
         </div>
@@ -46,7 +46,7 @@ export function PasoQuiz({
             <span
               key={it.pregunta.id}
               className={`h-1.5 flex-1 rounded-full transition-colors ${
-                i === indice ? "bg-[#15203b]" : sesion.respuestas[it.pregunta.id] ? "bg-[#7c849e]" : "bg-[#e4dccb]"
+                i === indice ? "bg-azul-950" : sesion.respuestas[it.pregunta.id] ? "bg-azul-300" : "bg-azul-100"
               }`}
             />
           ))}
@@ -66,11 +66,11 @@ export function PasoQuiz({
         <button
           onClick={() => setIndice(Math.max(0, indice - 1))}
           disabled={indice === 0}
-          className="rounded-full px-3 py-2 text-[#4a5475] hover:text-[#15203b] disabled:opacity-30"
+          className="rounded-full px-3 py-2 text-azul-900/70 hover:text-azul-950 disabled:opacity-30"
         >
           ← Anterior
         </button>
-        <span className="text-[#7c849e]">
+        <span className="text-azul-900/55">
           {respondidas} de {items.length} respondidas
         </span>
       </div>
@@ -107,10 +107,10 @@ function TarjetaPregunta({
 
   return (
     <article className={`${tarjeta} p-6 sm:p-8`}>
-      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#7c849e]">
+      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-azul-900/55">
         {abierta ? "Explícalo con tus palabras" : "Opción múltiple"}
       </p>
-      <h2 className="mt-3 font-serif text-2xl leading-snug tracking-tight text-pretty sm:text-[28px]">{pregunta.enunciado}</h2>
+      <h2 className="font-bold text-azul-950 mt-3 text-2xl leading-snug tracking-tight text-pretty sm:text-[28px]">{pregunta.enunciado}</h2>
 
       {abierta ? (
         <textarea
@@ -119,17 +119,17 @@ function TarjetaPregunta({
           disabled={confirmada}
           rows={4}
           placeholder="Escribe tu respuesta como se la explicarías a un compañero…"
-          className="mt-6 w-full resize-y rounded-xl border border-[#d6ccb6] bg-[#faf7f0] px-4 py-3 leading-relaxed outline-none placeholder:text-[#7c849e] focus:border-[#15203b] disabled:opacity-80"
+          className="mt-6 w-full resize-y rounded-xl border border-azul-200 bg-azul-50 px-4 py-3 leading-relaxed outline-none placeholder:text-azul-900/55 focus:border-azul-950 disabled:opacity-80"
         />
       ) : (
         <ul className="mt-6 space-y-2.5">
           {pregunta.opciones.map((opcion, i) => {
             const marcada = elegida === i;
-            let estilo = marcada ? "border-[#15203b] bg-[#f3eee2]" : "border-[#d6ccb6] bg-[#fffdf8] hover:border-[#7c849e]";
+            let estilo = marcada ? "border-azul-950 bg-azul-50" : "border-azul-200 bg-white hover:border-azul-300";
             if (confirmada) {
-              if (i === pregunta.correcta) estilo = "border-[#1f9466] bg-[#dcf2e7]";
-              else if (marcada) estilo = "border-[#e0492f] bg-[#fde6df]";
-              else estilo = "border-[#e4dccb] bg-[#fffdf8] opacity-60";
+              if (i === pregunta.correcta) estilo = "border-emerald-600 bg-emerald-50";
+              else if (marcada) estilo = "border-red-600 bg-red-50";
+              else estilo = "border-azul-100 bg-white opacity-60";
             }
             return (
               <li key={i}>
@@ -141,7 +141,7 @@ function TarjetaPregunta({
                 >
                   <span
                     className={`grid size-7 shrink-0 place-items-center rounded-full text-sm font-semibold ${
-                      marcada && !confirmada ? "bg-[#15203b] text-[#faf7f0]" : "bg-[#f3eee2] text-[#4a5475]"
+                      marcada && !confirmada ? "bg-azul-950 text-white" : "bg-azul-50 text-azul-900/70"
                     }`}
                   >
                     <Letra i={i} />
@@ -161,7 +161,7 @@ function TarjetaPregunta({
             {abierta ? "Guardar respuesta" : "Confirmar"}
           </button>
           {!seguridad && (abierta ? texto.trim() : elegida !== undefined) && (
-            <p className="mt-2 text-center text-xs text-[#7c849e]">Marca qué tan seguro estás para continuar.</p>
+            <p className="mt-2 text-center text-xs text-azul-900/55">Marca qué tan seguro estás para continuar.</p>
           )}
         </div>
       )}
@@ -169,8 +169,8 @@ function TarjetaPregunta({
       {confirmada && (
         <div className="mt-6 space-y-4">
           {abierta ? (
-            <div className="rounded-2xl bg-[#f3eee2] p-4 text-sm leading-relaxed text-[#4a5475]">
-              <strong className="text-[#15203b]">Respuesta guardada.</strong> La IA la corrige al terminar el diagnóstico y te
+            <div className="rounded-2xl bg-azul-50 p-4 text-sm leading-relaxed text-azul-900/70">
+              <strong className="text-azul-950">Respuesta guardada.</strong> La IA la corrige al terminar el diagnóstico y te
               dice qué te faltó.
             </div>
           ) : (
@@ -184,8 +184,8 @@ function TarjetaPregunta({
                     ? "Incorrecto, y estabas seguro: posible punto ciego"
                     : "Incorrecto"}
               </p>
-              <p className="mt-1.5 leading-relaxed text-[#4a5475]">{pregunta.explicacion}</p>
-              {pregunta.fuente && <p className="mt-2 text-xs text-[#7c849e]">En tus apuntes: {pregunta.fuente}</p>}
+              <p className="mt-1.5 leading-relaxed text-azul-900/70">{pregunta.explicacion}</p>
+              {pregunta.fuente && <p className="mt-2 text-xs text-azul-900/55">En tus apuntes: {pregunta.fuente}</p>}
             </div>
           )}
           <button onClick={onSiguiente} className={`${botonPrimario} w-full py-3.5`}>

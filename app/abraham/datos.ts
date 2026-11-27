@@ -31,7 +31,7 @@ export const grados = [...new Set(estudiantes.map((e) => e.grado))];
 export const salones = [...new Set(estudiantes.map((e) => e.salon))];
 
 /** Avisos con los que arranca la demo, para que no se vea vacía. */
-export const avisosIniciales: Aviso[] = [
+export const avisosIniciales: Aviso[] = ([
   {
     id: "a1",
     texto: "Mañana la clase de Física del 10A es en el laboratorio 2.",
@@ -50,7 +50,14 @@ export const avisosIniciales: Aviso[] = [
     vistos: { e2: "2026-10-26T15:00:00.000Z", e4: "2026-10-26T16:10:00.000Z", e7: "2026-10-26T18:45:00.000Z" },
     creado: "2026-10-26T14:00:00.000Z",
   },
-];
+  // Antes eran los "Anuncios" de Colegio (School Guide): ahora todos los avisos están en un solo lugar.
+  ...[
+    { id: "a3", texto: "Feria de Ciencias de Prueba: será en el Patio Prueba A. Cada grupo presenta su proyecto de 8:00 a 11:00.", urgente: true, creado: "2026-11-10T13:00:00.000Z" },
+    { id: "a4", texto: "Esta semana la Biblioteca Prueba abre de 7:30 a 13:00.", urgente: false, creado: "2026-11-03T13:00:00.000Z" },
+    { id: "a5", texto: "Las boletas de ejemplo del primer periodo se entregan en Coordinación Prueba.", urgente: true, creado: "2026-10-27T13:00:00.000Z" },
+    { id: "a6", texto: "El Profesor Prueba 3 abre inscripciones al club de lectura de los viernes.", urgente: false, creado: "2026-10-20T13:00:00.000Z" },
+  ].map((a): Aviso => ({ ...a, audiencia: "Toda la escuela", destinatarios: estudiantes.map((e) => e.id), vistos: {} })),
+] as Aviso[]).sort((a, b) => b.creado.localeCompare(a.creado));
 
 /** Estudiantes que reciben un aviso según la audiencia elegida. */
 export function resolverAudiencia(

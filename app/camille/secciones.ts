@@ -1,4 +1,5 @@
-// Las secciones de la guía. Para cambiar el nombre, el ícono, la descripción o la explicación de una tarjeta, edita esta lista.
+// Las secciones de Colegio. Los pendientes están en Tareas, los anuncios en Avisos y el horario en Horario.
+// Para cambiar el nombre, el ícono, la descripción o la explicación de una tarjeta, edita esta lista.
 export const secciones = [
   {
     ruta: "mapa",
@@ -15,13 +16,6 @@ export const secciones = [
     explicacion: "Escribe un nombre, una materia o una oficina en el buscador. Toca un correo para abrir tu aplicación de correo con la dirección lista.",
   },
   {
-    ruta: "pendientes",
-    icono: "lista",
-    nombre: "Mis pendientes",
-    descripcion: "Tus tareas, exámenes y proyectos.",
-    explicacion: "Anota lo que debes hacer, para cuándo es y dónde está la información. Toca el círculo cuando lo termines. Lo que falta se ordena por fecha de entrega.",
-  },
-  {
     ruta: "clubes",
     icono: "estrella",
     nombre: "Clubes",
@@ -36,18 +30,11 @@ export const secciones = [
     explicacion: "Todas las fechas del año escolar, ordenadas por mes. Usa los filtros para ver solo exámenes, eventos o vacaciones.",
   },
   {
-    ruta: "anuncios",
-    icono: "anuncios",
-    nombre: "Anuncios",
-    descripcion: "Avisos importantes del colegio.",
-    explicacion: "Los avisos del colegio, del más nuevo al más viejo. Toca un anuncio para leerlo completo. Los importantes tienen una etiqueta roja.",
-  },
-  {
     ruta: "informacion",
     icono: "informacion",
     nombre: "Información general",
-    descripcion: "Horarios y reglas.",
-    explicacion: "El horario de clases de secundaria día por día y las reglas básicas de convivencia.",
+    descripcion: "Reglas del colegio.",
+    explicacion: "Las reglas básicas de convivencia. Tu horario de clases está en Horario.",
   },
 ] as const;
 
