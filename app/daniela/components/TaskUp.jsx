@@ -2490,13 +2490,7 @@ function App() {
     let vigente = true;
     const clave = claveDe(correo);
     (async () => {
-      let guardado = await loadState(clave);
-      // Tareas de antes de las cuentas (guardadas sin correo): pasan una vez a esta cuenta.
-      let deAntes = false;
-      if (!guardado) {
-        guardado = await loadState(STORAGE_KEY);
-        deAntes = !!guardado;
-      }
+      const guardado = await loadState(clave);
       let loaded = guardado || defaultData();
       if (!vigente) return;
       // Con cuenta, los datos y los ajustes salen de los Ajustes de IAE LIFE (sirven para todas las apps).
@@ -2527,13 +2521,8 @@ function App() {
         loaded = { ...loaded, tasks: [...(loaded.tasks || []), ...viejos] };
         loaded = { ...loaded, tasks: scheduleAll(loaded) };
       }
-      if (viejos.length || deAntes) {
-        // Lo viejo solo se borra si lo nuevo quedó guardado.
-        if (await saveState(clave, loaded)) {
-          if (viejos.length) borrarPendientesDeLaGuia();
-          if (deAntes) { try { localStorage.removeItem(STORAGE_KEY); } catch {} }
-        }
-      }
+      // Lo viejo solo se borra si lo nuevo quedó guardado.
+      if (viejos.length && (await saveState(clave, loaded))) borrarPendientesDeLaGuia();
       if (!vigente) return;
       claveActual.current = clave;
       firstLoad.current = true;

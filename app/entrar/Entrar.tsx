@@ -47,8 +47,17 @@ export default function Entrar({ clienteGoogle }: { clienteGoogle: string }) {
   useEffect(() => {
     if (!cuenta) return;
     const volver = new URLSearchParams(window.location.search).get("volver");
-    const seguro = volver && volver.startsWith("/") && !volver.startsWith("//") && !volver.startsWith("/\\");
-    if (seguro && cuenta.genero && cuenta.nacimiento) router.replace(volver);
+    let destino: string | null = null;
+    if (volver?.startsWith("/")) {
+      try {
+        // El navegador normaliza la ruta; solo se acepta si sigue siendo de IAE LIFE.
+        const url = new URL(volver, window.location.origin);
+        if (url.origin === window.location.origin) destino = url.pathname + url.search + url.hash;
+      } catch {
+        destino = null;
+      }
+    }
+    if (destino && cuenta.genero && cuenta.nacimiento) router.replace(destino);
     else router.replace(cuenta.genero && cuenta.nacimiento ? "/perfil" : "/perfil#ajustes");
   }, [cuenta, router]);
 
