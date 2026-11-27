@@ -34,7 +34,7 @@
 - Solo con la cuenta de IAE LIFE: no pide nombre, rol ni fecha de nacimiento.
 - Las clases vienen de Horario (`app/_life/horario.ts`) y no se editan aquí; aquí solo se agregan actividades y compromisos.
 - Es la única lista de pendientes: Hoy la lee (`lib/tareas.ts`) y Colegio abre "Agregar trabajo" ya escrito (`/daniela?nueva=...&materia=...`).
-- Los "Mis pendientes" que alguien tenía en la vieja guía de Colegio se pasan solos a Tareas la primera vez.
+- Los "Mis pendientes" que alguien tenía en la vieja guía de Colegio se pasan solos a Organiza la primera vez.
 
 ## Cómo está armado
 
