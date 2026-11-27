@@ -10,7 +10,7 @@ export default function Page() {
     <Pantalla
       icono={Mail}
       titulo="Retoma"
-      texto="Si no pudiste venir, escribimos un correo para cada profesor y así te pones al día. Tú lo revisas y lo envías."
+      texto="Si no vas a poder venir, escribimos un correo para cada profesor para que te pongas al día. Tú lo revisas y lo envías."
       ancho="angosto"
     >
       <AvisIA />

@@ -47,7 +47,7 @@ const ATAJOS = [
   {
     href: "/jonathan",
     titulo: "Retoma",
-    texto: "Ponte al día con tus profes",
+    texto: "Avisa a tus profes y ponte al día",
     icono: Mail,
     fondo: "bg-red-50 text-red-700",
   },
