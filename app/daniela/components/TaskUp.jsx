@@ -567,10 +567,12 @@ async function loadState(clave) {
   } catch (e) { console.error("No se pudo leer lo guardado", e); }
   return null;
 }
+// Devuelve true si quedó guardado (así una migración solo borra lo viejo si lo nuevo ya está a salvo).
 async function saveState(clave, data) {
   try {
     localStorage.setItem(clave, JSON.stringify(data));
-  } catch (e) { console.error("No se pudo guardar", e); }
+    return true;
+  } catch (e) { console.error("No se pudo guardar", e); return false; }
 }
 
 /* ============================================================
@@ -2488,7 +2490,13 @@ function App() {
     let vigente = true;
     const clave = claveDe(correo);
     (async () => {
-      const guardado = await loadState(clave);
+      let guardado = await loadState(clave);
+      // Tareas de antes de las cuentas (guardadas sin correo): pasan una vez a esta cuenta.
+      let deAntes = false;
+      if (!guardado) {
+        guardado = await loadState(STORAGE_KEY);
+        deAntes = !!guardado;
+      }
       let loaded = guardado || defaultData();
       if (!vigente) return;
       // Con cuenta, los datos y los ajustes salen de los Ajustes de IAE LIFE (sirven para todas las apps).
@@ -2519,9 +2527,12 @@ function App() {
         loaded = { ...loaded, tasks: [...(loaded.tasks || []), ...viejos] };
         loaded = { ...loaded, tasks: scheduleAll(loaded) };
       }
-      if (viejos.length) {
-        await saveState(clave, loaded);
-        borrarPendientesDeLaGuia();
+      if (viejos.length || deAntes) {
+        // Lo viejo solo se borra si lo nuevo quedó guardado.
+        if (await saveState(clave, loaded)) {
+          if (viejos.length) borrarPendientesDeLaGuia();
+          if (deAntes) { try { localStorage.removeItem(STORAGE_KEY); } catch {} }
+        }
       }
       if (!vigente) return;
       claveActual.current = clave;
@@ -2654,7 +2665,7 @@ function App() {
       <Card className="mx-auto max-w-md text-center">
         <p className="font-bold text-azul-950">Entra con tu cuenta del colegio</p>
         <p className="mt-1 text-sm text-azul-900/65">Tareas usa tu cuenta de IAE LIFE: no te pide tus datos otra vez.</p>
-        <Link href="/entrar" className={`${botonPrimario} mt-4`}>Entrar</Link>
+        <Link href={`/entrar?${new URLSearchParams({ volver: typeof window === "undefined" ? "/daniela" : window.location.pathname + window.location.search })}`} className={`${botonPrimario} mt-4`}>Entrar</Link>
       </Card>
     );
   }
