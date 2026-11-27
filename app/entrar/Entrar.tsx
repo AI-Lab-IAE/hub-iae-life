@@ -42,9 +42,23 @@ export default function Entrar({ clienteGoogle }: { clienteGoogle: string }) {
     };
   }, []);
 
-  // Si ya entraste, vas a tu perfil (la primera vez, directo a completar tus ajustes).
+  // Si ya entraste, vuelves a donde estabas (?volver=/ruta, solo rutas de IAE LIFE)
+  // o a tu perfil (la primera vez, directo a completar tus ajustes).
   useEffect(() => {
-    if (cuenta) router.replace(cuenta.genero && cuenta.nacimiento ? "/perfil" : "/perfil#ajustes");
+    if (!cuenta) return;
+    const volver = new URLSearchParams(window.location.search).get("volver");
+    let destino: string | null = null;
+    if (volver?.startsWith("/")) {
+      try {
+        // El navegador normaliza la ruta; solo se acepta si sigue siendo de IAE LIFE.
+        const url = new URL(volver, window.location.origin);
+        if (url.origin === window.location.origin && !url.pathname.startsWith("//")) destino = url.pathname + url.search + url.hash;
+      } catch {
+        destino = null;
+      }
+    }
+    if (destino && cuenta.genero && cuenta.nacimiento) router.replace(destino);
+    else router.replace(cuenta.genero && cuenta.nacimiento ? "/perfil" : "/perfil#ajustes");
   }, [cuenta, router]);
 
   // Botón oficial de Google (solo si el coordinador configuró el Client ID).
