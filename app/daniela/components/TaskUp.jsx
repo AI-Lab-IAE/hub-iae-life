@@ -857,7 +857,7 @@ function Onboarding() {
           <p className="text-sm leading-relaxed text-azul-900/70">
             {tx(
               "Organiza es tu asistente de organización del tiempo: analiza tu horario, tus responsabilidades y tus trabajos pendientes. En vez de solo hacer una lista, decide cuándo es el mejor momento para hacer cada cosa. Tú siempre tienes el control final de tu horario.",
-              "Tasks is your time-organization assistant: it analyzes your schedule, your responsibilities, and your pending work. Instead of just making a list, it decides the best moment to do each thing. You always keep final control of your schedule."
+              "Organiza is your time-organization assistant: it analyzes your schedule, your responsibilities, and your pending work. Instead of just making a list, it decides the best moment to do each thing. You always keep final control of your schedule."
             )}
           </p>
         </>
