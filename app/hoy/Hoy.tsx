@@ -32,7 +32,7 @@ const ATAJOS = [
   },
   {
     href: "/daniela",
-    titulo: "Tareas",
+    titulo: "Organiza",
     texto: "Organiza tu semana",
     icono: ClipboardCheck,
     fondo: "bg-violet-100 text-violet-700",

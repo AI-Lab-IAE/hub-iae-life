@@ -10,7 +10,7 @@ import { BookOpen, ClipboardCheck, Home, Megaphone, UserRound } from "lucide-rea
 // "Hoy" va en el centro, como botón destacado (guía de Camille).
 const PESTANAS = [
   { href: "/marco", texto: "Estudiar", icono: BookOpen },
-  { href: "/daniela", texto: "Tareas", icono: ClipboardCheck },
+  { href: "/daniela", texto: "Organiza", icono: ClipboardCheck },
   { href: "/", texto: "Hoy", icono: Home },
   { href: "/abraham", texto: "Avisos", icono: Megaphone },
   { href: "/perfil", texto: "Perfil", icono: UserRound },

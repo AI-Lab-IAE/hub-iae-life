@@ -55,7 +55,7 @@ export default async function Page({ params }: PageProps<"/camille/clubes/[id]">
           </dl>
           <BotonUnirme club={club} />
           <p className="mt-2 text-center text-xs text-azul-900/60">{club.abierto
-              ? "Por ahora recibe integrantes, pero confirma con el encargado si hay cupo. Se anota en Tareas."
+              ? "Por ahora recibe integrantes, pero confirma con el encargado si hay cupo. Se anota en Organiza."
               : "Por ahora no recibe integrantes. Igual puedes ver de qué se trata y preguntarle al encargado."}</p>
         </div>
       </section>

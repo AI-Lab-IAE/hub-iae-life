@@ -137,7 +137,7 @@ function PerfilDe({ cuenta }: { cuenta: Cuenta }) {
         >
           <h2 className="font-bold text-azul-950">Ajustes de IAE LIFE</h2>
           <p className="mt-1 text-sm text-azul-900/65">
-            Todas las funciones de IAE LIFE los usan para no volver a pedírtelos (el idioma, por ahora, solo en Tareas).
+            Todas las funciones de IAE LIFE los usan para no volver a pedírtelos (el idioma, por ahora, solo en Organiza).
           </p>
           {faltanDatos && (
             <p className="mt-3 rounded-2xl bg-oro/15 px-4 py-3 text-sm font-medium text-azul-950">
