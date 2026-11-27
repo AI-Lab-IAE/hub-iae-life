@@ -2,7 +2,7 @@
 
 - **Proyecto:** TASKUP!
 - **Para quién es:** estudiantes que tienen dificultad para organizar su tiempo entre tareas, exámenes, proyectos y actividades.
-- **En IAE LIFE se llama «Tareas»** (`/daniela`). El nombre TASKUP! y la autora solo salen en Créditos.
+- **En IAE LIFE se llama «Organiza»** (`/daniela`). El nombre TASKUP! y la autora solo salen en Créditos.
 - **Funcionalidad central:** TASKUP! organiza automáticamente las tareas del estudiante dentro de su horario real. Usa la fecha de entrega, el tiempo que necesita cada trabajo y los espacios libres que de verdad existen. No toca clases, actividades, eventos, sueño ni tiempo personal.
 
 ## Qué hace hoy
