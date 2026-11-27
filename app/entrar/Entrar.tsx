@@ -52,7 +52,7 @@ export default function Entrar({ clienteGoogle }: { clienteGoogle: string }) {
       try {
         // El navegador normaliza la ruta; solo se acepta si sigue siendo de IAE LIFE.
         const url = new URL(volver, window.location.origin);
-        if (url.origin === window.location.origin) destino = url.pathname + url.search + url.hash;
+        if (url.origin === window.location.origin && !url.pathname.startsWith("//")) destino = url.pathname + url.search + url.hash;
       } catch {
         destino = null;
       }
