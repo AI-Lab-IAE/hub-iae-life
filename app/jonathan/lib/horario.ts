@@ -1,4 +1,4 @@
-// Faltar usa el único horario de IAE LIFE (app/_life/horario.ts): aquí solo se convierte a clases de un día.
+// Retoma usa el único horario de IAE LIFE (app/_life/horario.ts): aquí solo se convierte a clases de un día.
 // Los profesores y correos de ese horario son de ejemplo (inventados).
 import { BLOQUES, hayBloque, materia, type Horario as HorarioLife } from "../../_life/horario";
 

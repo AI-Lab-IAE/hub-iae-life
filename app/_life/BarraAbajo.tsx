@@ -1,7 +1,7 @@
 "use client";
 
 // Barra de abajo en el celular (boceto de Camille): Hoy, Estudiar, Tareas, Avisos y Perfil.
-// Faltar, Colegio y Horario se abren desde Hoy o desde "Funciones" arriba.
+// Retoma, Colegio y Horario se abren desde Hoy o desde "Funciones" arriba.
 // En computadora no sale; ahí se usa la barra de arriba. En el HUB (/hub y /coordinador) tampoco.
 import Link from "next/link";
 import { usePathname } from "next/navigation";

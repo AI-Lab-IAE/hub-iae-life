@@ -31,7 +31,7 @@ const MODULOS: (Base & { slug: string })[] = [
   { slug: "marco", nombre: "Estudiar", resumen: "Encuentra lo que no sabes antes del examen", icono: BookOpen, logo: "/img/logos/marco.png" },
   { slug: "daniela", nombre: "Tareas", resumen: "Tus pendientes repartidos en tu semana", icono: ClipboardCheck },
   { slug: "abraham", nombre: "Avisos", resumen: "Los avisos del colegio y quién los vio", icono: Megaphone },
-  { slug: "jonathan", nombre: "Faltar", resumen: "Avisa tu ausencia a cada profesor", icono: Mail },
+  { slug: "jonathan", nombre: "Retoma", resumen: "Escríbeles a tus profes para ponerte al día", icono: Mail },
   { slug: "camille", nombre: "Colegio", resumen: "Mapa, contactos, clubes y calendario", icono: Compass, logo: "/img/logos/camille.png" },
 ];
 
