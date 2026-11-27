@@ -869,7 +869,7 @@ function Onboarding() {
           <p className="text-sm leading-relaxed text-azul-900/70">
             {tx(
               "Tus clases ya vienen de Horario. Agrega tus actividades, tus horas de sueño y tu tiempo personal, y luego tus trabajos con su fecha de entrega. Organiza decide cuándo hacer cada trabajo, respetando siempre tu descanso y tu tiempo personal.",
-              "Your classes already come from Schedule. Add your activities, sleep hours and personal time, then your assignments with their due dates. Tasks organizes when to do each one, always respecting your rest and personal time."
+              "Your classes already come from Schedule. Add your activities, sleep hours and personal time, then your assignments with their due dates. Organiza decides when to do each one, always respecting your rest and personal time."
             )}
           </p>
         </>
@@ -1611,7 +1611,7 @@ const QUICK_QUESTIONS_EN = ["Do I have time to do this today?", "What should I s
 
 function AIAssistantModal({ onClose }) {
   const { data, th, lang, tx } = useApp();
-  const [messages, setMessages] = useState([{ role: "assistant", content: tx("¡Hola! Soy el asistente de Organiza. Puedes preguntarme lo que quieras — sobre tu horario, tus tareas y exámenes, o cualquier otra cosa.", "Hi! I'm the Tasks assistant. Ask me anything — about your schedule, tasks and exams, or anything else.") }]);
+  const [messages, setMessages] = useState([{ role: "assistant", content: tx("¡Hola! Soy el asistente de Organiza. Puedes preguntarme lo que quieras — sobre tu horario, tus tareas y exámenes, o cualquier otra cosa.", "Hi! I'm the Organiza assistant. Ask me anything — about your schedule, tasks and exams, or anything else.") }]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const scrollRef = useRef(null);
