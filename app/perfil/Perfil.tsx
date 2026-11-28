@@ -137,7 +137,7 @@ function PerfilDe({ cuenta }: { cuenta: Cuenta }) {
         >
           <h2 className="font-bold text-azul-950">Ajustes de IAE LIFE</h2>
           <p className="mt-1 text-sm text-azul-900/65">
-            Todas las funciones de IAE LIFE los usan para no volver a pedírtelos (el idioma, por ahora, solo en Tareas).
+            Todas las funciones de IAE LIFE los usan para no volver a pedírtelos (el idioma, por ahora, solo en Organiza).
           </p>
           {faltanDatos && (
             <p className="mt-3 rounded-2xl bg-oro/15 px-4 py-3 text-sm font-medium text-azul-950">
@@ -243,7 +243,7 @@ function PerfilDe({ cuenta }: { cuenta: Cuenta }) {
                 className="mt-1.5 block w-full rounded-xl border border-azul-200 px-3 py-2.5 text-base text-azul-950 outline-none focus:border-azul-500 focus:ring-2 focus:ring-azul-200"
               />
               <span className="mt-1 block text-xs text-azul-900/50">
-                Más adelante, AusencIA lo usará para mandarles copia cuando avises una ausencia. Se queda solo en este
+                Retoma los pone en copia en los correos que escribes a tus profes cuando vas a faltar. Se queda solo en este
                 navegador.
               </span>
               {!correoPadresValido && (

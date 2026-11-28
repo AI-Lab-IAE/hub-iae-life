@@ -122,7 +122,7 @@ export default function FormularioAusencia({ inicial, onEnviar }: Props) {
         </section>
       )}
 
-      <Paso n={1} titulo="¿Qué día vas a faltar?">
+      <Paso n={1} titulo="¿Qué día no puedes venir?">
         <div className="flex flex-wrap gap-2">
           {[
             { t: "Hoy", d: 0 },

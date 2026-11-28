@@ -1,7 +1,7 @@
 "use client";
 
 // Barra de abajo en el celular (boceto de Camille): Hoy, Estudiar, Tareas, Avisos y Perfil.
-// Faltar, Colegio y Horario se abren desde Hoy o desde "Funciones" arriba.
+// Retoma, Colegio y Horario se abren desde Hoy o desde "Funciones" arriba.
 // En computadora no sale; ahí se usa la barra de arriba. En el HUB (/hub y /coordinador) tampoco.
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -10,7 +10,7 @@ import { BookOpen, ClipboardCheck, Home, Megaphone, UserRound } from "lucide-rea
 // "Hoy" va en el centro, como botón destacado (guía de Camille).
 const PESTANAS = [
   { href: "/marco", texto: "Estudiar", icono: BookOpen },
-  { href: "/daniela", texto: "Tareas", icono: ClipboardCheck },
+  { href: "/daniela", texto: "Organiza", icono: ClipboardCheck },
   { href: "/", texto: "Hoy", icono: Home },
   { href: "/abraham", texto: "Avisos", icono: Megaphone },
   { href: "/perfil", texto: "Perfil", icono: UserRound },

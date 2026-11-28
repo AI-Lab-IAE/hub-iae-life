@@ -853,11 +853,11 @@ function Onboarding() {
       {key === "intro1" && (
         <>
           <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4 bg-azul-100 text-azul-800"><Sparkles size={22} /></div>
-          <h2 className="font-bold text-xl mb-3 text-azul-950">{tx("¿Qué hace Tareas?", "What does Tasks do?")}</h2>
+          <h2 className="font-bold text-xl mb-3 text-azul-950">{tx("¿Qué hace Organiza?", "What does Organiza do?")}</h2>
           <p className="text-sm leading-relaxed text-azul-900/70">
             {tx(
-              "Tareas es tu asistente de organización del tiempo: analiza tu horario, tus responsabilidades y tus trabajos pendientes. En vez de solo hacer una lista, decide cuándo es el mejor momento para hacer cada cosa. Tú siempre tienes el control final de tu horario.",
-              "Tasks is your time-organization assistant: it analyzes your schedule, your responsibilities, and your pending work. Instead of just making a list, it decides the best moment to do each thing. You always keep final control of your schedule."
+              "Organiza es tu asistente de organización del tiempo: analiza tu horario, tus responsabilidades y tus trabajos pendientes. En vez de solo hacer una lista, decide cuándo es el mejor momento para hacer cada cosa. Tú siempre tienes el control final de tu horario.",
+              "Organiza is your time-organization assistant: it analyzes your schedule, your responsibilities, and your pending work. Instead of just making a list, it decides the best moment to do each thing. You always keep final control of your schedule."
             )}
           </p>
         </>
@@ -868,8 +868,8 @@ function Onboarding() {
           <h2 className="font-bold text-xl mb-3 text-azul-950">{tx("¿Cómo se usa?", "How does it work?")}</h2>
           <p className="text-sm leading-relaxed text-azul-900/70">
             {tx(
-              "Tus clases ya vienen de Horario. Agrega tus actividades, tus horas de sueño y tu tiempo personal, y luego tus trabajos con su fecha de entrega. Tareas organiza cuándo hacer cada trabajo, respetando siempre tu descanso y tu tiempo personal.",
-              "Your classes already come from Schedule. Add your activities, sleep hours and personal time, then your assignments with their due dates. Tasks organizes when to do each one, always respecting your rest and personal time."
+              "Tus clases ya vienen de Horario. Agrega tus actividades, tus horas de sueño y tu tiempo personal, y luego tus trabajos con su fecha de entrega. Organiza decide cuándo hacer cada trabajo, respetando siempre tu descanso y tu tiempo personal.",
+              "Your classes already come from Schedule. Add your activities, sleep hours and personal time, then your assignments with their due dates. Organiza decides when to do each one, always respecting your rest and personal time."
             )}
           </p>
         </>
@@ -1611,7 +1611,7 @@ const QUICK_QUESTIONS_EN = ["Do I have time to do this today?", "What should I s
 
 function AIAssistantModal({ onClose }) {
   const { data, th, lang, tx } = useApp();
-  const [messages, setMessages] = useState([{ role: "assistant", content: tx("¡Hola! Soy el asistente de Tareas. Puedes preguntarme lo que quieras — sobre tu horario, tus tareas y exámenes, o cualquier otra cosa.", "Hi! I'm the Tasks assistant. Ask me anything — about your schedule, tasks and exams, or anything else.") }]);
+  const [messages, setMessages] = useState([{ role: "assistant", content: tx("¡Hola! Soy el asistente de Organiza. Puedes preguntarme lo que quieras — sobre tu horario, tus tareas y exámenes, o cualquier otra cosa.", "Hi! I'm the Organiza assistant. Ask me anything — about your schedule, tasks and exams, or anything else.") }]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const scrollRef = useRef(null);
@@ -1642,7 +1642,7 @@ function AIAssistantModal({ onClose }) {
 
   return (
     <Modal onClose={onClose} wide>
-      <ModalHeader title={tx("Asistente de Tareas", "Tasks assistant")} onClose={onClose} icon={Sparkles} />
+      <ModalHeader title={tx("Asistente de Organiza", "Organiza assistant")} onClose={onClose} icon={Sparkles} />
       <div className="flex flex-col" style={{ height: "70vh" }}>
         <div ref={scrollRef} className="flex-1 overflow-y-auto px-6 py-4 flex flex-col gap-3">
           {messages.map((m, i) => (
@@ -1672,7 +1672,7 @@ function FloatingAI({ onClick }) {
     <button
       onClick={onClick}
       className="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] right-4 z-30 w-14 h-14 rounded-full flex items-center justify-center bg-azul-800 text-white shadow-xl shadow-azul-900/30 active:scale-95 transition md:bottom-6 md:right-6"
-      title="Asistente de Tareas"
+      title="Asistente de Organiza"
     >
       <Sparkles size={24} />
     </button>
@@ -2605,7 +2605,7 @@ function App() {
         const key = `task-${t.id}-${tISOToday}`;
         if (!newLog[key]) {
           try {
-            new Notification("IAE LIFE · Tareas", { body: lang === "es"
+            new Notification("IAE LIFE · Organiza", { body: lang === "es"
               ? `"${t.name}" ${days === 0 ? "se entrega hoy" : days === 1 ? "se entrega mañana" : "se entrega en 2 días"}.`
               : `"${t.name}" ${days === 0 ? "is due today" : days === 1 ? "is due tomorrow" : "is due in 2 days"}.` });
           } catch (e) {}
@@ -2619,7 +2619,7 @@ function App() {
         const key = `exam-${ex.id}-${tISOToday}`;
         if (!newLog[key]) {
           try {
-            new Notification("IAE LIFE · Tareas", { body: lang === "es" ? `Examen "${ex.title}" es mañana.` : `Exam "${ex.title}" is tomorrow.` });
+            new Notification("IAE LIFE · Organiza", { body: lang === "es" ? `Examen "${ex.title}" es mañana.` : `Exam "${ex.title}" is tomorrow.` });
           } catch (e) {}
           newLog[key] = true; changed = true;
         }
@@ -2644,7 +2644,7 @@ function App() {
 
   const pestanas = NAV_ITEMS.map((n) => ({ id: n.key, texto: lang === "es" ? n.es : n.en, icono: n.icon }));
   const marco = (contenido) => (
-    <Pantalla icono={ClipboardCheck} titulo="Tareas" texto={tx("Tus trabajos repartidos en tu semana, sin dejar todo para el último día.", "Your work spread across your week, without leaving it all for the last day.")} ancho="ancho">
+    <Pantalla icono={ClipboardCheck} titulo="Organiza" texto={tx("Tus trabajos repartidos en tu semana, sin dejar todo para el último día.", "Your work spread across your week, without leaving it all for the last day.")} ancho="ancho">
       {contenido}
     </Pantalla>
   );
@@ -2653,7 +2653,7 @@ function App() {
     return marco(
       <Card className="mx-auto max-w-md text-center">
         <p className="font-bold text-azul-950">Entra con tu cuenta del colegio</p>
-        <p className="mt-1 text-sm text-azul-900/65">Tareas usa tu cuenta de IAE LIFE: no te pide tus datos otra vez.</p>
+        <p className="mt-1 text-sm text-azul-900/65">Organiza usa tu cuenta de IAE LIFE: no te pide tus datos otra vez.</p>
         <Link href={`/entrar?${new URLSearchParams({ volver: typeof window === "undefined" ? "/daniela" : window.location.pathname + window.location.search })}`} className={`${botonPrimario} mt-4`}>Entrar</Link>
       </Card>
     );
@@ -2680,7 +2680,7 @@ function App() {
         ) : (
           <>
             <Pestanas
-              etiqueta="Secciones de Tareas"
+              etiqueta="Secciones de Organiza"
               opciones={pestanas}
               valor={view}
               onCambio={(v) => { if (v === "agregar") setShowAddTask(true); else setView(v); }}

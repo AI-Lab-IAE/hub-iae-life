@@ -3,7 +3,7 @@ import TaskUp from "./components/TaskUp";
 import { info } from "./info";
 
 export const metadata: Metadata = {
-  title: `${info.proyecto} · HUB IAE LIFE`,
+  title: "Organiza",
   description: info.descripcion,
 };
 

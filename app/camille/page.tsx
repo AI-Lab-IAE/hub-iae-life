@@ -21,7 +21,7 @@ const datoSeccion: Record<RutaSeccion, { numero: number; texto: string }> = {
 // Lo que antes repetía la guía y ahora vive en una sola función de IAE LIFE.
 const EN_OTRA_FUNCION: { href: string; titulo: string; texto: string; icono: LucideIcon }[] = [
   { href: "/horario", titulo: "Horario", texto: "Tu horario de clases", icono: CalendarDays },
-  { href: "/daniela", titulo: "Tareas", texto: "Tus pendientes", icono: ClipboardCheck },
+  { href: "/daniela", titulo: "Organiza", texto: "Tus pendientes", icono: ClipboardCheck },
   { href: "/abraham", titulo: "Avisos", texto: "Los anuncios del colegio", icono: Megaphone },
 ];
 
