@@ -124,7 +124,7 @@ function Flujo({ cuenta }: { cuenta: Cuenta | null }) {
                 className="-ml-2 flex min-h-10 items-center gap-1.5 rounded-xl px-2 text-sm font-semibold text-azul-700 hover:bg-azul-50"
               >
                 <ArrowLeft className="size-4" aria-hidden />
-                Cambiar la ausencia
+                Cambiar el día
               </button>
               <h2 className="mt-2 text-2xl font-black tracking-tight text-azul-950">
                 {correos.length === 1 ? "1 correo listo" : `${correos.length} correos listos`}
@@ -238,7 +238,7 @@ function Flujo({ cuenta }: { cuenta: Cuenta | null }) {
               onClick={otra}
               className="mt-6 min-h-12 w-full rounded-2xl bg-azul-800 px-4 font-bold text-white hover:bg-azul-900"
             >
-              Avisar otra ausencia
+              Escribir otro aviso
             </button>
           </section>
         )}
